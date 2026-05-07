@@ -40,6 +40,7 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: process.env.NODE_ENV === "production",
   },
+  swcMinify: true,
 };
 
 export default nextConfig;
