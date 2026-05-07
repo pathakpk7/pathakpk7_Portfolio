@@ -37,10 +37,6 @@ const nextConfig: NextConfig = {
   httpAgentOptions: {
     keepAlive: true,
   },
-  // Optimize font loading
-  optimizeFonts: true,
-  // Reduce unused preloads
-  swcMinify: true,
 };
 
 export default nextConfig;
