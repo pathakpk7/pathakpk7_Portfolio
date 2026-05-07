@@ -25,7 +25,8 @@ const SectionWrapper = React.forwardRef<HTMLElement, SectionWrapperProps>(
     animate = true,
     delay = 0,
     direction = "up",
-    ...props 
+    style,
+    ...restProps 
   }, ref) => {
     const backgroundClasses = {
       default: "bg-background",
@@ -104,7 +105,8 @@ const SectionWrapper = React.forwardRef<HTMLElement, SectionWrapperProps>(
             delay, 
             ease: [0.25, 0.1, 0.25, 1] 
           }}
-          {...props}
+          style={style}
+          {...restProps}
         >
           {/* Subtle background gradient overlay */}
           {background === "cinematic" && (
