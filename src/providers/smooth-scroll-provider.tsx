@@ -78,7 +78,7 @@ export function SmoothScrollProvider({
     const initLenis = async () => {
       try {
         // Dynamically import Lenis to avoid SSR issues
-        const Lenis = (await import("@studio-freight/lenis")).default
+        const Lenis = (await import("lenis")).default
         
         const lenis = new Lenis({
           duration: duration,
