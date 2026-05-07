@@ -209,8 +209,8 @@ export const WordReveal = React.forwardRef<HTMLDivElement, TextRevealProps>(
           animate={isVisible ? { y: 0, opacity: 1 } : { y: 30, opacity: 0 }}
           transition={{
             duration: 0.8,
-            delay: props.delay! + (index * stagger),
-            ease: props.ease || "easeOut",
+            delay: delay + (index * stagger),
+            ease: ease || "easeOut",
           }}
           className="inline-block mr-2"
         >
