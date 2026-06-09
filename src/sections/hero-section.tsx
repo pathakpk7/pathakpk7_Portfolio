@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion"
+import Image from "next/image"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui"
 import { Container, SectionWrapper } from "@/components/layout"
@@ -318,19 +319,22 @@ const HeroSection = React.forwardRef<
                   
                   {/* Image container with mask for edge blending */}
                   <div 
-                    className="relative w-full aspect-square md:aspect-[3/4] lg:aspect-square"
+                    className="relative w-full aspect-square md:aspect-3/4 lg:aspect-square"
                     style={{
                       maskImage: 'radial-gradient(ellipse 70% 80% at 50% 50%, black 40%, transparent 80%)',
                       WebkitMaskImage: 'radial-gradient(ellipse 70% 80% at 50% 50%, black 40%, transparent 80%)',
                     }}
                   >
-                    <img 
+                    <Image 
                       src="/images/profile.jpg" 
                       alt="Prasoon Pathak"
-                      className="w-full h-full object-cover object-center"
+                      fill
+                      className="object-cover object-center"
                       style={{
                         filter: 'brightness(1.1) contrast(1.15) saturate(1.1)',
                       }}
+                      priority
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     />
                   </div>
 

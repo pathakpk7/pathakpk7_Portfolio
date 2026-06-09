@@ -27,7 +27,7 @@
   }
 
   .dark {
-    /* Premium Dark Theme */
+    /* Premium Dark Theme with improved contrast */
     --background: 210 10% 4%;
     --foreground: 210 40% 98%;
     --card: 210 12% 8%;
@@ -39,13 +39,13 @@
     --secondary: 210 16% 23%;
     --secondary-foreground: 210 40% 98%;
     --muted: 210 16% 23%;
-    --muted-foreground: 210 20% 65%;
+    --muted-foreground: 210 15% 75%;
     --accent: 200 60% 45%;
     --accent-foreground: 210 40% 98%;
     --destructive: 0 60% 60%;
     --destructive-foreground: 210 40% 98%;
-    --border: 210 16% 23%;
-    --input: 210 16% 23%;
+    --border: 210 16% 30%;
+    --input: 210 16% 30%;
     --ring: 200 65% 55%;
     --radius: 0.5rem;
   }
@@ -69,6 +69,12 @@
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* Improved clickability and touch targets */
+  button, a, [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
   }
   
   /* Premium scrollbar styling */

@@ -121,7 +121,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, isOpen, onC
                       {project.features.map((feature, index) => (
                         <li key={index} className="flex items-start space-x-3">
                           <ChevronRight className={cn(
-                            "w-5 h-5 mt-0.5 flex-shrink-0",
+                            "w-5 h-5 mt-0.5 shrink-0",
                             project.color === "cyber-blue" ? "text-cyber-blue" : "text-cyber-purple"
                           )} />
                           <span className="text-muted-foreground">{feature}</span>
@@ -157,7 +157,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, isOpen, onC
                       {project.challenges.map((challenge, index) => (
                         <li key={index} className="flex items-start space-x-3">
                           <span className={cn(
-                            "w-2 h-2 mt-2 rounded-full flex-shrink-0",
+                            "w-2 h-2 mt-2 rounded-full shrink-0",
                             project.color === "cyber-blue" ? "bg-cyber-blue" : "bg-cyber-purple"
                           )} />
                           <span className="text-muted-foreground">{challenge}</span>
@@ -173,7 +173,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, isOpen, onC
                       {project.keyLearnings.map((learning, index) => (
                         <li key={index} className="flex items-start space-x-3">
                           <span className={cn(
-                            "w-2 h-2 mt-2 rounded-full flex-shrink-0",
+                            "w-2 h-2 mt-2 rounded-full shrink-0",
                             project.color === "cyber-blue" ? "bg-cyber-blue" : "bg-cyber-purple"
                           )} />
                           <span className="text-muted-foreground">{learning}</span>

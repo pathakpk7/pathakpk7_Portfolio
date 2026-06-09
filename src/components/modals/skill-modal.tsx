@@ -110,7 +110,7 @@ export const SkillModal: React.FC<SkillModalProps> = ({
                     <ul className="space-y-2">
                       {concepts.map((concept, index) => (
                         <li key={index} className="flex items-start space-x-3">
-                          <ChevronRight className="w-5 h-5 mt-0.5 text-cyber-blue flex-shrink-0" />
+                          <ChevronRight className="w-5 h-5 mt-0.5 text-cyber-blue shrink-0" />
                           <span className="text-muted-foreground">{concept}</span>
                         </li>
                       ))}
@@ -123,7 +123,7 @@ export const SkillModal: React.FC<SkillModalProps> = ({
                     <ul className="space-y-2">
                       {whereUsed.map((usage, index) => (
                         <li key={index} className="flex items-start space-x-3">
-                          <span className="w-2 h-2 mt-2 rounded-full bg-cyber-purple flex-shrink-0" />
+                          <span className="w-2 h-2 mt-2 rounded-full bg-cyber-purple shrink-0" />
                           <span className="text-muted-foreground">{usage}</span>
                         </li>
                       ))}
