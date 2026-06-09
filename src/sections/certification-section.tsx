@@ -371,8 +371,8 @@ const CertificationSection = React.forwardRef<
         {/* Section title */}
         <AnimatedWrapper variant="fadeInUp" delay={0.2}>
           <SectionTitle centered>
-            <GradientText>CERTIFICATIONS</GradientText>
-            <span className="block text-lg font-normal text-muted-foreground mt-4 max-w-2xl mx-auto">
+            <GradientText className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl">CERTIFICATIONS</GradientText>
+            <span className="block text-base sm:text-lg font-normal text-muted-foreground mt-4 max-w-2xl mx-auto">
               Industry-recognized certifications and professional development validating expertise in AI, cloud computing, and cybersecurity
             </span>
           </SectionTitle>
@@ -412,7 +412,7 @@ const CertificationSection = React.forwardRef<
           <AnimatedWrapper variant="fadeInUp" delay={0.6}>
             <div className={cn(
               "grid gap-8",
-              isMobile ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2 lg:grid-cols-2"
+              "grid-cols-1 md:grid-cols-2"
             )}>
               {otherCertifications.map((cert, index) => (
                 <PremiumCertificationCard

@@ -208,7 +208,7 @@ const AboutSection = React.forwardRef<
               className="text-center space-y-6"
             >
               <motion.h2
-                className="text-5xl md:text-7xl font-black tracking-tight"
+                className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl font-black tracking-tight"
                 initial={{ scale: 0.9 }}
                 whileInView={{ scale: 1 }}
                 transition={{ duration: 0.8, delay: 0.2 }}

@@ -50,7 +50,7 @@ const personalProjects = [
     github: "https://github.com/pathakpk7/Murder_Mystery_Game",
     liveDemo: "",
     category: "Game Development",
-    tech: ["JavaScript", "HTML5", "CSS3", "Game Logic", "Interactive Design"],
+    tech: ["JavaScript","SQL","HTML5", "CSS3", "Game Logic", "Interactive Design"],
     color: "cyber-blue",
     featured: true,
     overview: "An interactive detective game that challenges players to solve murder mysteries through investigation and deduction.",
@@ -440,7 +440,7 @@ const PersonalProjectsSection = React.forwardRef<
               className="text-center space-y-8"
             >
               <motion.h2
-                className="text-5xl md:text-7xl font-black tracking-tight"
+                className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl font-black tracking-tight"
                 initial={{ scale: 0.9 }}
                 whileInView={{ scale: 1 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
