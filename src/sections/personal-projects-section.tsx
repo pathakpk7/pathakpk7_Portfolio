@@ -4,74 +4,78 @@ import * as React from "react"
 import { motion } from "framer-motion"
 import { Container, SectionWrapper } from "@/components/layout"
 import { cn } from "@/lib/utils"
+import { ProjectModal } from "@/components/modals/project-modal"
 
 // Projects data
 const personalProjects = [
   {
     id: 1,
-    title: "Incident Response Projects",
-    description: "Built hands-on incident response projects covering phishing, malware, and network attacks.",
-    fullDescription: "Performed phishing email analysis, malicious URL detection, malware analysis, IOC detection, and network traffic monitoring using Wireshark and Snort.",
-    github: "https://github.com/pathakpk7/Incident-Response-Projects.git",
-    category: "Cybersecurity",
-    tech: ["Wireshark", "Snort", "Network Analysis", "IOC Detection"],
+    title: "Portfolio Website",
+    description: "A modern, responsive portfolio website showcasing skills, projects, and certifications.",
+    fullDescription: "Built a comprehensive portfolio website with immersive hero section, interactive project modals, skill displays, and certification showcase. Implemented with Next.js, React, and Tailwind CSS for optimal performance and user experience.",
+    github: "https://github.com/pathakpk7/pathakpk7_Portfolio",
+    liveDemo: "https://pathakpk7.vercel.app",
+    category: "Web Development",
+    tech: ["Next.js", "React.js", "Tailwind CSS", "Framer Motion", "Three.js"],
     color: "cyber-blue",
-    featured: true
+    featured: true,
+    overview: "A professional portfolio website designed to showcase technical skills, projects, and certifications in an immersive and interactive manner.",
+    features: ["Immersive hero section with edge blending", "Interactive project modals with glassmorphism", "Responsive design for all devices", "Smooth animations and transitions", "SEO optimized structure"],
+    challenges: ["Implementing edge blending for profile image", "Creating smooth scroll animations", "Optimizing performance with 3D elements", "Ensuring mobile responsiveness"],
+    keyLearnings: ["Advanced CSS masking techniques", "Framer Motion animations", "Next.js optimization", "Responsive design patterns"],
+    outcome: "Successfully deployed a professional portfolio website that showcases technical expertise and provides an excellent user experience."
   },
   {
     id: 2,
-    title: "Fake News Detector",
-    description: "Developed an AI-based fake news detection system using NLP and Machine Learning.",
-    fullDescription: "Built an intelligent news classifier and automated fake news prediction engine focused on identifying misleading and false news content.",
-    github: "https://github.com/pathakpk7/Fake_news_Detector.git",
-    category: "AI/ML",
-    tech: ["Python", "NLP", "Machine Learning", "TensorFlow", "Scikit-learn"],
+    title: "Spotify Clone",
+    description: "A music streaming application clone with playlist management and music playback features.",
+    fullDescription: "Developed a Spotify-inspired music streaming application with features including playlist creation, music playback, search functionality, and user authentication. Built with modern web technologies for a seamless music experience.",
+    github: "https://github.com/pathakpk7/Spotify_clone",
+    liveDemo: "",
+    category: "Web Development",
+    tech: ["React.js", "Node.js", "Express.js", "MongoDB", "Spotify API"],
     color: "cyber-purple",
-    featured: true
+    featured: true,
+    overview: "A music streaming application clone that replicates core Spotify functionality with a modern, responsive interface.",
+    features: ["Music playback controls", "Playlist management", "Search and discovery", "User authentication", "Responsive design"],
+    challenges: ["Integrating Spotify API", "Managing audio playback state", "Creating smooth UI transitions", "Handling user authentication"],
+    keyLearnings: ["API integration patterns", "State management for audio", "Authentication flows", "Modern UI/UX patterns"],
+    outcome: "Built a functional music streaming clone with core features and a polished user interface."
   },
   {
     id: 3,
-    title: "VSBH Cricket League",
-    description: "Developed a cricket league management platform for teams, matches, scores, and player registration.",
-    fullDescription: "Built comprehensive tournament fixtures and updates system using HTML, CSS, and JavaScript for smooth league management.",
-    github: "https://github.com/pathakpk7/vsbh-cricleague.git",
-    category: "Web Development",
-    tech: ["HTML", "CSS", "JavaScript", "Tournament Management"],
+    title: "Murder Mystery Game",
+    description: "An interactive murder mystery game with clues, suspects, and detective gameplay mechanics.",
+    fullDescription: "Created an engaging murder mystery game where players investigate crimes, collect clues, interview suspects, and solve cases. Features include multiple scenarios, clue systems, and interactive storytelling elements.",
+    github: "https://github.com/pathakpk7/Murder_Mystery_Game",
+    liveDemo: "",
+    category: "Game Development",
+    tech: ["JavaScript", "HTML5", "CSS3", "Game Logic", "Interactive Design"],
     color: "cyber-blue",
-    featured: false
+    featured: true,
+    overview: "An interactive detective game that challenges players to solve murder mysteries through investigation and deduction.",
+    features: ["Multiple mystery scenarios", "Clue collection system", "Suspect interrogation", "Progress tracking", "Immersive storytelling"],
+    challenges: ["Designing engaging game mechanics", "Creating compelling storylines", "Balancing difficulty levels", "Implementing clue systems"],
+    keyLearnings: ["Game design principles", "Interactive storytelling", "State management in games", "User engagement techniques"],
+    outcome: "Developed an entertaining and challenging murder mystery game with multiple scenarios and replay value."
   },
   {
     id: 4,
-    title: "Online Book Store",
-    description: "Developed a complete online bookstore platform for browsing, searching, and purchasing books.",
-    fullDescription: "Created clean and user-friendly interface for seamless book discovery and purchasing experience with advanced search capabilities.",
-    github: "https://github.com/pathakpk7/Online_Book_Store.git",
+    title: "VSBH Cric League",
+    description: "A comprehensive cricket league management platform with team registration, match scheduling, and score tracking.",
+    fullDescription: "Built a full-featured cricket league management system with team registration, player management, match scheduling, live score updates, and tournament tracking. Includes both frontend and backend components for complete league administration.",
+    github: "https://github.com/pathakpk7/vsbh-cricleague",
+    liveDemo: "https://vsbh-cl.vercel.app",
+    backendDemo: "https://vsbh-cl-backend.onrender.com",
     category: "Web Development",
-    tech: ["HTML", "CSS", "JavaScript", "E-commerce"],
+    tech: ["React.js", "Node.js", "Express.js", "MongoDB", "REST APIs"],
     color: "cyber-purple",
-    featured: false
-  },
-  {
-    id: 5,
-    title: "Currency Converter",
-    description: "Built a real-time multi-currency exchange calculator for fast and accurate currency conversion.",
-    fullDescription: "Implemented real-time exchange rate API integration with responsive design for accurate and instant currency conversion.",
-    github: "https://github.com/pathakpk7/Currency_converter.git",
-    category: "Utility",
-    tech: ["JavaScript", "API Integration", "Real-time Data"],
-    color: "cyber-blue",
-    featured: false
-  },
-  {
-    id: 6,
-    title: "Food Order and Delivery System",
-    description: "Developed an online food ordering and delivery platform for restaurants and customers.",
-    fullDescription: "Built smooth ordering experience with restaurant management, order tracking, and delivery coordination features.",
-    github: "https://github.com/pathakpk7/Food-order-and-delivery.git",
-    category: "Web Development",
-    tech: ["HTML", "CSS", "JavaScript", "Order Management"],
-    color: "cyber-purple",
-    featured: false
+    featured: true,
+    overview: "A comprehensive cricket league management platform that handles all aspects of tournament administration from team registration to score tracking.",
+    features: ["Team and player registration", "Match scheduling and management", "Live score updates", "Tournament standings", "Admin dashboard"],
+    challenges: ["Real-time score updates", "Complex tournament logic", "User role management", "Data consistency across matches"],
+    keyLearnings: ["Full-stack development", "Real-time data handling", "Complex business logic", "Admin panel design"],
+    outcome: "Successfully deployed a complete cricket league management system used for organizing tournaments with live tracking capabilities."
   }
 ]
 
@@ -80,11 +84,16 @@ const ProjectCard = React.forwardRef<HTMLDivElement, {
   project: typeof personalProjects[0]
   index: number
   delay: number
-}>(({ project, index, delay }, ref) => {
+  onLearnMore: (project: typeof personalProjects[0]) => void
+}>(({ project, index, delay, onLearnMore }, ref) => {
   const [isHovered, setIsHovered] = React.useState(false)
   const [showDetails, setShowDetails] = React.useState(false)
   const handleProjectClick = () => {
     window.open(project.github, '_blank', 'noopener,noreferrer')
+  }
+  const handleLearnMore = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    onLearnMore(project)
   }
 
   return (
@@ -253,12 +262,35 @@ const ProjectCard = React.forwardRef<HTMLDivElement, {
           
           {/* GitHub CTA */}
           <motion.div
-            className="pt-2"
+            className="pt-2 space-y-2"
             animate={{
               y: isHovered ? -2 : 0,
             }}
             transition={{ duration: 0.3 }}
           >
+            <motion.button
+              onClick={handleLearnMore}
+              className={cn(
+                "w-full px-4 py-3 rounded-xl border transition-all duration-500",
+                "bg-linear-to-br from-background/60 to-background/30",
+                "backdrop-blur-md flex items-center justify-center space-x-2",
+                project.color === "cyber-blue"
+                  ? "border-cyber-blue/40 hover:border-cyber-blue/60 hover:bg-cyber-blue/10"
+                  : "border-cyber-purple/40 hover:border-cyber-purple/60 hover:bg-cyber-purple/10"
+              )}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <motion.span
+                className="text-sm font-medium"
+                animate={{
+                  x: isHovered ? 2 : 0,
+                }}
+                transition={{ duration: 0.3 }}
+              >
+                Learn More
+              </motion.span>
+            </motion.button>
             <motion.button
               onClick={handleProjectClick}
               className={cn(
@@ -363,10 +395,22 @@ const PersonalProjectsSection = React.forwardRef<
   React.ElementRef<typeof SectionWrapper>,
   Omit<React.ComponentPropsWithoutRef<typeof SectionWrapper>, 'children'>
 >(({ className, ...props }, ref) => {
+  const [selectedProject, setSelectedProject] = React.useState<typeof personalProjects[0] | null>(null)
+  const [isModalOpen, setIsModalOpen] = React.useState(false)
 
-    // Separate featured and regular projects
-    const featuredProjects = personalProjects.filter(p => p.featured)
-    const regularProjects = personalProjects.filter(p => !p.featured)
+  const handleLearnMore = (project: typeof personalProjects[0]) => {
+    setSelectedProject(project)
+    setIsModalOpen(true)
+  }
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false)
+    setSelectedProject(null)
+  }
+
+  // Separate featured and regular projects
+  const featuredProjects = personalProjects.filter(p => p.featured)
+  const regularProjects = personalProjects.filter(p => !p.featured)
 
     return (
       <SectionWrapper
@@ -402,7 +446,7 @@ const PersonalProjectsSection = React.forwardRef<
                 transition={{ duration: 0.8, delay: 0.2 }}
               >
                 <span className="bg-linear-to-r from-cyber-blue via-cyber-purple to-cyber-blue bg-clip-text text-transparent bg-size-[200%_auto] animate-gradient">
-                  PROJECT GALLERY
+                  PROJECTS
                 </span>
               </motion.h2>
               
@@ -463,6 +507,7 @@ const PersonalProjectsSection = React.forwardRef<
                       project={project}
                       index={index}
                       delay={1.2}
+                      onLearnMore={handleLearnMore}
                     />
                   ))}
                 </div>
@@ -493,6 +538,7 @@ const PersonalProjectsSection = React.forwardRef<
                       project={project}
                       index={index + featuredProjects.length}
                       delay={2}
+                      onLearnMore={handleLearnMore}
                     />
                   ))}
                 </div>
@@ -532,6 +578,15 @@ const PersonalProjectsSection = React.forwardRef<
 
           </div>
         </Container>
+
+        {/* Project Modal */}
+        {selectedProject && (
+          <ProjectModal
+            project={selectedProject}
+            isOpen={isModalOpen}
+            onClose={handleCloseModal}
+          />
+        )}
       </SectionWrapper>
     )
   }

@@ -221,30 +221,24 @@ const PremiumCertificationCard = React.forwardRef<HTMLDivElement, {
             </div>
           </div>
 
-          {/* Description - revealed on hover */}
+          {/* Description - always visible */}
           <motion.div
-            className="overflow-hidden"
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ 
-              height: isHovered ? "auto" : 0, 
-              opacity: isHovered ? 1 : 0 
-            }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
+            className="pt-4"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.2 }}
           >
             <p className="text-sm text-muted-foreground leading-relaxed">
               {certification.description}
             </p>
           </motion.div>
 
-          {/* Skills - revealed on hover */}
+          {/* Skills - always visible */}
           <motion.div
-            className="flex flex-wrap gap-2"
+            className="flex flex-wrap gap-2 pt-4"
             initial={{ opacity: 0, y: 10 }}
-            animate={{ 
-              opacity: isHovered ? 1 : 0, 
-              y: isHovered ? 0 : 10 
-            }}
-            transition={{ duration: 0.3, delay: 0.1 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.3 }}
           >
             {certification.skills.map((skill, skillIndex) => (
               <motion.span
@@ -263,15 +257,12 @@ const PremiumCertificationCard = React.forwardRef<HTMLDivElement, {
             ))}
           </motion.div>
 
-          {/* Verification CTA - enhanced on hover */}
+          {/* Verification CTA - always visible */}
           <motion.div
             className="pt-4"
             initial={{ opacity: 0, y: 10 }}
-            animate={{ 
-              opacity: isHovered ? 1 : 0, 
-              y: isHovered ? 0 : 10 
-            }}
-            transition={{ duration: 0.3, delay: 0.2 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.4 }}
           >
             <PremiumCTA
               variant={certification.featured ? "primary" : "outline"}
@@ -358,8 +349,8 @@ const CertificationSection = React.forwardRef<
               key={i}
               className="absolute w-1 h-1 bg-cyber-blue rounded-full opacity-60"
               style={{
-                left: `${positions[i].left}%`,
-                top: `${positions[i].top}%`,
+                left: `${positions[i]?.left}%`,
+                top: `${positions[i]?.top}%`,
               }}
               animate={{
                 y: [0, -30, 0],
@@ -380,7 +371,7 @@ const CertificationSection = React.forwardRef<
         {/* Section title */}
         <AnimatedWrapper variant="fadeInUp" delay={0.2}>
           <SectionTitle centered>
-            <GradientText>Verified Credentials</GradientText>
+            <GradientText>CERTIFICATIONS</GradientText>
             <span className="block text-lg font-normal text-muted-foreground mt-4 max-w-2xl mx-auto">
               Industry-recognized certifications and professional development validating expertise in AI, cloud computing, and cybersecurity
             </span>

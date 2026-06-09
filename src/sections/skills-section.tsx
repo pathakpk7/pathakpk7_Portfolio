@@ -6,6 +6,7 @@ import { ScrollReveal, HeroParallax } from "@/components/motion"
 import { Container, SectionWrapper } from "@/components/layout"
 import { cn } from "@/lib/utils"
 import { useMobileOptimization } from "@/hooks/use-mobile-optimization"
+import { SkillModal } from "@/components/modals/skill-modal"
 import {
   SiC, SiCplusplus, SiOpenjdk, SiJavascript, SiPython,
   SiReact, SiHtml5, SiCss, SiNodedotjs, SiTensorflow,
@@ -41,15 +42,14 @@ const SKILL_ICON_MAP = {
 }
 
 const skillsCategories = [
-  { title: "Programming Languages", icon: "💻", color: "cyber-blue", skills: ["C","C++","Java","JavaScript","Python"], description: "Core programming foundations" },
-  { title: "Frontend Development", icon: "🎨", color: "cyber-purple", skills: ["React","HTML5","CSS3"], description: "Modern web interface development" },
-  { title: "Backend Development", icon: "⚙️", color: "cyber-blue", skills: ["Node.js"], description: "Server-side architecture" },
-  { title: "AI / ML", icon: "🤖", color: "cyber-purple", skills: ["TensorFlow","OpenCV","Pandas","Scikit-learn"], description: "Machine learning and AI systems" },
-  { title: "Database", icon: "🗄️", color: "cyber-blue", skills: ["MongoDB","MySQL","SQLite","SQL Server","Supabase"], description: "Data storage and management" },
-  { title: "Data Visualization", icon: "�", color: "cyber-purple", skills: ["Chart.js"], description: "Data visualization and analytics" },
-  { title: "Backend as a Service (BaaS)", icon: "☁️", color: "cyber-blue", skills: ["Firebase"], description: "Cloud backend services" },
-  { title: "Framework", icon: "🏗️", color: "cyber-purple", skills: ["Django","Bootstrap"], description: "Development frameworks" },
-  { title: "Version Control", icon: "🔀", color: "cyber-blue", skills: ["Git"], description: "Code versioning and collaboration" },
+  { title: "Languages", icon: "💻", color: "cyber-blue", skills: ["Java","Python","C++","JavaScript","SQL"], description: "Core programming foundations" },
+  { title: "Frontend", icon: "🎨", color: "cyber-purple", skills: ["React.js","HTML5","CSS3","Tailwind CSS","Bootstrap","UI/UX Fundamentals"], description: "Modern web interface development" },
+  { title: "Backend", icon: "⚙️", color: "cyber-blue", skills: ["Spring Boot","Node.js","Express.js","REST APIs"], description: "Server-side architecture" },
+  { title: "Databases", icon: "🗄️", color: "cyber-purple", skills: ["MySQL","PostgreSQL","MongoDB","Supabase"], description: "Data storage and management" },
+  { title: "AI & Data", icon: "🤖", color: "cyber-blue", skills: ["Machine Learning","Pandas","NumPy","Scikit-Learn","Power BI","Generative AI Applications","Prompt Engineering"], description: "Machine learning and AI systems" },
+  { title: "Cloud & DevOps", icon: "☁️", color: "cyber-purple", skills: ["Firebase","Vercel","Git","GitHub"], description: "Cloud infrastructure and deployment" },
+  { title: "Developer Tools", icon: "🛠️", color: "cyber-blue", skills: ["VS Code","Postman","Jupyter Notebook","Docker (Basic)"], description: "Development and productivity tools" },
+  { title: "Core CS", icon: "�", color: "cyber-purple", skills: ["DSA","OOP","DBMS","Operating Systems","Computer Networks"], description: "Computer science fundamentals" },
 ]
 
 interface SkillCategoryModuleProps {
@@ -215,7 +215,7 @@ const SkillsSection = React.forwardRef<
               transition={{ duration: 0.8, delay: 0.2 }}
             >
               <span className="bg-linear-to-r from-cyber-blue via-cyber-purple to-cyber-blue bg-clip-text text-transparent bg-size-[200%_auto] animate-gradient">
-                CAPABILITIES
+                SKILLS
               </span>
             </motion.h2>
             

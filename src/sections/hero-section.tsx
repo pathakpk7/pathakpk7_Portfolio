@@ -318,7 +318,7 @@ const HeroSection = React.forwardRef<
                   
                   {/* Image container with mask for edge blending */}
                   <div 
-                    className="relative"
+                    className="relative w-full aspect-square md:aspect-[3/4] lg:aspect-square"
                     style={{
                       maskImage: 'radial-gradient(ellipse 70% 80% at 50% 50%, black 40%, transparent 80%)',
                       WebkitMaskImage: 'radial-gradient(ellipse 70% 80% at 50% 50%, black 40%, transparent 80%)',
@@ -327,7 +327,7 @@ const HeroSection = React.forwardRef<
                     <img 
                       src="/images/profile.jpg" 
                       alt="Prasoon Pathak"
-                      className="w-full h-auto object-cover"
+                      className="w-full h-full object-cover object-center"
                       style={{
                         filter: 'brightness(1.1) contrast(1.15) saturate(1.1)',
                       }}

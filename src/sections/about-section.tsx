@@ -214,7 +214,7 @@ const AboutSection = React.forwardRef<
                 transition={{ duration: 0.8, delay: 0.2 }}
               >
                 <span className="bg-linear-to-r from-cyber-blue via-cyber-purple to-cyber-blue bg-clip-text text-transparent bg-size-[200%_auto] animate-gradient">
-                  IDENTITY
+                  ABOUT ME
                 </span>
               </motion.h2>
               <motion.div
@@ -263,7 +263,7 @@ const AboutSection = React.forwardRef<
                 transition={{ duration: 0.8, delay: 1 }}
                 className="text-3xl font-bold text-foreground"
               >
-                Education
+                EDUCATION
               </motion.h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
