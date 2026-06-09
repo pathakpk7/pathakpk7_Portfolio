@@ -1,13 +1,12 @@
 "use client"
 
 import * as React from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui"
 import { Container, SectionWrapper } from "@/components/layout"
 import { HeroScene } from "@/components/3d"
 import { useMousePosition } from "@/hooks"
-import Image from "next/image"
 import { FaLinkedin, FaEnvelope, FaTwitter } from "react-icons/fa"
 import { SiGithub, SiLeetcode, SiInstagram, SiGeeksforgeeks } from "react-icons/si"
 
@@ -40,7 +39,9 @@ const HeroSection = React.forwardRef<
 >(({ className }, ref) => {
     const [currentQuoteIndex, setCurrentQuoteIndex] = React.useState(0)
     const mousePosition = useMousePosition()
-    const [isHovered, setIsHovered] = React.useState(false)
+    const { scrollY } = useScroll()
+    const imageScale = useTransform(scrollY, [0, 500], [1, 1.05])
+    const imageY = useTransform(scrollY, [0, 500], [0, -20])
 
     // Quote rotation effect
     React.useEffect(() => {
@@ -231,209 +232,253 @@ const HeroSection = React.forwardRef<
               </motion.div>
             </motion.div>
 
-            {/* Right Content - Professional Image */}
+            {/* Right Content - Immersive Profile Image */}
             <motion.div
               className="relative flex justify-center lg:justify-end items-center"
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 1.2, delay: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
-              style={{
-                transform: `translateX(${-moveX * 0.5}px) translateY(${moveY * 0.5}px)`
-              }}
             >
-              {/* Image Container with Cinematic Effects */}
-              <div className="relative">
-                {/* Glow Effect */}
-                <div className="absolute inset-0 bg-linear-to-br from-cyber-blue-500/20 to-cyber-purple-500/20 rounded-full blur-2xl scale-110" />
+              {/* Immersive Image Container */}
+              <div className="relative w-full max-w-2xl mx-auto">
                 
-                {/* Main Image - Cinematic Integration */}
-                <motion.div
-                  className="relative w-full max-w-2xl mx-auto"
-                  animate={{
-                    scale: isHovered ? 1.01 : 1,
-                    y: isHovered ? -5 : 0,
-                  }}
-                  transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
-                >
-                  {/* Soft Edge Mask Container */}
-                  <div className="relative">
-                    {/* Primary Image with Soft Mask */}
-                    <div className="relative rounded-3xl overflow-hidden">
-                      <div className="absolute inset-0 rounded-3xl">
-                        <Image 
-                          src="/images/profile.jpg" 
-                          alt="Prasoon Pathak - Professional Headshot"
-                          width={800}
-                          height={600}
-                          className="w-full h-[500px] object-cover rounded-3xl transition-all duration-700 group-hover:scale-105"
-                          style={{ 
-                            mixBlendMode: 'screen',
-                            opacity: 0.92,
-                            filter: 'brightness(1.1) contrast(1.15) saturate(1.05)'
-                          }}
-                          priority
-                          unoptimized
-                          loading="eager"
-                        />
-                      </div>
-                      
-                      {/* Multi-Layer Cinematic Lighting */}
-                      <div className="absolute inset-0 pointer-events-none rounded-3xl">
-                        {/* Primary Cyber Glow */}
-                        <div className="absolute inset-0 rounded-3xl">
-                          <div className="absolute inset-0 rounded-3xl bg-gradient-radial from-cyber-blue/25 via-cyber-blue/10 to-transparent opacity-0 group-hover:opacity-60 transition-opacity duration-1500" />
-                        </div>
-                        
-                        {/* Premium Rim Lighting */}
-                        <div className="absolute inset-0 rounded-3xl">
-                          <div className="absolute inset-0 rounded-3xl bg-linear-to-t from-transparent via-cyber-purple/8 to-cyber-blue/6 opacity-70 group-hover:opacity-90 transition-opacity duration-1000" />
-                        </div>
-                        
-                        {/* Soft Edge Fade Mask */}
-                        <div className="absolute inset-0 rounded-3xl">
-                          <div className="absolute inset-0 rounded-3xl bg-linear-to-br from-transparent via-cyber-blue/8 to-transparent opacity-50" />
-                        </div>
-                        
-                        {/* Ambient Light Reflection */}
-                        <div className="absolute inset-0 rounded-3xl">
-                          <div className="absolute top-0 left-0 w-full h-1/3 rounded-3xl bg-linear-to-b from-white/10 via-transparent to-transparent opacity-40" />
-                        </div>
-                      </div>
-                    </div>
-                    
-                    {/* Depth Environment Layer */}
-                    <div className="absolute -inset-12 pointer-events-none">
-                      {/* Enhanced Ambient Particles */}
-                      {[...Array(12)].map((_, i) => (
-                        <motion.div
-                          key={`particle-${i}`}
-                          className="absolute w-1.5 h-1.5 bg-cyber-blue/50 rounded-full blur-sm"
-                          style={{
-                            left: `${10 + (i * 7)}%`,
-                            top: `${15 + (i * 6)}%`,
-                          }}
-                          animate={{
-                            opacity: [0, 0.7, 0.3],
-                            scale: [1, 1.3, 0.8],
-                            y: [0, -10, 5],
-                          }}
-                          transition={{
-                            duration: 4 + (i * 0.6),
-                            repeat: Infinity,
-                            ease: "easeInOut"
-                          }}
-                        />
-                      ))}
-                      
-                      {/* Cyber UI Elements */}
-                      <motion.div
-                        className="absolute w-40 h-40 border-2 border-cyber-blue/40 rounded-full"
-                        style={{
-                          left: '65%',
-                          top: '75%',
-                        }}
-                        animate={{
-                          scale: [1, 1.15, 1, 1.15],
-                          opacity: [0.2, 0.35, 0.2],
-                          rotate: [0, 180, 360],
-                        }}
-                        transition={{
-                          duration: 8,
-                          repeat: Infinity,
-                          ease: "linear"
-                        }}
-                      />
-                      
-                      <motion.div
-                        className="absolute w-32 h-32 border border-cyber-purple/35 rounded-full"
-                        style={{
-                          left: '20%',
-                          top: '65%',
-                        }}
-                        animate={{
-                          scale: [1, 0.85, 1],
-                          opacity: [0.15, 0.3, 0.15],
-                          rotate: [0, -90, -180],
-                        }}
-                        transition={{
-                          duration: 6,
-                          repeat: Infinity,
-                          ease: "easeInOut"
-                        }}
-                      />
-                      
-                      <motion.div
-                        className="absolute w-24 h-24 border border-cyan-500/30 rounded-full"
-                        style={{
-                          left: '75%',
-                          top: '25%',
-                        }}
-                        animate={{
-                          scale: [1, 1.2, 1],
-                          opacity: [0.1, 0.25, 0.1],
-                        }}
-                        transition={{
-                          duration: 5,
-                          repeat: Infinity,
-                          ease: "easeInOut"
-                        }}
-                      />
-                      
-                      {/* HUD Grid Lines */}
-                      <div className="absolute inset-0 rounded-3xl">
-                        <div className="absolute top-1/4 left-0 w-full h-px bg-cyber-blue/20" />
-                        <div className="absolute top-1/2 left-0 w-full h-px bg-cyber-blue/15" />
-                        <div className="absolute top-3/4 left-0 w-full h-px bg-cyber-blue/20" />
-                        <div className="absolute left-1/4 top-0 w-px h-full bg-cyber-blue/15" />
-                        <div className="absolute left-1/2 top-0 w-px h-full bg-cyber-blue/20" />
-                        <div className="absolute left-3/4 top-0 w-px h-full bg-cyber-blue/15" />
-                      </div>
-                    </div>
-                    
-                    {/* Premium Gradient Overlay System */}
-                    <div className="absolute inset-0 pointer-events-none rounded-3xl">
-                      {/* Top Fade */}
-                      <div className="absolute top-0 left-0 w-full h-32 bg-linear-to-b from-background/30 via-background/10 to-transparent" />
-                      
-                      {/* Bottom Fade */}
-                      <div className="absolute bottom-0 left-0 w-full h-32 bg-linear-to-t from-background/40 via-background/15 to-transparent" />
-                      
-                      {/* Side Fades */}
-                      <div className="absolute top-0 left-0 w-32 h-full bg-linear-to-r from-background/25 via-background/8 to-transparent" />
-                      <div className="absolute top-0 right-0 w-32 h-full bg-linear-to-l from-background/25 via-background/8 to-transparent" />
-                      
-                      {/* Corner Enhancements */}
-                      <div className="absolute top-0 left-0 w-48 h-48 bg-linear-to-br from-cyber-blue/20 via-transparent to-transparent" />
-                      <div className="absolute top-0 right-0 w-48 h-48 bg-linear-to-bl from-cyber-purple/15 via-transparent to-transparent" />
-                      <div className="absolute bottom-0 left-0 w-48 h-48 bg-linear-to-tr from-cyber-blue/15 via-transparent to-transparent" />
-                      <div className="absolute bottom-0 right-0 w-48 h-48 bg-linear-to-tl from-cyber-purple/20 via-transparent to-transparent" />
-                    </div>
-                  </div>
-                </motion.div>
-                
-                {/* Floating Particles */}
-                {[...Array(6)].map((_, i) => (
+                {/* Layer 1: Background HUD Rings (Behind Image) */}
+                <div className="absolute inset-0 pointer-events-none">
+                  {/* Outer rotating ring */}
                   <motion.div
-                    key={i}
-                    className="absolute w-2 h-2 bg-cyber-blue-500 rounded-full opacity-60"
+                    className="absolute w-[120%] h-[120%] left-[-10%] top-[-10%]"
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+                  >
+                    <div className="w-full h-full rounded-full border border-cyber-blue/20" />
+                    <div className="absolute top-0 left-1/2 w-2 h-2 bg-cyber-blue/40 rounded-full -translate-x-1/2" />
+                    <div className="absolute bottom-0 left-1/2 w-2 h-2 bg-cyber-blue/40 rounded-full -translate-x-1/2" />
+                    <div className="absolute left-0 top-1/2 w-2 h-2 bg-cyber-blue/40 rounded-full -translate-y-1/2" />
+                    <div className="absolute right-0 top-1/2 w-2 h-2 bg-cyber-blue/40 rounded-full -translate-y-1/2" />
+                  </motion.div>
+                  
+                  {/* Inner counter-rotating ring */}
+                  <motion.div
+                    className="absolute w-full h-full left-0 top-0"
+                    animate={{ rotate: -360 }}
+                    transition={{ duration: 45, repeat: Infinity, ease: "linear" }}
+                  >
+                    <div className="w-full h-full rounded-full border border-cyber-purple/15 border-dashed" />
+                  </motion.div>
+                  
+                  {/* Pulsing holographic circles */}
+                  {[...Array(3)].map((_, i) => (
+                    <motion.div
+                      key={`holo-${i}`}
+                      className="absolute rounded-full border border-cyber-blue/10"
+                      style={{
+                        width: `${80 + i * 15}%`,
+                        height: `${80 + i * 15}%`,
+                        left: `${10 - i * 7.5}%`,
+                        top: `${10 - i * 7.5}%`,
+                      }}
+                      animate={{
+                        scale: [1, 1.05, 1],
+                        opacity: [0.1, 0.2, 0.1],
+                      }}
+                      transition={{
+                        duration: 4 + i,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                        delay: i * 0.5,
+                      }}
+                    />
+                  ))}
+                </div>
+
+                {/* Layer 2: Scanning Grid Effect */}
+                <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                  <motion.div
+                    className="absolute inset-0 bg-linear-to-b from-transparent via-cyber-blue/5 to-transparent"
+                    animate={{ y: ['-100%', '100%'] }}
+                    transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                  />
+                </div>
+
+                {/* Layer 3: Main Image with Edge Blending */}
+                <motion.div 
+                  className="relative"
+                  style={{
+                    scale: imageScale,
+                    y: imageY,
+                  }}
+                >
+                  {/* Mouse-reactive spotlight */}
+                  <motion.div
+                    className="absolute inset-0 rounded-full blur-3xl"
                     style={{
-                      left: `${20 + i * 15}%`,
-                      top: `${10 + i * 12}%`,
-                    }}
-                    animate={{
-                      y: [0, -20, 0],
-                      opacity: [0.6, 1, 0.6],
-                    }}
-                    transition={{
-                      duration: 3 + i * 0.5,
-                      repeat: Infinity,
-                      delay: i * 0.2,
-                      ease: "easeInOut",
+                      background: `radial-gradient(circle at ${mouseX}px ${mouseY}px, rgba(59, 130, 246, 0.15) 0%, transparent 50%)`,
                     }}
                   />
-                ))}
+                  
+                  {/* Image container with mask for edge blending */}
+                  <div 
+                    className="relative"
+                    style={{
+                      maskImage: 'radial-gradient(ellipse 70% 80% at 50% 50%, black 40%, transparent 80%)',
+                      WebkitMaskImage: 'radial-gradient(ellipse 70% 80% at 50% 50%, black 40%, transparent 80%)',
+                    }}
+                  >
+                    <img 
+                      src="/images/profile.jpg" 
+                      alt="Prasoon Pathak"
+                      className="w-full h-auto object-cover"
+                      style={{
+                        filter: 'brightness(1.1) contrast(1.15) saturate(1.1)',
+                      }}
+                    />
+                  </div>
+
+                  {/* Edge gradient overlays for seamless blending */}
+                  <div className="absolute inset-0 pointer-events-none">
+                    {/* Radial fade from center */}
+                    <div 
+                      className="absolute inset-0"
+                      style={{
+                        background: 'radial-gradient(ellipse 60% 70% at 50% 50%, transparent 30%, rgba(15, 23, 42, 0.3) 70%, rgba(15, 23, 42, 0.8) 100%)',
+                      }}
+                    />
+                    
+                    {/* Corner fog effects */}
+                    <div className="absolute top-0 left-0 w-1/2 h-1/2 bg-linear-to-br from-cyber-blue/10 via-transparent to-transparent" />
+                    <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-linear-to-bl from-cyber-purple/10 via-transparent to-transparent" />
+                    <div className="absolute bottom-0 left-0 w-1/2 h-1/2 bg-linear-to-tr from-cyber-blue/10 via-transparent to-transparent" />
+                    <div className="absolute bottom-0 right-0 w-1/2 h-1/2 bg-linear-to-tl from-cyber-purple/10 via-transparent to-transparent" />
+                  </div>
+                </motion.div>
+
+                {/* Layer 4: Ambient Particles (Multiple Parallax Layers) */}
+                <div className="absolute inset-0 pointer-events-none">
+                  {/* Background particles (slow) */}
+                  {[...Array(8)].map((_, i) => (
+                    <motion.div
+                      key={`bg-particle-${i}`}
+                      className="absolute w-1 h-1 bg-cyber-blue/30 rounded-full"
+                      style={{
+                        left: `${10 + i * 12}%`,
+                        top: `${15 + i * 10}%`,
+                      }}
+                      animate={{
+                        y: [0, -30, 0],
+                        x: [0, 15, 0],
+                        opacity: [0.2, 0.5, 0.2],
+                      }}
+                      transition={{
+                        duration: 8 + i,
+                        repeat: Infinity,
+                        delay: i * 0.3,
+                        ease: "easeInOut",
+                      }}
+                    />
+                  ))}
+                  
+                  {/* Mid-ground particles (medium speed) */}
+                  {[...Array(6)].map((_, i) => (
+                    <motion.div
+                      key={`mid-particle-${i}`}
+                      className="absolute w-1.5 h-1.5 bg-cyber-purple/40 rounded-full"
+                      style={{
+                        left: `${20 + i * 15}%`,
+                        top: `${25 + i * 12}%`,
+                      }}
+                      animate={{
+                        y: [0, -25, 0],
+                        x: [0, -10, 0],
+                        opacity: [0.3, 0.6, 0.3],
+                      }}
+                      transition={{
+                        duration: 6 + i * 0.5,
+                        repeat: Infinity,
+                        delay: i * 0.4,
+                        ease: "easeInOut",
+                      }}
+                    />
+                  ))}
+                  
+                  {/* Foreground particles (fast, closer to viewer) */}
+                  {[...Array(4)].map((_, i) => (
+                    <motion.div
+                      key={`fg-particle-${i}`}
+                      className="absolute w-2 h-2 bg-cyan-400/50 rounded-full"
+                      style={{
+                        left: `${30 + i * 18}%`,
+                        top: `${35 + i * 15}%`,
+                      }}
+                      animate={{
+                        y: [0, -20, 0],
+                        x: [0, 20, 0],
+                        opacity: [0.4, 0.8, 0.4],
+                        scale: [1, 1.2, 1],
+                      }}
+                      transition={{
+                        duration: 4 + i * 0.3,
+                        repeat: Infinity,
+                        delay: i * 0.5,
+                        ease: "easeInOut",
+                      }}
+                    />
+                  ))}
+                </div>
+
+                {/* Layer 5: Cyber Scan Lines */}
+                <div className="absolute inset-0 pointer-events-none opacity-20">
+                  {[...Array(20)].map((_, i) => (
+                    <motion.div
+                      key={`scan-${i}`}
+                      className="absolute w-full h-px bg-cyber-blue/50"
+                      style={{ top: `${i * 5}%` }}
+                      animate={{ opacity: [0.1, 0.3, 0.1] }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        delay: i * 0.1,
+                        ease: "easeInOut",
+                      }}
+                    />
+                  ))}
+                </div>
+
+                {/* Layer 6: Tech Nodes (Animated HUD Elements) */}
+                <div className="absolute inset-0 pointer-events-none">
+                  {[...Array(4)].map((_, i) => (
+                    <motion.div
+                      key={`node-${i}`}
+                      className="absolute w-3 h-3 border border-cyber-blue/40 rotate-45"
+                      style={{
+                        left: `${15 + i * 20}%`,
+                        top: `${20 + i * 18}%`,
+                      }}
+                      animate={{
+                        rotate: [45, 135, 45],
+                        scale: [1, 1.2, 1],
+                        opacity: [0.3, 0.6, 0.3],
+                      }}
+                      transition={{
+                        duration: 5 + i,
+                        repeat: Infinity,
+                        delay: i * 0.6,
+                        ease: "easeInOut",
+                      }}
+                    />
+                  ))}
+                </div>
+
+                {/* Layer 7: Rim Lighting Effect */}
+                <div className="absolute inset-0 pointer-events-none">
+                  <div 
+                    className="absolute inset-0 rounded-full"
+                    style={{
+                      background: 'conic-gradient(from 0deg, transparent 0%, rgba(59, 130, 246, 0.1) 25%, transparent 50%, rgba(147, 51, 234, 0.1) 75%, transparent 100%)',
+                      animation: 'spin 10s linear infinite',
+                    }}
+                  />
+                </div>
+
               </div>
             </motion.div>
           </div>

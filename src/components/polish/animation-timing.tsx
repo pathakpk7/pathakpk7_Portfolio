@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { motion, useReducedMotion, useAnimation } from "framer-motion"
+import { motion, useReducedMotion, Easing } from "framer-motion"
 import { cn } from "@/lib/utils"
 
 // Premium animation timing constants
@@ -13,22 +13,22 @@ export const TIMING = {
   slow: 0.5,
   slower: 0.8,
   cinematic: 1.2,
-  
+
   // Delay constants
   none: 0,
   short: 0.1,
   medium: 0.2,
   long: 0.4,
-  cinematic: 0.6,
-  
+  cinematicDelay: 0.6,
+
   // Easing functions for premium feel
-  ease: [0.25, 0.1, 0.25, 1], // Material Design ease
-  easeIn: [0.42, 0, 1, 1],   // Ease in
-  easeOut: [0, 0, 0.58, 1],  // Ease out
-  easeInOut: [0.42, 0, 0.58, 1], // Ease in-out
-  bounce: [0.68, -0.55, 0.265, 1.55], // Bounce effect
-  smooth: [0.4, 0, 0.2, 1],   // Smooth cubic-bezier
-  luxury: [0.25, 0.46, 0.45, 0.94], // Luxury easing
+  ease: [0.25, 0.1, 0.25, 1] as unknown as Easing[], // Material Design ease
+  easeIn: [0.42, 0, 1, 1] as unknown as Easing[],   // Ease in
+  easeOut: [0, 0, 0.58, 1] as unknown as Easing[],  // Ease out
+  easeInOut: [0.42, 0, 0.58, 1] as unknown as Easing[], // Ease in-out
+  bounce: [0.68, -0.55, 0.265, 1.55] as unknown as Easing[], // Bounce effect
+  smooth: [0.4, 0, 0.2, 1] as unknown as Easing[],   // Smooth cubic-bezier
+  luxury: [0.25, 0.46, 0.45, 0.94] as unknown as Easing[], // Luxury easing
 }
 
 // Stagger timing for choreographed animations
@@ -119,25 +119,25 @@ export const ANIMATION_VARIANTS = {
 }
 
 // Animated wrapper with perfect timing
-export const AnimatedWrapper = React.forwardRef<HTMLDivElement, {
+export const AnimatedWrapper = ({
+  children,
+  className,
+  variant = "fadeInUp",
+  delay = TIMING.none,
+  duration = TIMING.normal,
+  easing = TIMING.ease,
+  trigger = true,
+  stagger = 0
+}: {
   children: React.ReactNode
   className?: string
   variant?: keyof typeof ANIMATION_VARIANTS
   delay?: number
   duration?: number
-  easing?: number[]
+  easing?: Easing | Easing[]
   trigger?: boolean
   stagger?: number
-}>(({ 
-  children, 
-  className, 
-  variant = "fadeInUp", 
-  delay = TIMING.none, 
-  duration = TIMING.normal,
-  easing = TIMING.ease,
-  trigger = true,
-  stagger = 0
-}, ref) => {
+}) => {
   const shouldReduceMotion = useReducedMotion()
   const [isVisible, setIsVisible] = React.useState(false)
   const elementRef = React.useRef<HTMLDivElement>(null)
@@ -145,7 +145,7 @@ export const AnimatedWrapper = React.forwardRef<HTMLDivElement, {
   React.useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && trigger) {
+        if (entry?.isIntersecting && trigger) {
           setIsVisible(true)
         }
       },
@@ -155,13 +155,14 @@ export const AnimatedWrapper = React.forwardRef<HTMLDivElement, {
       }
     )
 
-    if (elementRef.current) {
-      observer.observe(elementRef.current)
+    const element = elementRef.current
+    if (element) {
+      observer.observe(element)
     }
 
     return () => {
-      if (elementRef.current) {
-        observer.unobserve(elementRef.current)
+      if (element) {
+        observer.unobserve(element)
       }
     }
   }, [trigger])
@@ -190,9 +191,7 @@ export const AnimatedWrapper = React.forwardRef<HTMLDivElement, {
       {children}
     </motion.div>
   )
-})
-
-AnimatedWrapper.displayName = "AnimatedWrapper"
+}
 
 // Staggered list animation
 export const StaggeredList = React.forwardRef<HTMLDivElement, {
@@ -252,119 +251,95 @@ export const StaggeredList = React.forwardRef<HTMLDivElement, {
 
 StaggeredList.displayName = "StaggeredList"
 
-// Hero section animation with cinematic timing
-export const HeroAnimation = React.forwardRef<HTMLDivElement, {
-  children: React.ReactNode
-  className?: string
-}>(({ children, className }, ref) => {
-  const shouldReduceMotion = useReducedMotion()
-
-  return (
-    <motion.div
-      ref={ref}
-      className={cn("transform-gpu", className)}
-      initial="hidden"
-      animate="visible"
-      variants={{
-        hidden: { opacity: 0, y: 50, scale: 0.95 },
-        visible: {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          transition: {
-            duration: shouldReduceMotion ? 0 : TIMING.cinematic,
-            ease: TIMING.luxury,
-            delay: shouldReduceMotion ? 0 : TIMING.short,
-          }
-        }
-      }}
-    >
-      {children}
-    </motion.div>
-  )
-})
-
-HeroAnimation.displayName = "HeroAnimation"
-
-// Card reveal animation with perfect timing
-export const CardReveal = React.forwardRef<HTMLDivElement, {
-  children: React.ReactNode
-  className?: string
-  delay?: number
-  index?: number
-}>(({ children, className, delay = TIMING.none, index = 0 }, ref) => {
-  const shouldReduceMotion = useReducedMotion()
-
-  return (
-    <motion.div
-      ref={ref}
-      className={cn("transform-gpu", className)}
-      initial="hidden"
-      animate="visible"
-      variants={{
-        hidden: { opacity: 0, y: 40, scale: 0.9 },
-        visible: {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          transition: {
-            duration: shouldReduceMotion ? 0 : TIMING.slow,
-            ease: TIMING.luxury,
-            delay: shouldReduceMotion ? 0 : delay + (index * STAGGER.items),
-          }
-        }
-      }}
-    >
-      {children}
-    </motion.div>
-  )
-})
-
-CardReveal.displayName = "CardReveal"
-
 // Text animation with character-level control
 export const AnimatedText = React.forwardRef<HTMLDivElement, {
   children: React.ReactNode
   className?: string
   delay?: number
   stagger?: number
-}>(({ children, className, delay = TIMING.none, stagger = STAGGER.letters }, ref) => {
-  const shouldReduceMotion = useReducedMotion()
+  direction?: "up" | "down" | "left" | "right" | "fade"
+  ease?: Easing | Easing[]
+  once?: boolean
+}>(({ children, className, delay = 0, stagger = 0.1, direction = "up", ease = "easeOut", once = true }, ref) => {
+  const [isVisible, setIsVisible] = React.useState(false)
+  const elementRef = React.useRef<HTMLDivElement>(null)
 
-  const splitText = (text: string) => {
-    return text.split('').map((char, index) => (
+  React.useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting) {
+          setIsVisible(true)
+          if (once) {
+            observer.unobserve(entry.target)
+          }
+        } else if (!once) {
+          setIsVisible(false)
+        }
+      },
+      {
+        threshold: 0.1,
+        rootMargin: "-50px 0px -50px 0px"
+      }
+    )
+
+    const element = elementRef.current
+    if (element) {
+      observer.observe(element)
+    }
+
+    return () => {
+      if (element) {
+        observer.unobserve(element)
+      }
+    }
+  }, [once])
+
+  const getDirectionOffset = () => {
+    switch (direction) {
+      case "up": return { y: 30 }
+      case "down": return { y: -30 }
+      case "left": return { x: 30 }
+      case "right": return { x: -30 }
+      case "fade": return {}
+      default: return { y: 30 }
+    }
+  }
+
+  const splitWords = (text: string) => {
+    const offset = getDirectionOffset()
+    return text.split(' ').map((word, index) => (
       <motion.span
-        key={index}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
+        key={`${word}-${index}`}
+        initial={{ ...offset, opacity: 0 }}
+        animate={isVisible ? { y: 0, x: 0, opacity: 1 } : offset}
         transition={{
-          duration: shouldReduceMotion ? 0 : TIMING.normal,
-          ease: TIMING.ease,
-          delay: shouldReduceMotion ? 0 : delay + (index * stagger),
+          duration: 0.8,
+          delay: delay + (index * stagger),
+          ease: ease || "easeOut",
         }}
-        className="inline-block"
+        className="inline-block mr-2"
       >
-        {char === ' ' ? '\u00A0' : char}
+        {word}
       </motion.span>
     ))
   }
 
   const renderContent = (content: React.ReactNode): React.ReactNode => {
     if (typeof content === 'string') {
-      return splitText(content)
+      return splitWords(content)
     }
     
     if (React.isValidElement(content)) {
-      const element = content as React.ReactElement
+      const element = content as React.ReactElement<Record<string, unknown>>
       if (typeof element.props.children === 'string') {
-        return React.cloneElement(element, {}, splitText(element.props.children))
+        return React.cloneElement(element, {}, splitWords(element.props.children))
       }
       
       return React.cloneElement(element, {
         ...element.props,
         children: React.Children.map(element.props.children, (child) => {
           if (typeof child === 'string') {
-            return splitText(child)
+            return splitWords(child)
           }
           return child
         })
@@ -375,9 +350,19 @@ export const AnimatedText = React.forwardRef<HTMLDivElement, {
   }
 
   return (
-    <div ref={ref} className={cn("transform-gpu", className)}>
+    <motion.div
+      ref={ref}
+      className={cn("overflow-hidden", className)}
+      initial="hidden"
+      animate={isVisible ? { y: 0, opacity: 1 } : { y: 30, opacity: 0 }}
+      transition={{
+        duration: 0.8,
+        delay: delay,
+        ease: ease || "easeOut",
+      }}
+    >
       {renderContent(children)}
-    </div>
+    </motion.div>
   )
 })
 
@@ -448,7 +433,7 @@ export const useAnimationTiming = () => {
   }
 
   const getEasing = (type: keyof typeof TIMING) => {
-    return TIMING[type] as number[]
+    return TIMING[type] as Easing | Easing[]
   }
 
   return {

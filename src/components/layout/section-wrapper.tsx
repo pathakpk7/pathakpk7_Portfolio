@@ -74,7 +74,7 @@ const SectionWrapper = React.forwardRef<HTMLElement, SectionWrapperProps>(
           paddingClasses[padding],
           className
         )}
-        {...props}
+        {...restProps}
       >
         {/* Subtle background gradient overlay */}
         {background === "cinematic" && (
