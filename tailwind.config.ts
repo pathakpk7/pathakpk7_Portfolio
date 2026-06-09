@@ -22,6 +22,14 @@ const config: Config = {
         "2xl": "1400px",
       },
     },
+    screens: {
+      "xs": "320px",
+      "sm": "375px",
+      "md": "425px",
+      "lg": "768px",
+      "xl": "1024px",
+      "2xl": "1400px",
+    },
     extend: {
       // Premium Dark Theme Color System
       colors: {
