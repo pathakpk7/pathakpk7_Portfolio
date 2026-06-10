@@ -143,8 +143,9 @@ const SkillCategoryModule = React.memo(({ category, index }: SkillCategoryModule
                   duration: 0.4
                 }}
                 whileHover={{ 
-                  scale: 1.05,
-                  y: -2
+                  scale: 1.03,
+                  y: -1,
+                  transition: { duration: 0.2, ease: "easeOut" }
                 }}
                 className={cn(
                   "flex items-center space-x-2 p-2 rounded-md",

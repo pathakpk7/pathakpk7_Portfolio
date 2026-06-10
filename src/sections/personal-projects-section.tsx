@@ -129,14 +129,14 @@ const ProjectCard = React.forwardRef<HTMLDivElement, {
             : "border-cyber-purple/30 hover:border-cyber-purple/60"
         )}
         whileHover={{
-          scale: 1.05,
-          rotateX: -5,
-          rotateY: 5,
-          y: -10,
-          z: 50,
+          scale: 1.02,
+          rotateX: -3,
+          rotateY: 3,
+          y: -5,
+          z: 30,
         }}
         transition={{
-          duration: 0.6,
+          duration: 0.4,
           ease: [0.25, 0.1, 0.25, 1]
         }}
       >
