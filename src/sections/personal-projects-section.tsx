@@ -87,6 +87,22 @@ const personalProjects = [
     challenges: ["Integrating exchange rate APIs", "Handling API rate limits", "Ensuring accuracy", "Creating responsive UI"],
     keyLearnings: ["API integration", "Asynchronous JavaScript", "Error handling", "Responsive design"],
     outcome: "Developed a reliable currency converter with real-time rates and smooth user experience."
+  },
+  {
+    id: 6,
+    title: "Project Vritra – SQL Murder Mystery Game",
+    description: "Developed a full-stack detective game where players solve murder mysteries using real SQL queries.",
+    fullDescription: "Built a full-stack detective game where players solve murder mysteries using real SQL queries. Built with HTML, CSS, JavaScript, Node.js, Express, PostgreSQL, and Supabase, featuring 18 interconnected cases, evidence analysis, detective boards, progression systems, and a story-driven investigation experience.",
+    github: "https://github.com/pathakpk7/Murder_Mystery_Game",
+    category: "Game Development",
+    tech: ["HTML", "CSS", "JavaScript", "Node.js", "Express.js", "Supabase", "PostgreSQL", "SQL"],
+    color: "cyber-purple",
+    featured: false,
+    overview: "A full-stack educational detective game where players solve murder mysteries using real SQL queries.",
+    features: ["18 interconnected cases", "Evidence analysis system", "Detective board", "Progression systems", "Story-driven investigation"],
+    challenges: ["Designing SQL-based game mechanics", "Building scalable database architecture", "Creating immersive storytelling", "Implementing progression systems"],
+    keyLearnings: ["Full-stack development", "Database design", "Game development", "Educational game design"],
+    outcome: "Developed an engaging educational game that teaches SQL through interactive detective gameplay."
   }
 ]
 

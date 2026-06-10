@@ -2,11 +2,12 @@
 
 import * as React from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { X, ExternalLink, ChevronRight, GitBranch } from "lucide-react"
+import { X, ExternalLink, ChevronRight, GitBranch, Check, Zap, Lightbulb, Trophy, Shield, Brain, Trophy as TrophyIcon, Database, Code, Gamepad2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface ProjectModalProps {
   project: {
+    id: number
     title: string
     description: string
     fullDescription: string
@@ -38,6 +39,30 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, isOpen, onC
     }
   }, [isOpen])
 
+  const isVritra = project.title.includes("Vritra") || project.title.includes("SQL Murder Mystery")
+
+  const vritraFeatures = [
+    { icon: <Gamepad2 className="w-5 h-5" />, text: "🕵️ Detective Simulation" },
+    { icon: <Database className="w-5 h-5" />, text: "18 Interconnected Cases" },
+    { icon: <Code className="w-5 h-5" />, text: "SQL-Based Investigation System" },
+    { icon: <Shield className="w-5 h-5" />, text: "Evidence Locker" },
+    { icon: <Brain className="w-5 h-5" />, text: "Detective Board" },
+    { icon: <Database className="w-5 h-5" />, text: "Witness Database" },
+    { icon: <Shield className="w-5 h-5" />, text: "Forensics Database" },
+    { icon: <TrophyIcon className="w-5 h-5" />, text: "Timeline Analysis" },
+    { icon: <Zap className="w-5 h-5" />, text: "Task Force Dossier" },
+    { icon: <Trophy className="w-5 h-5" />, text: "XP System" },
+    { icon: <TrophyIcon className="w-5 h-5" />, text: "Rank Progression" },
+    { icon: <Lightbulb className="w-5 h-5" />, text: "Achievement System" },
+    { icon: <Gamepad2 className="w-5 h-5" />, text: "Story-Driven Gameplay" },
+    { icon: <Code className="w-5 h-5" />, text: "Node.js Backend" },
+    { icon: <Code className="w-5 h-5" />, text: "Express.js API" },
+    { icon: <Database className="w-5 h-5" />, text: "PostgreSQL Database" },
+    { icon: <Database className="w-5 h-5" />, text: "Supabase Integration" },
+    { icon: <Brain className="w-5 h-5" />, text: "Educational SQL Learning" },
+    { icon: <Code className="w-5 h-5" />, text: "Full Stack Architecture" },
+  ]
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -59,7 +84,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, isOpen, onC
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
               transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
-              className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto"
+              className="relative w-full max-w-5xl max-h-[90vh] overflow-y-auto"
             >
               {/* Glassmorphism Modal */}
               <div className={cn(
@@ -71,7 +96,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, isOpen, onC
                 <button
                   onClick={onClose}
                   className={cn(
-                    "absolute top-4 right-4 z-10",
+                    "sticky top-4 right-4 z-10 float-right",
                     "w-10 h-10 rounded-full",
                     "bg-background/80 backdrop-blur-sm",
                     "border border-border/20",
@@ -83,7 +108,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, isOpen, onC
                 </button>
 
                 {/* Modal Content */}
-                <div className="p-8 space-y-8">
+                <div className="p-6 md:p-8 space-y-8">
                   {/* Header */}
                   <div className="space-y-4">
                     <motion.div
@@ -106,37 +131,85 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, isOpen, onC
                     </p>
                   </div>
 
-                  {/* Overview */}
+                  {/* Special Hero Section for Project Vritra */}
+                  {isVritra && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: 0.1 }}
+                      className={cn(
+                        "relative p-6 rounded-2xl border",
+                        "bg-linear-to-br from-cyber-purple/10 via-background/50 to-cyber-blue/10",
+                        "border-cyber-purple/30"
+                      )}
+                    >
+                      <div className="absolute top-0 right-0 w-32 h-32 bg-cyber-purple/20 rounded-full blur-3xl" />
+                      <div className="absolute bottom-0 left-0 w-32 h-32 bg-cyber-blue/20 rounded-full blur-3xl" />
+                      
+                      <div className="relative z-10">
+                        <div className="flex items-center space-x-2 mb-4">
+                          <Trophy className="w-6 h-6 text-cyber-purple" />
+                          <h3 className="text-xl font-bold text-foreground">Flagship Project</h3>
+                        </div>
+                        
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                          {vritraFeatures.map((feature, index) => (
+                            <motion.div
+                              key={index}
+                              initial={{ opacity: 0, scale: 0.9 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              transition={{ duration: 0.3, delay: 0.2 + (index * 0.05) }}
+                              className={cn(
+                                "flex items-center space-x-2 p-2 rounded-lg",
+                                "bg-background/60 backdrop-blur-sm",
+                                "border border-cyber-purple/20",
+                                "text-sm"
+                              )}
+                            >
+                              {feature.icon}
+                              <span className="text-foreground">{feature.text}</span>
+                            </motion.div>
+                          ))}
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+
+                  {/* Project Overview */}
                   <div className="space-y-3">
-                    <h3 className="text-xl font-bold text-foreground">Overview</h3>
+                    <h3 className="text-xl font-bold text-foreground flex items-center space-x-2">
+                      <Lightbulb className="w-5 h-5 text-cyber-blue" />
+                      <span>Project Overview</span>
+                    </h3>
                     <p className="text-muted-foreground leading-relaxed">
                       {project.overview}
                     </p>
                   </div>
 
-                  {/* Features */}
+                  {/* Project Description */}
                   <div className="space-y-3">
-                    <h3 className="text-xl font-bold text-foreground">Features</h3>
-                    <ul className="space-y-2">
-                      {project.features.map((feature, index) => (
-                        <li key={index} className="flex items-start space-x-3">
-                          <ChevronRight className={cn(
-                            "w-5 h-5 mt-0.5 shrink-0",
-                            project.color === "cyber-blue" ? "text-cyber-blue" : "text-cyber-purple"
-                          )} />
-                          <span className="text-muted-foreground">{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
+                    <h3 className="text-xl font-bold text-foreground flex items-center space-x-2">
+                      <ExternalLink className="w-5 h-5 text-cyber-purple" />
+                      <span>Project Description</span>
+                    </h3>
+                    <p className="text-muted-foreground leading-relaxed">
+                      {project.fullDescription}
+                    </p>
                   </div>
 
-                  {/* Tech Stack */}
+                  {/* Technology Stack */}
                   <div className="space-y-3">
-                    <h3 className="text-xl font-bold text-foreground">Tech Stack</h3>
+                    <h3 className="text-xl font-bold text-foreground flex items-center space-x-2">
+                      <Code className="w-5 h-5 text-cyber-blue" />
+                      <span>Technology Stack</span>
+                    </h3>
                     <div className="flex flex-wrap gap-2">
                       {project.tech.map((tech, index) => (
-                        <span
+                        <motion.span
                           key={index}
+                          initial={{ opacity: 0, scale: 0.9 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ duration: 0.3, delay: index * 0.05 }}
                           className={cn(
                             "px-3 py-1.5 rounded-lg text-sm font-medium border",
                             project.color === "cyber-blue"
@@ -145,49 +218,121 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, isOpen, onC
                           )}
                         >
                           {tech}
-                        </span>
+                        </motion.span>
                       ))}
                     </div>
                   </div>
 
-                  {/* Challenges */}
+                  {/* Key Features */}
                   <div className="space-y-3">
-                    <h3 className="text-xl font-bold text-foreground">Challenges</h3>
-                    <ul className="space-y-2">
+                    <h3 className="text-xl font-bold text-foreground flex items-center space-x-2">
+                      <Check className="w-5 h-5 text-cyber-blue" />
+                      <span>Key Features</span>
+                    </h3>
+                    <div className="grid gap-3">
+                      {project.features.map((feature, index) => (
+                        <motion.div
+                          key={index}
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ duration: 0.3, delay: index * 0.05 }}
+                          className={cn(
+                            "flex items-start space-x-3 p-3 rounded-lg",
+                            "bg-background/40 backdrop-blur-sm",
+                            "border border-border/10",
+                            "hover:border-border/20 transition-colors"
+                          )}
+                        >
+                          <Check className={cn(
+                            "w-5 h-5 mt-0.5 shrink-0",
+                            project.color === "cyber-blue" ? "text-cyber-blue" : "text-cyber-purple"
+                          )} />
+                          <span className="text-muted-foreground">{feature}</span>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Challenges Solved */}
+                  <div className="space-y-3">
+                    <h3 className="text-xl font-bold text-foreground flex items-center space-x-2">
+                      <Zap className="w-5 h-5 text-cyber-purple" />
+                      <span>Challenges Solved</span>
+                    </h3>
+                    <div className="grid gap-3">
                       {project.challenges.map((challenge, index) => (
-                        <li key={index} className="flex items-start space-x-3">
-                          <span className={cn(
-                            "w-2 h-2 mt-2 rounded-full shrink-0",
-                            project.color === "cyber-blue" ? "bg-cyber-blue" : "bg-cyber-purple"
+                        <motion.div
+                          key={index}
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ duration: 0.3, delay: index * 0.05 }}
+                          className={cn(
+                            "flex items-start space-x-3 p-3 rounded-lg",
+                            "bg-background/40 backdrop-blur-sm",
+                            "border border-border/10",
+                            "hover:border-border/20 transition-colors"
+                          )}
+                        >
+                          <Zap className={cn(
+                            "w-5 h-5 mt-0.5 shrink-0",
+                            project.color === "cyber-blue" ? "text-cyber-blue" : "text-cyber-purple"
                           )} />
                           <span className="text-muted-foreground">{challenge}</span>
-                        </li>
+                        </motion.div>
                       ))}
-                    </ul>
+                    </div>
                   </div>
 
                   {/* Key Learnings */}
                   <div className="space-y-3">
-                    <h3 className="text-xl font-bold text-foreground">Key Learnings</h3>
-                    <ul className="space-y-2">
+                    <h3 className="text-xl font-bold text-foreground flex items-center space-x-2">
+                      <Lightbulb className="w-5 h-5 text-cyber-blue" />
+                      <span>Key Learnings</span>
+                    </h3>
+                    <div className="grid gap-3">
                       {project.keyLearnings.map((learning, index) => (
-                        <li key={index} className="flex items-start space-x-3">
-                          <span className={cn(
-                            "w-2 h-2 mt-2 rounded-full shrink-0",
-                            project.color === "cyber-blue" ? "bg-cyber-blue" : "bg-cyber-purple"
+                        <motion.div
+                          key={index}
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ duration: 0.3, delay: index * 0.05 }}
+                          className={cn(
+                            "flex items-start space-x-3 p-3 rounded-lg",
+                            "bg-background/40 backdrop-blur-sm",
+                            "border border-border/10",
+                            "hover:border-border/20 transition-colors"
+                          )}
+                        >
+                          <Lightbulb className={cn(
+                            "w-5 h-5 mt-0.5 shrink-0",
+                            project.color === "cyber-blue" ? "text-cyber-blue" : "text-cyber-purple"
                           )} />
                           <span className="text-muted-foreground">{learning}</span>
-                        </li>
+                        </motion.div>
                       ))}
-                    </ul>
+                    </div>
                   </div>
 
-                  {/* Outcome */}
+                  {/* Project Outcome */}
                   <div className="space-y-3">
-                    <h3 className="text-xl font-bold text-foreground">Outcome</h3>
-                    <p className="text-muted-foreground leading-relaxed">
-                      {project.outcome}
-                    </p>
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: 0.3 }}
+                      className={cn(
+                        "p-6 rounded-2xl border",
+                        "bg-linear-to-br from-cyber-blue/10 via-background/50 to-cyber-purple/10",
+                        "border-cyber-blue/30"
+                      )}
+                    >
+                      <div className="flex items-center space-x-2 mb-3">
+                        <Trophy className="w-6 h-6 text-cyber-blue" />
+                        <h3 className="text-xl font-bold text-foreground">Project Outcome</h3>
+                      </div>
+                      <p className="text-muted-foreground leading-relaxed">
+                        {project.outcome}
+                      </p>
+                    </motion.div>
                   </div>
 
                   {/* Action Buttons */}
