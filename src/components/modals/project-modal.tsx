@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { X, ExternalLink, ChevronRight, GitBranch, Check, Zap, Lightbulb, Trophy, Shield, Brain, Trophy as TrophyIcon, Database, Code, Gamepad2 } from "lucide-react"
+import { X, ExternalLink, GitBranch, Check, Zap, Lightbulb, Trophy, Shield, Brain, Trophy as TrophyIcon, Database, Code, Gamepad2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface ProjectModalProps {

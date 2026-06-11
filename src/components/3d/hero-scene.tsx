@@ -8,7 +8,7 @@ import * as THREE from "three"
 import { cn } from "@/lib/utils"
 
 // Simple floating particles with luxury motion
-function FloatingParticles() {
+const FloatingParticles = React.memo(function FloatingParticles() {
   const particlesRef = useRef<THREE.Points>(null)
   
   useFrame((state) => {
@@ -19,13 +19,14 @@ function FloatingParticles() {
   })
 
   // Pre-defined particle positions - completely deterministic
+  // Reduced from 150 to 50 particles for better performance
   const positions = React.useMemo(() => {
-    const pos = new Float32Array(150 * 3)
+    const pos = new Float32Array(50 * 3)
     let index = 0
-    for (let x = -7; x <= 7; x += 2) {
-      for (let y = -7; y <= 7; y += 2) {
-        for (let z = -7; z <= 7; z += 2) {
-          if (index < 150 * 3) {
+    for (let x = -5; x <= 5; x += 2) {
+      for (let y = -5; y <= 5; y += 2) {
+        for (let z = -5; z <= 5; z += 2) {
+          if (index < 50 * 3) {
             pos[index] = x + 0.1
             pos[index + 1] = y + 0.1
             pos[index + 2] = z + 0.1
@@ -42,7 +43,7 @@ function FloatingParticles() {
       <bufferGeometry>
         <bufferAttribute
           attach="attributes-position"
-          count={150}
+          count={50}
           array={positions}
           itemSize={3}
           args={[new Float32Array(), 3]}
@@ -58,10 +59,10 @@ function FloatingParticles() {
       />
     </points>
   )
-}
+})
 
 // Simple ambient spheres
-function AmbientSpheres() {
+const AmbientSpheres = React.memo(function AmbientSpheres() {
   const spheresRef = useRef<THREE.Group>(null)
   
   useFrame((state) => {
@@ -74,10 +75,9 @@ function AmbientSpheres() {
     }
   })
 
-  // Pre-defined sphere positions
+  // Reduced from 8 to 4 spheres for better performance
   const spherePositions: [number, number, number][] = [
-    [-4, 2, -3], [3, -1, 4], [-2, 3, 2], [5, -2, -2],
-    [-3, -3, 3], [2, 4, -4], [-5, 1, 1], [4, -4, -1]
+    [-4, 2, -3], [3, -1, 4], [-2, 3, 2], [5, -2, -2]
   ]
 
   return (
@@ -103,17 +103,12 @@ function AmbientSpheres() {
       ))}
     </group>
   )
-}
+})
 
 // Cinematic depth layers
-function DepthLayers() {
+const DepthLayers = React.memo(function DepthLayers() {
   return (
     <group>
-      {/* Back layer - distant particles */}
-      <group position={[0, 0, -5]}>
-        <FloatingParticles />
-      </group>
-      
       {/* Middle layer - ambient spheres */}
       <AmbientSpheres />
       
@@ -123,10 +118,10 @@ function DepthLayers() {
       </group>
     </group>
   )
-}
+})
 
 // Mouse-responsive parallax
-function ParallaxContainer({ children }: { children: React.ReactNode }) {
+const ParallaxContainer = React.memo(function ParallaxContainer({ children }: { children: React.ReactNode }) {
   const groupRef = useRef<THREE.Group>(null)
   
   useFrame((state) => {
@@ -144,10 +139,10 @@ function ParallaxContainer({ children }: { children: React.ReactNode }) {
       {children}
     </group>
   )
-}
+})
 
 // Performance monitor
-function PerformanceMonitor() {
+const PerformanceMonitor = React.memo(function PerformanceMonitor() {
   const { gl } = useThree()
   
   React.useEffect(() => {
@@ -159,22 +154,22 @@ function PerformanceMonitor() {
   }, [gl])
 
   return null
-}
+})
 
 interface HeroSceneProps {
   className?: string
   enableParallax?: boolean
 }
 
-const HeroScene = React.forwardRef<HTMLDivElement, HeroSceneProps>(
-  ({ className, enableParallax = true }, ref) => {
+const HeroScene = React.memo(React.forwardRef<HTMLDivElement, HeroSceneProps>(
+  ({ className, enableParallax = false }, ref) => {
     return (
       <div ref={ref} className={cn("absolute inset-0", className)}>
         <Canvas
           camera={{ position: [0, 0, 5], fov: 75 }}
           className="w-full h-full"
-          gl={{ alpha: true, antialias: true }}
-          dpr={[1, 2]}
+          gl={{ alpha: true, antialias: false }}
+          dpr={[1, 1.5]}
         >
           <Suspense fallback={null}>
             {/* Performance optimization */}
@@ -205,7 +200,7 @@ const HeroScene = React.forwardRef<HTMLDivElement, HeroSceneProps>(
       </div>
     )
   }
-)
+))
 HeroScene.displayName = "HeroScene"
 
 export { HeroScene }

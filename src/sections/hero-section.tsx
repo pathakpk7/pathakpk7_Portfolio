@@ -6,10 +6,16 @@ import Image from "next/image"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui"
 import { Container, SectionWrapper } from "@/components/layout"
-import { HeroScene } from "@/components/3d"
+import dynamic from "next/dynamic"
 import { useMousePosition } from "@/hooks"
 import { FaLinkedin, FaEnvelope, FaTwitter } from "react-icons/fa"
 import { SiGithub, SiLeetcode, SiInstagram, SiGeeksforgeeks } from "react-icons/si"
+
+// Lazy load 3D scene for better performance
+const HeroScene = dynamic(() => import("@/components/3d").then(mod => ({ default: mod.HeroScene })), {
+  ssr: false,
+  loading: () => null
+})
 
 // Premium quotes for rotation
 const PREMIUM_QUOTES = [
