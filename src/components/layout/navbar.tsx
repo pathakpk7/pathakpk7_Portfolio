@@ -4,8 +4,7 @@ import * as React from "react"
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui"
-import { NAVIGATION, SOCIAL_LINKS } from "@/constants"
+import { NAVIGATION } from "@/constants"
 
 interface NavbarProps {
   className?: string
@@ -32,6 +31,29 @@ const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
       window.addEventListener("scroll", handleScroll)
       return () => window.removeEventListener("scroll", handleScroll)
     }, [])
+
+    // Prevent body scroll when mobile menu is open
+    useEffect(() => {
+      if (mobileMenuOpen) {
+        document.body.style.overflow = 'hidden'
+      } else {
+        document.body.style.overflow = 'unset'
+      }
+      return () => {
+        document.body.style.overflow = 'unset'
+      }
+    }, [mobileMenuOpen])
+
+    // Handle escape key to close menu
+    useEffect(() => {
+      const handleEscape = (e: KeyboardEvent) => {
+        if (e.key === 'Escape' && mobileMenuOpen) {
+          setMobileMenuOpen(false)
+        }
+      }
+      window.addEventListener('keydown', handleEscape)
+      return () => window.removeEventListener('keydown', handleEscape)
+    }, [mobileMenuOpen])
 
     const scrollToSection = (sectionId: string) => {
       const element = document.getElementById(sectionId)
@@ -156,32 +178,72 @@ const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
             {/* Mobile Menu */}
             <AnimatePresence>
               {mobileMenuOpen && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0, y: -20 }}
-                  animate={{ opacity: 1, height: "auto", y: 0 }}
-                  exit={{ opacity: 0, height: 0, y: -20 }}
-                  transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
-                  className="lg:hidden glass-strong border-border/30 rounded-xl mt-6 overflow-hidden"
-                >
-                  <div className="py-6 space-y-2">
-                    {Object.entries(NAVIGATION).map(([key, label], index) => (
-                      <motion.button
-                        key={key}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.05 }}
-                        onClick={() => scrollToSection(key)}
-                        className={cn(
-                          "block w-full text-left px-6 py-3 text-foreground hover:text-primary hover:bg-accent/20 transition-all duration-200 font-medium rounded-lg",
-                          activeSection === key && "text-primary bg-primary/10"
-                        )}
-                      >
-                        {label}
-                      </motion.button>
-                    ))}
-                    
-                  </div>
-                </motion.div>
+                <>
+                  {/* Backdrop */}
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm lg:hidden"
+                    onClick={() => setMobileMenuOpen(false)}
+                  />
+                  
+                  {/* Menu Panel */}
+                  <motion.div
+                    initial={{ opacity: 0, x: '100%' }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: '100%' }}
+                    transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+                    className="lg:hidden fixed top-0 right-0 bottom-0 z-50 w-80 glass-strong border-border/30 overflow-hidden"
+                  >
+                    <div className="h-full flex flex-col">
+                      {/* Menu Header */}
+                      <div className="flex items-center justify-between p-6 border-b border-border/20">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-8 h-8 bg-linear-to-r from-cyber-blue-500 to-cyber-purple-500 rounded-lg" />
+                          <span className="text-heading font-bold text-lg gradient-text-cyber">
+                            Menu
+                          </span>
+                        </div>
+                        <button
+                          onClick={() => setMobileMenuOpen(false)}
+                          className="p-2 rounded-lg hover:bg-accent/20 transition-colors"
+                        >
+                          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      </div>
+                      
+                      {/* Menu Items */}
+                      <div className="flex-1 overflow-y-auto p-6 space-y-2">
+                        {Object.entries(NAVIGATION).map(([key, label], index) => (
+                          <motion.button
+                            key={key}
+                            initial={{ opacity: 0, x: 20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: index * 0.05 }}
+                            onClick={() => scrollToSection(key)}
+                            className={cn(
+                              "block w-full text-left px-4 py-3 text-foreground hover:text-primary hover:bg-accent/20 transition-all duration-200 font-medium rounded-lg text-lg",
+                              activeSection === key && "text-primary bg-primary/10"
+                            )}
+                          >
+                            {label}
+                          </motion.button>
+                        ))}
+                      </div>
+                      
+                      {/* Menu Footer */}
+                      <div className="p-6 border-t border-border/20">
+                        <p className="text-sm text-muted-foreground text-center">
+                          © 2024 Prasoon Pathak
+                        </p>
+                      </div>
+                    </div>
+                  </motion.div>
+                </>
               )}
             </AnimatePresence>
           </div>

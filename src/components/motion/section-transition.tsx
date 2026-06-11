@@ -28,7 +28,7 @@ interface SectionTransitionProps {
   once?: boolean
 }
 
-export const SectionTransition = React.forwardRef<HTMLDivElement, SectionTransitionProps>(
+export const SectionTransition = React.memo(React.forwardRef<HTMLDivElement, SectionTransitionProps>(
   ({
     children,
     className,
@@ -221,47 +221,47 @@ export const SectionTransition = React.forwardRef<HTMLDivElement, SectionTransit
       </div>
     )
   }
-)
+))
 
 SectionTransition.displayName = "SectionTransition"
 
 // Simplified transition components
-export const FadeTransition = React.forwardRef<HTMLDivElement, Omit<SectionTransitionProps, "type">>(
+export const FadeTransition = React.memo(React.forwardRef<HTMLDivElement, Omit<SectionTransitionProps, "type">>(
   (props, ref) => {
     return <SectionTransition ref={ref} type="fade" {...props} />
   }
-)
+))
 
 FadeTransition.displayName = "FadeTransition"
 
-export const SlideTransition = React.forwardRef<HTMLDivElement, Omit<SectionTransitionProps, "type">>(
+export const SlideTransition = React.memo(React.forwardRef<HTMLDivElement, Omit<SectionTransitionProps, "type">>(
   (props, ref) => {
     return <SectionTransition ref={ref} type="slide" {...props} />
   }
-)
+))
 
 SlideTransition.displayName = "SlideTransition"
 
-export const ScaleTransition = React.forwardRef<HTMLDivElement, Omit<SectionTransitionProps, "type">>(
+export const ScaleTransition = React.memo(React.forwardRef<HTMLDivElement, Omit<SectionTransitionProps, "type">>(
   (props, ref) => {
     return <SectionTransition ref={ref} type="scale" {...props} />
   }
-)
+))
 
 ScaleTransition.displayName = "ScaleTransition"
 
-export const RotateTransition = React.forwardRef<HTMLDivElement, Omit<SectionTransitionProps, "type">>(
+export const RotateTransition = React.memo(React.forwardRef<HTMLDivElement, Omit<SectionTransitionProps, "type">>(
   (props, ref) => {
     return <SectionTransition ref={ref} type="rotate" {...props} />
   }
-)
+))
 
 RotateTransition.displayName = "RotateTransition"
 
-export const WipeTransition = React.forwardRef<HTMLDivElement, Omit<SectionTransitionProps, "type">>(
+export const WipeTransition = React.memo(React.forwardRef<HTMLDivElement, Omit<SectionTransitionProps, "type">>(
   (props, ref) => {
     return <SectionTransition ref={ref} type="wipe" {...props} />
   }
-)
+))
 
 WipeTransition.displayName = "WipeTransition"

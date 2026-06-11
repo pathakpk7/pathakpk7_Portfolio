@@ -2,20 +2,14 @@
 
 import * as React from "react"
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion"
-import Image from "next/image"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui"
 import { Container, SectionWrapper } from "@/components/layout"
-import dynamic from "next/dynamic"
+import { HeroScene } from "@/components/3d"
 import { useMousePosition } from "@/hooks"
+import { OptimizedImage } from "@/components/performance/optimized-image"
 import { FaLinkedin, FaEnvelope, FaTwitter } from "react-icons/fa"
 import { SiGithub, SiLeetcode, SiInstagram, SiGeeksforgeeks } from "react-icons/si"
-
-// Lazy load 3D scene for better performance
-const HeroScene = dynamic(() => import("@/components/3d").then(mod => ({ default: mod.HeroScene })), {
-  ssr: false,
-  loading: () => null
-})
 
 // Premium quotes for rotation
 const PREMIUM_QUOTES = [
@@ -83,11 +77,11 @@ const HeroSection = React.forwardRef<
         
         {/* Content */}
         <Container size="cinematic" className="relative z-20">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-[80vh]">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center min-h-[80vh] lg:min-h-[80vh]">
             
             {/* Left Content - Text */}
             <motion.div 
-              className="space-y-8 lg:space-y-12"
+              className="space-y-6 lg:space-y-12 order-2 lg:order-1"
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 1.2, ease: [0.25, 0.1, 0.25, 1] }}
@@ -96,9 +90,9 @@ const HeroSection = React.forwardRef<
               }}
             >
               {/* Luxury Name Display */}
-              <div className="space-y-4">
+              <div className="space-y-2 lg:space-y-4">
                 <motion.h1 
-                  className="text-heading text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black tracking-tight gradient-text-cyber text-shadow-glow"
+                  className="text-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black tracking-tight gradient-text-cyber text-shadow-glow"
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 1, delay: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
@@ -106,7 +100,7 @@ const HeroSection = React.forwardRef<
                   PRASOON
                 </motion.h1>
                 <motion.h1 
-                  className="text-heading text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black tracking-tight gradient-text-cyber text-shadow-glow"
+                  className="text-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black tracking-tight gradient-text-cyber text-shadow-glow"
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 1, delay: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
@@ -116,7 +110,7 @@ const HeroSection = React.forwardRef<
               </div>
 
               {/* Random Quote Rotation */}
-              <div className="h-12 flex items-center">
+              <div className="h-10 lg:h-12 flex items-center">
                 <AnimatePresence mode="wait">
                   <motion.p
                     key={currentQuoteIndex}
@@ -124,7 +118,7 @@ const HeroSection = React.forwardRef<
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
-                    className="text-lg md:text-xl text-muted-foreground italic font-medium"
+                    className="text-sm md:text-lg lg:text-xl text-muted-foreground italic font-medium"
                   >
                     {PREMIUM_QUOTES[currentQuoteIndex]}
                   </motion.p>
@@ -136,7 +130,7 @@ const HeroSection = React.forwardRef<
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
-                className="text-lg md:text-xl text-foreground font-medium"
+                className="text-base md:text-lg lg:text-xl text-foreground font-medium"
               >
                 Cybersecurity Enthusiast | Full Stack Developer | AI/ML Learner
               </motion.p>
@@ -146,7 +140,7 @@ const HeroSection = React.forwardRef<
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
-                className="text-base md:text-lg text-muted-foreground max-w-lg leading-relaxed"
+                className="text-sm md:text-base lg:text-lg text-muted-foreground max-w-lg leading-relaxed"
               >
                 Motivated Computer Science Engineering student with a Diploma background in Mechanical Engineering and strong interest in Cybersecurity, Full Stack Development, AI/ML, and Cloud Technologies.
               </motion.p>
@@ -156,7 +150,7 @@ const HeroSection = React.forwardRef<
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 1, ease: [0.25, 0.1, 0.25, 1] }}
-                className="flex flex-wrap gap-4"
+                className="flex flex-wrap gap-3 lg:gap-4"
               >
                 <Button variant="cyber" size="lg" className="hover-lift group">
                   <span className="relative z-10">Resume Download</span>
@@ -241,13 +235,13 @@ const HeroSection = React.forwardRef<
 
             {/* Right Content - Immersive Profile Image */}
             <motion.div
-              className="relative flex justify-center lg:justify-end items-center"
+              className="relative flex justify-center lg:justify-end items-center order-1 lg:order-2"
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 1.2, delay: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
             >
               {/* Immersive Image Container */}
-              <div className="relative w-full max-w-2xl mx-auto">
+              <div className="relative w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-2xl mx-auto">
                 
                 {/* Layer 1: Background HUD Rings (Behind Image) */}
                 <div className="absolute inset-0 pointer-events-none">
@@ -331,16 +325,17 @@ const HeroSection = React.forwardRef<
                       WebkitMaskImage: 'radial-gradient(ellipse 70% 80% at 50% 50%, black 40%, transparent 80%)',
                     }}
                   >
-                    <Image 
+                    <OptimizedImage 
                       src="/images/profile.jpg" 
                       alt="Prasoon Pathak"
                       fill
+                      priority
+                      quality={90}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       className="object-cover object-center"
                       style={{
                         filter: 'brightness(1.1) contrast(1.15) saturate(1.1)',
                       }}
-                      priority
-                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     />
                   </div>
 

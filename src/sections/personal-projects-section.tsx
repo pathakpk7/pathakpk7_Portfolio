@@ -142,7 +142,7 @@ const ProjectCard = React.forwardRef<HTMLDivElement, {
       className={cn(
         "relative group cursor-pointer",
         "transition-all duration-700 ease-out",
-        isHovered ? "z-20" : "z-10"
+        "z-10"
       )}
     >
       {/* Main 3D Card */}

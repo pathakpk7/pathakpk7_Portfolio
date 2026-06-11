@@ -1,11 +1,11 @@
 // Main portfolio page with all sections
 import dynamic from 'next/dynamic'
 import { Suspense } from 'react'
+import { ErrorBoundary, AnimationErrorBoundary } from '@/components/performance/error-boundary'
 
 // Lazy load heavy sections for better performance
 const HeroSection = dynamic(() => import('@/sections/hero-section').then(mod => ({ default: mod.HeroSection })), {
-  loading: () => <div className="min-h-screen flex items-center justify-center">Loading...</div>,
-  ssr: false
+  loading: () => <div className="min-h-screen flex items-center justify-center">Loading...</div>
 })
 
 const AboutSection = dynamic(() => import('@/sections/about-section').then(mod => ({ default: mod.AboutSection })), {
@@ -30,36 +30,48 @@ const CertificationSection = dynamic(() => import('@/sections/certification-sect
 
 export default function Home() {
   return (
-    <>
+    <ErrorBoundary>
       {/* Hero Section */}
-      <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
-        <HeroSection />
-      </Suspense>
+      <AnimationErrorBoundary>
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <HeroSection />
+        </Suspense>
+      </AnimationErrorBoundary>
       
       {/* About Section */}
-      <Suspense fallback={<div className="min-h-20 flex items-center justify-center">Loading...</div>}>
-        <AboutSection />
-      </Suspense>
+      <ErrorBoundary>
+        <Suspense fallback={<div className="min-h-20 flex items-center justify-center">Loading...</div>}>
+          <AboutSection />
+        </Suspense>
+      </ErrorBoundary>
       
       {/* Skills Section */}
-      <Suspense fallback={<div className="min-h-20 flex items-center justify-center">Loading...</div>}>
-        <SkillsSection />
-      </Suspense>
+      <ErrorBoundary>
+        <Suspense fallback={<div className="min-h-20 flex items-center justify-center">Loading...</div>}>
+          <SkillsSection />
+        </Suspense>
+      </ErrorBoundary>
       
       {/* Featured Project Section */}
-      <Suspense fallback={<div className="min-h-20 flex items-center justify-center">Loading...</div>}>
-        <FeaturedProjectSection />
-      </Suspense>
+      <ErrorBoundary>
+        <Suspense fallback={<div className="min-h-20 flex items-center justify-center">Loading...</div>}>
+          <FeaturedProjectSection />
+        </Suspense>
+      </ErrorBoundary>
       
       {/* Personal Projects Section */}
-      <Suspense fallback={<div className="min-h-20 flex items-center justify-center">Loading...</div>}>
-        <PersonalProjectsSection />
-      </Suspense>
+      <ErrorBoundary>
+        <Suspense fallback={<div className="min-h-20 flex items-center justify-center">Loading...</div>}>
+          <PersonalProjectsSection />
+        </Suspense>
+      </ErrorBoundary>
       
       {/* Certification Section */}
-      <Suspense fallback={<div className="min-h-20 flex items-center justify-center">Loading...</div>}>
-        <CertificationSection />
-      </Suspense>
-    </>
+      <ErrorBoundary>
+        <Suspense fallback={<div className="min-h-20 flex items-center justify-center">Loading...</div>}>
+          <CertificationSection />
+        </Suspense>
+      </ErrorBoundary>
+    </ErrorBoundary>
   );
 }

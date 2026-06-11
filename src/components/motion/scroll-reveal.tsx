@@ -31,7 +31,7 @@ interface ScrollRevealProps {
   once?: boolean
 }
 
-export const ScrollReveal = React.forwardRef<HTMLDivElement, ScrollRevealProps>(
+export const ScrollReveal = React.memo(React.forwardRef<HTMLDivElement, ScrollRevealProps>(
   ({
     children,
     className,
@@ -178,51 +178,51 @@ export const ScrollReveal = React.forwardRef<HTMLDivElement, ScrollRevealProps>(
       </div>
     )
   }
-)
+))
 
 ScrollReveal.displayName = "ScrollReveal"
 
 // Fade in component (simplified version)
-export const FadeIn = React.forwardRef<HTMLDivElement, Omit<ScrollRevealProps, "direction">>(
+export const FadeIn = React.memo(React.forwardRef<HTMLDivElement, Omit<ScrollRevealProps, "direction">>(
   (props, ref) => {
     return <ScrollReveal ref={ref} direction="fade" {...props} />
   }
-)
+))
 
 FadeIn.displayName = "FadeIn"
 
 // Slide up component
-export const SlideUp = React.forwardRef<HTMLDivElement, Omit<ScrollRevealProps, "direction">>(
+export const SlideUp = React.memo(React.forwardRef<HTMLDivElement, Omit<ScrollRevealProps, "direction">>(
   (props, ref) => {
     return <ScrollReveal ref={ref} direction="up" {...props} />
   }
-)
+))
 
 SlideUp.displayName = "SlideUp"
 
 // Slide down component
-export const SlideDown = React.forwardRef<HTMLDivElement, Omit<ScrollRevealProps, "direction">>(
+export const SlideDown = React.memo(React.forwardRef<HTMLDivElement, Omit<ScrollRevealProps, "direction">>(
   (props, ref) => {
     return <ScrollReveal ref={ref} direction="down" {...props} />
   }
-)
+))
 
 SlideDown.displayName = "SlideDown"
 
 // Slide left component
-export const SlideLeft = React.forwardRef<HTMLDivElement, Omit<ScrollRevealProps, "direction">>(
+export const SlideLeft = React.memo(React.forwardRef<HTMLDivElement, Omit<ScrollRevealProps, "direction">>(
   (props, ref) => {
     return <ScrollReveal ref={ref} direction="left" {...props} />
   }
-)
+))
 
 SlideLeft.displayName = "SlideLeft"
 
 // Slide right component
-export const SlideRight = React.forwardRef<HTMLDivElement, Omit<ScrollRevealProps, "direction">>(
+export const SlideRight = React.memo(React.forwardRef<HTMLDivElement, Omit<ScrollRevealProps, "direction">>(
   (props, ref) => {
     return <ScrollReveal ref={ref} direction="right" {...props} />
   }
-)
+))
 
 SlideRight.displayName = "SlideRight"
