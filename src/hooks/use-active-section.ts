@@ -51,6 +51,7 @@ export function useSmoothScrollTo() {
   const { scrollTo } = useSmoothScroll()
 
   const scrollToSection = React.useCallback((sectionId: string, offset = 0) => {
+    if (typeof window === "undefined") return
     const element = document.getElementById(sectionId)
     if (element) {
       scrollTo(element, offset)

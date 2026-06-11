@@ -170,6 +170,7 @@ ParallaxLayer.displayName = "ParallaxLayer"
 // Smooth scroll to section
 export const useSmoothScroll = () => {
   const scrollToSection = (sectionId: string, offset = 0) => {
+    if (typeof window === "undefined") return
     const element = document.getElementById(sectionId)
     if (element) {
       const y = element.getBoundingClientRect().top + window.pageYOffset - offset

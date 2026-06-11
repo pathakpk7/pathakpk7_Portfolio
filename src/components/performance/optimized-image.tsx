@@ -57,6 +57,7 @@ export const OptimizedImage = React.forwardRef<HTMLImageElement, OptimizedImageP
 
     // Generate blur data URL for placeholder
     const generateBlurDataURL = (width: number, height: number) => {
+      if (typeof window === "undefined") return undefined
       const canvas = document.createElement('canvas')
       canvas.width = width
       canvas.height = height

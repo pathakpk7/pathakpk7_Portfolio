@@ -175,6 +175,7 @@ export const SmartScrollNav = React.forwardRef<HTMLDivElement, {
       // Determine current section
       const sections = ["hero", "featured", "skills", "projects", "certifications", "contact"]
       const current = sections.find(section => {
+        if (typeof window === "undefined") return false
         const element = document.getElementById(section)
         if (element) {
           const rect = element.getBoundingClientRect()
@@ -193,6 +194,7 @@ export const SmartScrollNav = React.forwardRef<HTMLDivElement, {
   }, [])
 
   const scrollToSection = (sectionId: string) => {
+    if (typeof window === "undefined") return
     const element = document.getElementById(sectionId)
     if (element) {
       element.scrollIntoView({ behavior: 'smooth', block: 'start' })
