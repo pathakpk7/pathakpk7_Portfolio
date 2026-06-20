@@ -16,11 +16,7 @@ const SkillsSection = dynamic(() => import('@/sections/skills-section').then(mod
   loading: () => <div className="min-h-20 flex items-center justify-center">Loading...</div>
 })
 
-const FeaturedProjectSection = dynamic(() => import('@/sections/featured-project-section').then(mod => ({ default: mod.FeaturedProjectSection })), {
-  loading: () => <div className="min-h-20 flex items-center justify-center">Loading...</div>
-})
-
-const PersonalProjectsSection = dynamic(() => import('@/sections/personal-projects-section').then(mod => ({ default: mod.PersonalProjectsSection })), {
+const ProjectsSection = dynamic(() => import('@/sections/projects-section').then(mod => ({ default: mod.ProjectsSection })), {
   loading: () => <div className="min-h-20 flex items-center justify-center">Loading...</div>
 })
 
@@ -52,17 +48,10 @@ export default function Home() {
         </Suspense>
       </ErrorBoundary>
       
-      {/* Featured Project Section */}
+      {/* Projects Section */}
       <ErrorBoundary>
         <Suspense fallback={<div className="min-h-20 flex items-center justify-center">Loading...</div>}>
-          <FeaturedProjectSection />
-        </Suspense>
-      </ErrorBoundary>
-      
-      {/* Personal Projects Section */}
-      <ErrorBoundary>
-        <Suspense fallback={<div className="min-h-20 flex items-center justify-center">Loading...</div>}>
-          <PersonalProjectsSection />
+          <ProjectsSection />
         </Suspense>
       </ErrorBoundary>
       

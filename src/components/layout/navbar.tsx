@@ -150,8 +150,9 @@ const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.5 }}
-                className="lg:hidden p-2 rounded-lg hover:bg-accent/20 transition-colors duration-200"
+                className="lg:hidden p-3 rounded-lg hover:bg-accent/20 transition-colors duration-200 z-50 relative flex items-center justify-center"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                aria-label="Toggle mobile menu"
               >
                 <div className="w-6 h-5 flex flex-col justify-center space-y-1">
                   <motion.div

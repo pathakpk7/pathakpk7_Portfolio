@@ -5,8 +5,6 @@ import { motion } from "framer-motion"
 import { ScrollReveal, HeroParallax } from "@/components/motion"
 import { Container, SectionWrapper } from "@/components/layout"
 import { cn } from "@/lib/utils"
-import { useMobileOptimization } from "@/hooks/use-mobile-optimization"
-import { SkillModal } from "@/components/modals/skill-modal"
 import {
   SiC, SiCplusplus, SiOpenjdk, SiJavascript, SiPython,
   SiReact, SiHtml5, SiCss, SiNodedotjs, SiTensorflow,
@@ -58,8 +56,6 @@ interface SkillCategoryModuleProps {
 }
 
 const SkillCategoryModule = React.memo(({ category, index }: SkillCategoryModuleProps) => {
-  const { isMobile } = useMobileOptimization()
-  
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -70,7 +66,7 @@ const SkillCategoryModule = React.memo(({ category, index }: SkillCategoryModule
         ease: [0.25, 0.1, 0.25, 1]
       }}
       className={cn(
-        "relative group",
+        "relative group w-full",
         "p-6 rounded-xl border border-border/20",
         "bg-background/40 backdrop-blur-sm",
         "hover:bg-background/60 transition-all duration-500",
@@ -126,10 +122,7 @@ const SkillCategoryModule = React.memo(({ category, index }: SkillCategoryModule
         </div>
 
         {/* Skills Grid */}
-        <div className={cn(
-          "grid gap-2",
-          isMobile ? "grid-cols-2" : "grid-cols-3"
-        )}>
+        <div className="flex flex-wrap gap-2 w-full overflow-visible items-start">
           {category.skills.map((skill, skillIndex) => {
             const IconComponent = SKILL_ICON_MAP[skill as keyof typeof SKILL_ICON_MAP]
             
@@ -148,7 +141,7 @@ const SkillCategoryModule = React.memo(({ category, index }: SkillCategoryModule
                   transition: { duration: 0.2, ease: "easeOut" }
                 }}
                 className={cn(
-                  "flex items-center space-x-2 p-2 rounded-md",
+                  "inline-flex items-center space-x-2 p-2 rounded-md whitespace-nowrap shrink-0 overflow-visible",
                   "bg-background/60 border border-border/10",
                   "hover:bg-background/80 hover:border-border/20",
                   "transition-all duration-300 cursor-pointer"
@@ -168,7 +161,7 @@ const SkillCategoryModule = React.memo(({ category, index }: SkillCategoryModule
                     <IconComponent />
                   </motion.div>
                 )}
-                <span className="text-sm font-medium text-foreground truncate">
+                <span className="text-sm font-medium text-foreground whitespace-nowrap overflow-visible">
                   {skill}
                 </span>
               </motion.div>
@@ -191,7 +184,7 @@ const SkillsSection = React.forwardRef<
     <SectionWrapper
       ref={ref}
       id="skills"
-      className={cn("relative overflow-hidden", className)}
+      className={cn("relative w-full overflow-hidden", className)}
       {...props}
     >
       <HeroParallax speed={0.3} className="absolute inset-0">
@@ -201,8 +194,8 @@ const SkillsSection = React.forwardRef<
         <div className="absolute bottom-1/3 right-1/4 w-36 h-36 bg-cyber-purple/5 rounded-full blur-2xl" />
       </HeroParallax>
       
-      <Container size="cinematic" className="relative z-10">
-        <div className="max-w-6xl mx-auto space-y-16">
+      <Container size="full" className="relative z-10 w-full">
+        <div className="w-full space-y-16">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -245,9 +238,11 @@ const SkillsSection = React.forwardRef<
             </motion.p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="flex flex-wrap gap-4 w-full items-start">
             {skillsCategories.map((category, index) => (
-              <SkillCategoryModule key={category.title} category={category} index={index} />
+              <div key={category.title} className="w-full md:w-[calc(50%-8px)] lg:w-[calc(33.333%-11px)] min-w-[2500px]">
+                <SkillCategoryModule category={category} index={index} />
+              </div>
             ))}
           </div>
 

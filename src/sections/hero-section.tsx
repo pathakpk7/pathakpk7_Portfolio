@@ -2,12 +2,12 @@
 
 import * as React from "react"
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion"
+import Image from "next/image"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui"
 import { Container, SectionWrapper } from "@/components/layout"
 import { HeroScene } from "@/components/3d"
 import { useMousePosition } from "@/hooks"
-import { OptimizedImage } from "@/components/performance/optimized-image"
 import { FaLinkedin, FaEnvelope, FaTwitter } from "react-icons/fa"
 import { SiGithub, SiLeetcode, SiInstagram, SiGeeksforgeeks } from "react-icons/si"
 
@@ -77,11 +77,11 @@ const HeroSection = React.forwardRef<
         
         {/* Content */}
         <Container size="cinematic" className="relative z-20">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center min-h-[80vh] lg:min-h-[80vh]">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center min-h-[60vh] lg:min-h-[80vh]">
             
             {/* Left Content - Text */}
             <motion.div 
-              className="space-y-6 lg:space-y-12 order-2 lg:order-1"
+              className="space-y-4 lg:space-y-12 order-1 lg:order-1"
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 1.2, ease: [0.25, 0.1, 0.25, 1] }}
@@ -175,7 +175,7 @@ const HeroSection = React.forwardRef<
                   variant="minimal" 
                   size="lg" 
                   className="hover-lift"
-                  onClick={() => window.open('https://linkedin.com/in/prasoon-pathak', '_blank', 'noopener,noreferrer')}
+                  onClick={() => window.open('https://www.linkedin.com/in/prasoon7pathak07/', '_blank', 'noopener,noreferrer')}
                 >
                   <FaLinkedin className="w-4 h-4 mr-2" />
                   LinkedIn
@@ -185,7 +185,7 @@ const HeroSection = React.forwardRef<
                   variant="minimal" 
                   size="lg" 
                   className="hover-lift"
-                  onClick={() => window.open('https://leetcode.com/pathakpk7', '_blank', 'noopener,noreferrer')}
+                  onClick={() => window.open('https://leetcode.com/u/pathakMahi/', '_blank', 'noopener,noreferrer')}
                 >
                   <SiLeetcode className="w-4 h-4 mr-2" />
                   LeetCode
@@ -195,7 +195,7 @@ const HeroSection = React.forwardRef<
                   variant="minimal" 
                   size="lg" 
                   className="hover-lift"
-                  onClick={() => window.open('https://twitter.com/prasoonpathak', '_blank', 'noopener,noreferrer')}
+                  onClick={() => window.open('https://twitter.com/panditpk7', '_blank', 'noopener,noreferrer')}
                 >
                   <FaTwitter className="w-4 h-4 mr-2" />
                   Twitter
@@ -205,7 +205,7 @@ const HeroSection = React.forwardRef<
                   variant="minimal" 
                   size="lg" 
                   className="hover-lift"
-                  onClick={() => window.open('https://instagram.com/prasoonpathak', '_blank', 'noopener,noreferrer')}
+                  onClick={() => window.open('https://www.instagram.com/_.prasoon_._._/', '_blank', 'noopener,noreferrer')}
                 >
                   <SiInstagram className="w-4 h-4 mr-2" />
                   Instagram
@@ -215,7 +215,7 @@ const HeroSection = React.forwardRef<
                   variant="minimal" 
                   size="lg" 
                   className="hover-lift"
-                  onClick={() => window.open('https://geeksforgeeks.org/pathakpk7', '_blank', 'noopener,noreferrer')}
+                  onClick={() => window.open('https://www.geeksforgeeks.org/profile/prasoon7pathak', '_blank', 'noopener,noreferrer')}
                 >
                   <SiGeeksforgeeks className="w-4 h-4 mr-2" />
                   GFG
@@ -235,7 +235,7 @@ const HeroSection = React.forwardRef<
 
             {/* Right Content - Immersive Profile Image */}
             <motion.div
-              className="relative flex justify-center lg:justify-end items-center order-1 lg:order-2"
+              className="relative flex justify-center lg:justify-end items-center order-2 lg:order-2"
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 1.2, delay: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
@@ -325,17 +325,16 @@ const HeroSection = React.forwardRef<
                       WebkitMaskImage: 'radial-gradient(ellipse 70% 80% at 50% 50%, black 40%, transparent 80%)',
                     }}
                   >
-                    <OptimizedImage 
+                    <Image 
                       src="/images/profile.jpg" 
                       alt="Prasoon Pathak"
                       fill
-                      priority
-                      quality={90}
-                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       className="object-cover object-center"
                       style={{
                         filter: 'brightness(1.1) contrast(1.15) saturate(1.1)',
                       }}
+                      priority
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     />
                   </div>
 

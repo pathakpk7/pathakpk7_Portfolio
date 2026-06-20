@@ -1,4 +1,4 @@
-﻿const fs = require('fs');
+﻿import fs from 'fs';
 const lines = [];
 function add(s) { lines.push(s); }
 
