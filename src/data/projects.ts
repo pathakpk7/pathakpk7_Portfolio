@@ -17,6 +17,16 @@ export interface Project {
   github: string
   liveDemo?: string
   screenshot?: string
+  frontend?: string
+  backend?: string
+  database?: string
+  authentication?: string
+  apisUsed?: string[]
+  hosting?: string
+  orm?: string
+  storage?: string
+  aiModels?: string[]
+  teamSize?: string
 }
 
 export const projects: Project[] = [
@@ -29,63 +39,47 @@ export const projects: Project[] = [
     overview: "SecureNet IDS is an advanced Intrusion Detection System designed to detect and prevent cyber threats in real-time. The system uses machine learning algorithms to analyze network traffic patterns and identify suspicious activities, providing organizations with comprehensive security monitoring and threat prevention capabilities.",
     problemSolved: "Traditional IDS solutions often generate high false positive rates, struggle with encrypted traffic analysis, and lack real-time threat intelligence. SecureNet IDS addresses these challenges through AI-powered analysis, encrypted traffic inspection, and continuous threat intelligence updates.",
     keyFeatures: [
-      "Real-time Network Traffic Monitoring",
-      "Machine Learning-Based Threat Detection",
-      "Encrypted Traffic Analysis",
-      "Custom Rule Engine",
+      "Real-Time Packet Analysis",
       "Threat Intelligence Integration",
-      "Automated Incident Response",
-      "Dashboard with Analytics",
-      "Alert System with Severity Levels",
-      "Historical Data Analysis",
-      "Multi-Protocol Support"
+      "IP Reputation Analysis",
+      "URL Scanning",
+      "Risk Assessment Engine",
+      "Security Dashboard",
+      "WebSocket Live Monitoring",
+      "Threat Investigation System"
     ],
     techStack: [
-      "Python",
-      "TensorFlow",
-      "Scikit-learn",
-      "Flask",
       "React",
-      "TypeScript",
-      "PostgreSQL",
-      "Redis",
-      "Docker",
-      "Wireshark"
+      "Vite",
+      "Chart.js",
+      "React ChartJS 2",
+      "GSAP",
+      "Python",
+      "FastAPI",
+      "WebSockets",
+      "Supabase PostgreSQL"
     ],
-    architecture: "Network Traffic → Packet Capture → Feature Extraction → ML Model → Threat Detection → Alert System → Dashboard",
-    challenges: [
-      {
-        challenge: "High false positive rates in traditional IDS",
-        solution: "Implemented ensemble ML models with adaptive thresholding and continuous learning"
-      },
-      {
-        challenge: "Analyzing encrypted network traffic",
-        solution: "Used statistical analysis of packet metadata and behavioral pattern recognition"
-      },
-      {
-        challenge: "Real-time performance with large network volumes",
-        solution: "Implemented distributed processing with Redis caching and optimized feature extraction"
-      }
+    frontend: "React, Vite, Chart.js, React ChartJS 2, GSAP",
+    backend: "Python, FastAPI, WebSockets",
+    database: "Supabase PostgreSQL",
+    apisUsed: [
+      "VirusTotal API",
+      "AbuseIPDB API",
+      "URLScan API",
+      "AlienVault OTX API",
+      "Google Safe Browsing API"
     ],
-    keyLearnings: [
-      "Machine Learning for Cybersecurity",
-      "Network Protocol Analysis",
-      "Real-time System Design",
-      "Threat Intelligence Integration",
-      "Security Dashboard Development",
-      "Performance Optimization"
-    ],
+    authentication: "JWT-based API Security",
+    hosting: "Docker Containers, Nginx Reverse Proxy",
+    role: "Designed frontend dashboard, Integrated threat intelligence feeds, Built FastAPI backend services, Developed machine learning detection pipeline, Implemented Supabase database integration",
     futureRoadmap: [
-      "AI-Powered Threat Prediction",
-      "Cloud Deployment Support",
-      "Mobile Application",
-      "Integration with SIEM Systems",
-      "Automated Response Playbooks",
-      "Multi-tenant Architecture"
+      "SIEM Integration",
+      "LSTM-Based Threat Detection",
+      "Cloud-Native Deployment",
+      "Distributed Monitoring Nodes"
     ],
-    projectImpact: "Provides organizations with a modern, AI-driven approach to network security, reducing false positives by 60% and improving threat detection accuracy.",
-    role: "Full Stack Development | ML Model Training | System Architecture",
-    github: "https://github.com/pathakpk7/SecureNet_IDS.git"
+    github: "https://github.com/pathakpk7/SecureNet_IDS.git",
+    screenshot: undefined
   },
   {
     id: "ziva",
@@ -96,62 +90,41 @@ export const projects: Project[] = [
     overview: "Ziva is a wellness and fitness platform designed to reconnect users with India's traditional health practices. The platform combines yoga, physical exercises, traditional games, wellness tracking, diet guidance, and personalized health insights to encourage a healthier and more balanced lifestyle.",
     problemSolved: "Modern lifestyles promote sedentary habits, stress, poor fitness routines, and unhealthy living. Traditional Indian wellness practices offer effective solutions but are often difficult to discover, track, and adopt consistently. Ziva bridges this gap through a modern digital platform.",
     keyFeatures: [
-      "Yoga-Based Workout System",
-      "Traditional Indian Exercise Programs",
-      "Traditional Games & Activities",
-      "Daily Wellness Challenges",
-      "Fitness Tracking Dashboard",
-      "Diet & Nutrition Guidance",
-      "Health Assessment Tools",
-      "Gamification System",
-      "Achievement Badges",
-      "Progress Analytics"
+      "Yoga Programs",
+      "Traditional Fitness Workouts",
+      "Wellness Tracking",
+      "Diet Guidance",
+      "Traditional Indian Games",
+      "Achievement System",
+      "Progress Analytics Dashboard"
     ],
     techStack: [
       "React",
       "JavaScript",
-      "Tailwind CSS",
+      "Framer Motion",
+      "React Router",
+      "Axios",
       "Node.js",
       "Express.js",
       "MongoDB",
-      "Firebase",
-      "Chart.js",
-      "Lottie Animations"
+      "JWT",
+      "Passport.js",
+      "Google OAuth"
     ],
-    architecture: "User → React Frontend → Node.js Backend → MongoDB → Analytics Engine → Personalized Recommendations",
-    challenges: [
-      {
-        challenge: "Making traditional wellness practices engaging for younger generations",
-        solution: "Introduced gamification, achievement systems, and daily challenges"
-      },
-      {
-        challenge: "Creating a modern experience around traditional activities",
-        solution: "Designed immersive UI with interactive visualizations and progress tracking"
-      },
-      {
-        challenge: "Maintaining user engagement",
-        solution: "Implemented streak systems, rewards, and personalized recommendations"
-      }
-    ],
-    keyLearnings: [
-      "Frontend Architecture",
-      "Gamification Design",
-      "User Engagement Systems",
-      "Health Tracking Platforms",
-      "Data Visualization",
-      "Team Collaboration"
-    ],
+    frontend: "React, JavaScript, Framer Motion, React Router, Axios",
+    backend: "Node.js, Express.js",
+    database: "MongoDB",
+    authentication: "JWT, Passport.js, Google OAuth",
+    role: "Frontend Lead - Developed core UI components, Built fitness tracking interfaces, Implemented animations and user interactions, Integrated backend APIs",
+    teamSize: "5 Developers",
     futureRoadmap: [
-      "AI Fitness Coach",
-      "Wearable Integration",
-      "Personalized Workout Plans",
+      "AI Wellness Coach",
       "Community Challenges",
       "Mobile Application",
-      "Multilingual Support"
+      "Smart Wearable Integration"
     ],
-    projectImpact: "Promotes healthy living by combining traditional Indian wellness practices with modern technology, making fitness more engaging and culturally relevant.",
-    role: "Frontend Development | UI/UX Design | User Experience Engineering",
-    github: "https://github.com/ank501/ziva.git"
+    github: "https://github.com/ank501/ziva.git",
+    screenshot: undefined
   },
   {
     id: "findora",
@@ -164,30 +137,40 @@ export const projects: Project[] = [
     keyFeatures: [
       "Lost Item Reporting",
       "Found Item Submission",
-      "Smart Search System",
-      "Campus Authentication",
+      "Smart Search",
       "Leaderboards",
-      "Gamification",
-      "Reward System",
-      "Community Engagement"
+      "Trust Score System",
+      "Campus Verification",
+      "Role-Based Access Control"
     ],
     techStack: [
       "Next.js",
+      "React",
       "TypeScript",
+      "Tailwind CSS",
+      "Zustand",
+      "React Hook Form",
+      "Zod",
       "NestJS",
+      "Supabase PostgreSQL",
       "Prisma",
-      "Supabase",
-      "PostgreSQL",
-      "Tailwind CSS"
+      "Cloudinary"
     ],
+    frontend: "Next.js, React, TypeScript, Tailwind CSS, Zustand, React Hook Form, Zod",
+    backend: "NestJS, TypeScript",
+    database: "Supabase PostgreSQL",
+    authentication: "JWT Authentication, Passport.js",
+    orm: "Prisma",
+    storage: "Cloudinary",
+    role: "Full Stack Developer - Designed database schema, Implemented authentication, Developed frontend UI, Built backend APIs, Integrated Cloudinary uploads",
     futureRoadmap: [
-      "QR Verification",
       "AI Item Matching",
+      "QR Verification",
       "Mobile Application",
-      "Campus Notifications",
-      "Trust-Based Reputation System"
+      "Push Notifications"
     ],
-    github: "https://github.com/pathakpk7/Findora.git"
+    github: "https://github.com/pathakpk7/Findora.git",
+    screenshot: undefined
   },
   {
     id: "social-media-generator",
@@ -201,19 +184,33 @@ export const projects: Project[] = [
       "AI Caption Generation",
       "Hashtag Suggestions",
       "Content Templates",
-      "Platform-Specific Optimization",
-      "Tone Customization",
-      "Batch Generation"
+      "AI Content Creation",
+      "Prompt-Based Content Generation"
     ],
     techStack: [
-      "React",
+      "HTML",
+      "CSS",
+      "JavaScript",
+      "Gradio UI",
       "Python",
-      "OpenAI API",
-      "FastAPI",
-      "MongoDB",
-      "Tailwind CSS"
+      "Google Gemini API",
+      "Hugging Face Models"
     ],
-    github: "https://github.com/pathakpk7/Social_Media_Post_and_Caption_Generator.git"
+    frontend: "HTML, CSS, JavaScript, Gradio UI",
+    backend: "Python",
+    database: "None",
+    aiModels: [
+      "Google Gemini API",
+      "Hugging Face Models"
+    ],
+    futureRoadmap: [
+      "Content Calendar",
+      "Brand Voice Customization",
+      "Multi-Language Support",
+      "Social Platform Integrations"
+    ],
+    github: "https://github.com/pathakpk7/Social_Media_Post_and_Caption_Generator.git",
+    screenshot: undefined
   },
   {
     id: "murder-mystery",
@@ -224,19 +221,34 @@ export const projects: Project[] = [
     overview: "An interactive murder mystery game where players solve crimes through clue gathering, suspect interviews, and deductive reasoning.",
     problemSolved: "Created an engaging gaming experience that tests logical thinking and detective skills.",
     keyFeatures: [
-      "Interactive Storyline",
-      "Clue Discovery System",
-      "Suspect Interrogation",
       "Evidence Collection",
-      "Deduction Mechanics",
-      "Multiple Endings"
+      "Suspect Interrogation",
+      "Multiple Cases",
+      "Investigation System",
+      "Case Progression Tracking",
+      "Detective Gameplay"
     ],
     techStack: [
-      "Python",
-      "Pygame",
-      "SQLite"
+      "HTML",
+      "CSS",
+      "JavaScript",
+      "Node.js",
+      "Express.js",
+      "Supabase PostgreSQL",
+      "JWT Authentication"
     ],
-    github: "https://github.com/pathakpk7/Murder_Mystery_Game.git"
+    frontend: "HTML, CSS, JavaScript",
+    backend: "Node.js, Express.js",
+    database: "Supabase PostgreSQL",
+    authentication: "JWT Authentication",
+    futureRoadmap: [
+      "Multiplayer Investigations",
+      "AI Generated Cases",
+      "Achievement System",
+      "Global Leaderboards"
+    ],
+    github: "https://github.com/pathakpk7/Murder_Mystery_Game.git",
+    screenshot: undefined
   },
   {
     id: "vsbh-cricket",
@@ -247,20 +259,38 @@ export const projects: Project[] = [
     overview: "A comprehensive cricket league management system for organizing tournaments, tracking scores, and managing teams.",
     problemSolved: "Simplified cricket tournament organization with automated score tracking and team management.",
     keyFeatures: [
-      "Tournament Scheduling",
-      "Live Score Tracking",
+      "Live Player Auction",
+      "Real-Time Bidding",
       "Team Management",
-      "Player Statistics",
-      "Leaderboard",
-      "Match History"
+      "League Dashboard",
+      "Tournament Analytics",
+      "Google Sheets Integration"
     ],
     techStack: [
-      "React",
+      "React 19",
+      "TypeScript",
+      "React Router",
+      "Context API",
+      "Axios",
+      "Socket.IO Client",
       "Node.js",
-      "MongoDB",
-      "Express.js"
+      "Express.js",
+      "Socket.IO",
+      "Supabase PostgreSQL"
     ],
-    github: "https://github.com/pathakpk7/vsbh-cricleague.git"
+    frontend: "React 19, TypeScript, React Router, Context API, Axios, Socket.IO Client",
+    backend: "Node.js, Express.js, Socket.IO",
+    database: "Supabase PostgreSQL",
+    authentication: "Admin Authentication System",
+    hosting: "Frontend: Vercel, Backend: Render",
+    futureRoadmap: [
+      "Live Match Scoring",
+      "Fantasy Cricket Module",
+      "Mobile Application",
+      "Player Performance Analytics"
+    ],
+    github: "https://github.com/pathakpk7/vsbh-cricleague.git",
+    screenshot: undefined
   },
   {
     id: "spotify-clone",
@@ -271,20 +301,64 @@ export const projects: Project[] = [
     overview: "A Spotify-inspired music streaming application with playlist management, music playback, and user authentication.",
     problemSolved: "Demonstrated frontend development skills by recreating a popular music streaming platform.",
     keyFeatures: [
-      "Music Playback",
-      "Playlist Creation",
-      "Search Functionality",
-      "User Authentication",
+      "Spotify-Inspired UI",
+      "Playlist Navigation",
+      "Music Controls",
       "Responsive Design",
-      "Audio Controls"
+      "Audio Interface"
     ],
     techStack: [
-      "React",
-      "Tailwind CSS",
-      "Spotify API",
-      "Firebase"
+      "HTML",
+      "CSS",
+      "JavaScript"
     ],
-    github: "https://github.com/pathakpk7/Spotify_clone.git"
+    frontend: "HTML, CSS, JavaScript",
+    backend: "None",
+    database: "None",
+    authentication: "None",
+    apisUsed: ["None"],
+    futureRoadmap: [
+      "Spotify API Integration",
+      "User Authentication",
+      "Playlist Management",
+      "React Migration"
+    ],
+    github: "https://github.com/pathakpk7/Spotify_clone.git",
+    screenshot: undefined
+  },
+  {
+    id: "online-book-store",
+    name: "Online Book Store",
+    tagline: "E-Commerce Book Platform",
+    category: "personal",
+    featured: false,
+    overview: "A complete e-commerce platform for books with shopping cart, user authentication, and product browsing capabilities.",
+    problemSolved: "Created a functional e-commerce experience for book sales with cart management and user accounts.",
+    keyFeatures: [
+      "Book Catalogue",
+      "Shopping Cart",
+      "Login",
+      "Registration",
+      "Contact System",
+      "Product Browsing"
+    ],
+    techStack: [
+      "HTML",
+      "CSS",
+      "JavaScript"
+    ],
+    frontend: "HTML, CSS, JavaScript",
+    backend: "None",
+    database: "None",
+    authentication: "Frontend Login/Register Workflow",
+    futureRoadmap: [
+      "Payment Gateway",
+      "Backend Integration",
+      "User Profiles",
+      "Order Tracking"
+    ],
+    github: "https://github.com/pathakpk7/Online_Book_Store.git",
+    screenshot: undefined
   },
   {
     id: "currency-converter",
@@ -295,19 +369,26 @@ export const projects: Project[] = [
     overview: "A currency converter application that provides real-time exchange rates between multiple currencies.",
     problemSolved: "Simplified currency conversion with up-to-date exchange rates for travelers and businesses.",
     keyFeatures: [
-      "Real-Time Exchange Rates",
-      "Multiple Currency Support",
-      "Historical Rate Charts",
-      "Offline Mode",
-      "Quick Conversion"
+      "Currency Conversion",
+      "Multi-Currency Support",
+      "Responsive UI",
+      "Real-Time Calculations"
     ],
     techStack: [
-      "React",
-      "Exchange Rate API",
-      "Chart.js",
-      "Tailwind CSS"
+      "HTML",
+      "CSS",
+      "JavaScript",
+      "Exchange Rate API"
     ],
-    github: "https://github.com/pathakpk7/Currency_converter.git"
+    frontend: "HTML, CSS, JavaScript",
+    apisUsed: ["Exchange Rate API (if configured)"],
+    futureRoadmap: [
+      "Historical Exchange Rates",
+      "Currency Trend Charts",
+      "Favorite Currency Pairs"
+    ],
+    github: "https://github.com/pathakpk7/Currency_converter.git",
+    screenshot: undefined
   },
   {
     id: "food-order",
@@ -318,21 +399,29 @@ export const projects: Project[] = [
     overview: "A complete food ordering and delivery system for restaurants with menu management, order tracking, and delivery coordination.",
     problemSolved: "Streamlined the food ordering process for restaurants and customers with real-time order tracking.",
     keyFeatures: [
-      "Menu Management",
-      "Order Placement",
-      "Real-Time Tracking",
-      "Payment Integration",
-      "Delivery Coordination",
-      "User Reviews"
+      "Food Menu",
+      "Cart System",
+      "Order Management",
+      "Responsive Layout",
+      "Dynamic Price Calculation"
     ],
     techStack: [
-      "React",
-      "Node.js",
-      "MongoDB",
-      "Stripe API",
-      "Socket.io"
+      "HTML",
+      "CSS",
+      "JavaScript"
     ],
-    github: "https://github.com/pathakpk7/Food-order-and-delivery.git"
+    frontend: "HTML, CSS, JavaScript",
+    backend: "None",
+    database: "None",
+    authentication: "None",
+    futureRoadmap: [
+      "Payment Gateway",
+      "Order Tracking",
+      "User Authentication",
+      "Restaurant Dashboard"
+    ],
+    github: "https://github.com/pathakpk7/Food-order-and-delivery.git",
+    screenshot: undefined
   }
 ]
 

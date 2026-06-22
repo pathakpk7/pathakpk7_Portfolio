@@ -4,31 +4,17 @@ import * as React from "react"
 import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { Container, SectionWrapper } from "@/components/layout"
-import { ProjectRail } from "@/components/projects/project-rail"
-import { FeaturedProjectShowcase } from "@/components/projects/featured-project-showcase"
-import { ProjectLearnMorePanel } from "@/components/projects/project-learn-more-panel"
-import { projects, getFeaturedProject, getProjectsByCategory } from "@/data/projects"
-import type { Project } from "@/data/projects"
+import { ExpandableCard } from "@/components/projects/expandable-card"
+import { projects } from "@/data/projects"
 
 const ProjectsSection = React.forwardRef<
   React.ElementRef<typeof SectionWrapper>,
   Omit<React.ComponentPropsWithoutRef<typeof SectionWrapper>, "children">
 >(({ className, ...props }, ref) => {
-  const [selectedProject, setSelectedProject] = React.useState<Project | null>(null)
-  const [isPanelOpen, setIsPanelOpen] = React.useState(false)
+  const [expandedProjectId, setExpandedProjectId] = React.useState<string | null>(null)
 
-  const featuredProject = getFeaturedProject()
-  const groupProjects = getProjectsByCategory("group")
-  const personalProjects = getProjectsByCategory("personal")
-
-  const handleLearnMore = (project: Project) => {
-    setSelectedProject(project)
-    setIsPanelOpen(true)
-  }
-
-  const handleClosePanel = () => {
-    setIsPanelOpen(false)
-    setSelectedProject(null)
+  const handleToggle = (projectId: string) => {
+    setExpandedProjectId(prev => prev === projectId ? null : projectId)
   }
 
   return (
@@ -84,37 +70,18 @@ const ProjectsSection = React.forwardRef<
           </motion.p>
         </motion.div>
 
-        {/* Featured Project */}
-        {featuredProject && (
-          <div className="mb-24">
-            <FeaturedProjectShowcase
-              project={featuredProject}
-              onLearnMore={handleLearnMore}
+        {/* Projects Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {projects.map((project, index) => (
+            <ExpandableCard
+              key={project.id}
+              project={project}
+              isExpanded={expandedProjectId === project.id}
+              onToggle={() => handleToggle(project.id)}
+              index={index}
             />
-          </div>
-        )}
-
-        {/* Group Projects */}
-        {groupProjects.length > 0 && (
-          <div className="mb-24">
-            <ProjectRail
-              projects={groupProjects}
-              title="Group Projects"
-              onLearnMore={handleLearnMore}
-            />
-          </div>
-        )}
-
-        {/* Personal Projects */}
-        {personalProjects.length > 0 && (
-          <div className="mb-24">
-            <ProjectRail
-              projects={personalProjects}
-              title="Personal Projects"
-              onLearnMore={handleLearnMore}
-            />
-          </div>
-        )}
+          ))}
+        </div>
 
         {/* Project Stats */}
         <motion.div
@@ -122,7 +89,7 @@ const ProjectsSection = React.forwardRef<
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 1, delay: 0.8 }}
-          className="text-center"
+          className="text-center mt-16"
         >
           <motion.div
             className="inline-flex items-center space-x-8 px-8 py-4 rounded-2xl border border-border/20 bg-background/60 backdrop-blur-md"
@@ -135,29 +102,22 @@ const ProjectsSection = React.forwardRef<
             </div>
             <div className="w-px h-8 bg-border/30" />
             <div className="text-center">
-              <div className="text-3xl font-bold text-foreground">{featuredProject ? 1 : 0}</div>
+              <div className="text-3xl font-bold text-foreground">{projects.filter(p => p.featured).length}</div>
               <div className="text-sm text-muted-foreground">Featured</div>
             </div>
             <div className="w-px h-8 bg-border/30" />
             <div className="text-center">
-              <div className="text-3xl font-bold text-foreground">{groupProjects.length}</div>
+              <div className="text-3xl font-bold text-foreground">{projects.filter(p => p.category === "group").length}</div>
               <div className="text-sm text-muted-foreground">Group</div>
             </div>
             <div className="w-px h-8 bg-border/30" />
             <div className="text-center">
-              <div className="text-3xl font-bold text-foreground">{personalProjects.length}</div>
+              <div className="text-3xl font-bold text-foreground">{projects.filter(p => p.category === "personal").length}</div>
               <div className="text-sm text-muted-foreground">Personal</div>
             </div>
           </motion.div>
         </motion.div>
       </Container>
-
-      {/* Learn More Panel */}
-      <ProjectLearnMorePanel
-        project={selectedProject}
-        isOpen={isPanelOpen}
-        onClose={handleClosePanel}
-      />
     </SectionWrapper>
   )
 })
