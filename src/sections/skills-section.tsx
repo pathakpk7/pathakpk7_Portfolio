@@ -238,11 +238,9 @@ const SkillsSection = React.forwardRef<
             </motion.p>
           </motion.div>
 
-          <div className="flex flex-wrap gap-4 w-full items-start">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full items-start">
             {skillsCategories.map((category, index) => (
-              <div key={category.title} className="w-full md:w-[calc(50%-8px)] lg:w-[calc(33.333%-11px)] min-w-[2500px]">
-                <SkillCategoryModule category={category} index={index} />
-              </div>
+              <SkillCategoryModule key={category.title} category={category} index={index} />
             ))}
           </div>
 
