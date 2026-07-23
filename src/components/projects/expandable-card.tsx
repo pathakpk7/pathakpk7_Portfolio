@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { motion, AnimatePresence } from "framer-motion"
+import Image from "next/image"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui"
 import { Project } from "@/data/projects"
@@ -17,12 +18,18 @@ interface ExpandableCardProps {
 const ExpandableCard = React.forwardRef<HTMLDivElement, ExpandableCardProps>(
   ({ project, isExpanded, onToggle, index }, ref) => {
     const [isHovered, setIsHovered] = React.useState(false)
+    
+    React.useEffect(() => {
+      console.log('ExpandableCard isExpanded changed for', project.id, ':', isExpanded)
+    }, [isExpanded, project.id])
 
     const handleCardClick = (e: React.MouseEvent) => {
       // Prevent click if clicking on GitHub button or external link
-      if ((e.target as HTMLElement).closest('a[href]')) {
+      const target = e.target as HTMLElement
+      if (target.closest('button') || target.closest('a[href]')) {
         return
       }
+      console.log('Card clicked, toggling expansion for:', project.id)
       onToggle()
     }
 
@@ -58,7 +65,7 @@ const ExpandableCard = React.forwardRef<HTMLDivElement, ExpandableCardProps>(
         transition={{ duration: 0.6, delay: index * 0.1 }}
         layout
         className={cn(
-          "w-full rounded-3xl overflow-hidden",
+          "w-full rounded-3xl",
           "bg-linear-to-br from-background/60 to-background/30",
           "backdrop-blur-xl border border-border/20",
           "transition-all duration-500",
@@ -85,11 +92,12 @@ const ExpandableCard = React.forwardRef<HTMLDivElement, ExpandableCardProps>(
           {/* Screenshot Preview / Placeholder */}
           <div className="relative w-full h-48 md:h-56 rounded-2xl overflow-hidden mb-6 bg-linear-to-br from-cyber-blue/10 to-cyber-purple/10">
             {project.screenshot ? (
-              <img
+              <Image
                 src={project.screenshot}
                 alt={`${project.name} screenshot`}
-                className="w-full h-full object-cover"
-                loading="lazy"
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               />
             ) : (
               <div className="absolute inset-0 flex items-center justify-center">
@@ -191,14 +199,16 @@ const ExpandableCard = React.forwardRef<HTMLDivElement, ExpandableCardProps>(
         {/* Expanded State Content */}
         <AnimatePresence>
           {isExpanded && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
-              className="border-t border-border/20"
-            >
-              <div className="p-6 md:p-8 space-y-6">
+              <motion.div
+                key="expanded-content"
+                layout
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
+                className="border-t border-border/20"
+              >
+                <div className="p-6 md:p-8 space-y-6">
                 {/* Overview */}
                 <motion.section
                   initial={{ opacity: 0, y: 20 }}

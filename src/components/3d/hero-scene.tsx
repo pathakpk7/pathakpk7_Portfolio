@@ -10,11 +10,13 @@ import { cn } from "@/lib/utils"
 // Simple floating particles with luxury motion
 const FloatingParticles = React.memo(function FloatingParticles() {
   const particlesRef = useRef<THREE.Points>(null)
+  const timerRef = useRef<THREE.Timer>(new THREE.Timer())
   
-  useFrame((state) => {
+  useFrame(() => {
     if (particlesRef.current) {
-      particlesRef.current.rotation.y = state.clock.elapsedTime * 0.02
-      particlesRef.current.rotation.x = state.clock.elapsedTime * 0.01
+      const elapsedTime = timerRef.current.getElapsed()
+      particlesRef.current.rotation.y = elapsedTime * 0.02
+      particlesRef.current.rotation.x = elapsedTime * 0.01
     }
   })
 
@@ -64,13 +66,15 @@ const FloatingParticles = React.memo(function FloatingParticles() {
 // Simple ambient spheres
 const AmbientSpheres = React.memo(function AmbientSpheres() {
   const spheresRef = useRef<THREE.Group>(null)
+  const timerRef = useRef<THREE.Timer>(new THREE.Timer())
   
-  useFrame((state) => {
+  useFrame(() => {
     if (spheresRef.current) {
-      spheresRef.current.rotation.y = state.clock.elapsedTime * 0.01
+      const elapsedTime = timerRef.current.getElapsed()
+      spheresRef.current.rotation.y = elapsedTime * 0.01
       spheresRef.current.children.forEach((sphere, index) => {
         const child = sphere as THREE.Mesh
-        child.position.y = Math.sin(state.clock.elapsedTime * 0.5 + index) * 0.2
+        child.position.y = Math.sin(elapsedTime * 0.5 + index) * 0.2
       })
     }
   })

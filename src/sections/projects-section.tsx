@@ -14,7 +14,12 @@ const ProjectsSection = React.forwardRef<
   const [expandedProjectId, setExpandedProjectId] = React.useState<string | null>(null)
 
   const handleToggle = (projectId: string) => {
-    setExpandedProjectId(prev => prev === projectId ? null : projectId)
+    console.log('handleToggle called with:', projectId, 'current expanded:', expandedProjectId)
+    setExpandedProjectId(prev => {
+      const newValue = prev === projectId ? null : projectId
+      console.log('Setting expandedProjectId to:', newValue)
+      return newValue
+    })
   }
 
   return (
