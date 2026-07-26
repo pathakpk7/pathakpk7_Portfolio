@@ -75,17 +75,6 @@ Features:
 * Direct GitHub integration
 * Optimized mobile experience
 
-### 🏆 Certifications
-
-Interactive certification showcase featuring:
-
-* 📱 **Digital Application Fundamentals (STEM)** - NASSCOM / FutureSkills Prime (Sep 2025)
-* 🤖 **Generative AI Virtual Internship** - IBM SkillsBuild (Sep 2025)
-* 🧠 **SOAR – AI to Aspire** - Microsoft (Nov 2025)
-* 🔒 **Certified Phishing Prevention Specialist** - Hack & Fix (Dec 2025)
-* ☁️ **AWS Solutions Architecture Job Simulation** - Forage (Jan 2026)
-* 🌐 **Getting Started with Cisco Packet Tracer** - Cisco Networking Academy (Jul 2026)
-
 ### 📱 Fully Responsive
 
 Optimized for:
@@ -94,13 +83,6 @@ Optimized for:
 * 💻 Laptop
 * 📱 Tablet
 * 📲 Mobile
-
-### 💼 Experience
-
-Professional journey featuring:
-
-* 📊 **Data Analytics Intern** - InternAlpha (Aug 2026 – Present) - Remote
-* 🤖 **Generative AI Virtual Intern** - IBM SkillsBuild (Aug 2025 – Sept 2025) - Remote
 
 ---
 
@@ -137,43 +119,7 @@ Professional journey featuring:
 
 ---
 
-## 📂 Featured Projects
-
-### 🔐 SecureNet IDS
-
-An AI-Powered Real-Time Intrusion Detection System that captures and analyzes network traffic, identifies malicious activity using machine learning, enriches detections using threat intelligence services, and visualizes security events through an interactive monitoring dashboard.
-
-### 🤖 Social Media Post & Caption Generator
-
-An AI-powered application that generates social-media captions, hashtags, and content suggestions using generative AI models and prompt-driven content generation.
-
-### 🕵️ Murder Mystery Game
-
-An interactive detective game where players investigate fictional crimes by collecting evidence, questioning suspects, tracking clues, and applying deductive reasoning.
-
-### 🏏 VSBH Cricket League
-
-A cricket league management platform designed to organize teams, conduct live player auctions, manage tournament information, and provide league analytics.
-
-### 🎵 Spotify Clone
-
-A Spotify-inspired frontend application recreating the visual experience of a modern music streaming platform with playlist navigation and music controls.
-
-### 📚 Online Book Store
-
-A responsive online bookstore interface providing book discovery, product browsing, shopping-cart interactions, login, and registration workflows.
-
-### 💱 Currency Converter
-
-A responsive currency conversion application designed to calculate values between multiple currencies using exchange-rate data with real-time calculations.
-
-### 🍔 Food Order & Delivery System
-
-A responsive food-ordering interface featuring menu browsing, cart management, dynamic price calculation, and an ordering workflow.
-
----
-
-## 📦 Installation
+##  Installation
 
 Clone the repository:
 
