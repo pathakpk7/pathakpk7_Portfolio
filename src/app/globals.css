@@ -306,3 +306,29 @@
     background-color: hsl(var(--muted) / 0.3);
   }
 }
+/* =========================================================
+   SKILLS — HORIZONTAL EXPLORER
+   ========================================================= */
+
+.skills-horizontal-explorer {
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  user-select: none;
+}
+
+.skills-horizontal-explorer::-webkit-scrollbar {
+  display: none;
+}
+
+.skills-horizontal-explorer > * {
+  min-height: 0;
+}
+
+@media (max-width: 480px) {
+  .skill-category {
+    width: 240px;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+}

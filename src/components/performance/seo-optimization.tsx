@@ -2,233 +2,519 @@
 
 import * as React from "react"
 import Head from "next/head"
-import { Metadata } from "next"
+import Script from "next/script"
+import type { Metadata } from "next"
 
-// SEO metadata configuration
+/* =========================================================
+   SEO CONFIG
+========================================================= */
+
 const SEO_CONFIG = {
-  siteName: "Prasoon Pathak - Cybersecurity & Full Stack Developer",
-  title: "Prasoon Pathak | Cybersecurity Expert & Full Stack Developer",
-  description: "Final Year Computer Science student specializing in cybersecurity, full stack development, and AI/ML. Building intelligent intrusion detection systems and secure web applications.",
+  siteName: "Prasoon Pathak | Portfolio",
+
+  title:
+    "Prasoon Pathak |",
+
+  description:
+    "Portfolio of Prasoon Pathak, a Computer Science Engineering student building projects across software development, data analytics, cybersecurity, AI/ML, and modern web technologies.",
+
   keywords: [
-    "cybersecurity",
+    "Prasoon Pathak",
+    "software developer",
     "full stack developer",
-    "AI/ML",
-    "intrusion detection",
-    "web development",
+    "data analytics",
+    "cybersecurity",
+    "artificial intelligence",
+    "machine learning",
     "React",
-    "Node.js",
+    "Next.js",
+    "TypeScript",
+    "JavaScript",
     "Python",
-    "TensorFlow",
+    "SQL",
+    "FastAPI",
+    "intrusion detection system",
+    "SecureNet IDS",
+    "web development",
     "computer science",
-    "final year project",
     "portfolio",
-    "Prasoon Pathak"
   ],
+
   author: "Prasoon Pathak",
+
   url: "https://prasoon-portfolio.vercel.app",
+
   image: "/og-image.jpg",
-  twitterHandle: "@prasoonpathak",
+
   locale: "en_US",
-  type: "website"
-}
 
-// Generate structured data for SEO
-const generateStructuredData = () => {
-  return {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    "name": "Prasoon Pathak",
-    "jobTitle": "Computer Science Student & Developer",
-    "description": "Final Year Computer Science student specializing in cybersecurity, full stack development, and AI/ML",
-    "url": SEO_CONFIG.url,
-    "sameAs": [
-      "https://github.com/pathakpk7",
-      "https://linkedin.com/in/prasoon-pathak",
-      "https://twitter.com/prasoonpathak"
-    ],
-    "knowsAbout": [
-      "Cybersecurity",
-      "Full Stack Development",
-      "Artificial Intelligence",
-      "Machine Learning",
-      "Web Development",
-      "React",
-      "Node.js",
-      "Python"
-    ],
-    "alumniOf": {
+  type: "website",
+} as const
+
+/* =========================================================
+   PROFILE LINKS
+========================================================= */
+
+const PROFILE_LINKS = {
+  github: "https://github.com/pathakpk7",
+
+  linkedin:
+    "https://www.linkedin.com/in/prasoon7pathak07/",
+
+  twitter:
+    "https://twitter.com/panditpk7",
+
+  leetcode:
+    "https://leetcode.com/u/pathakMahi/",
+
+  geeksForGeeks:
+    "https://www.geeksforgeeks.org/profile/prasoon7pathak",
+} as const
+
+/* =========================================================
+   PERSON STRUCTURED DATA
+========================================================= */
+
+const generateStructuredData = () => ({
+  "@context": "https://schema.org",
+
+  "@type": "Person",
+
+  name: "Prasoon Pathak",
+
+  url: SEO_CONFIG.url,
+
+  image: `${SEO_CONFIG.url}${SEO_CONFIG.image}`,
+
+  description: SEO_CONFIG.description,
+
+  jobTitle: "Computer Science Engineering Student",
+
+  sameAs: [
+    PROFILE_LINKS.github,
+    PROFILE_LINKS.linkedin,
+    PROFILE_LINKS.twitter,
+    PROFILE_LINKS.leetcode,
+    PROFILE_LINKS.geeksForGeeks,
+  ],
+
+  knowsAbout: [
+    "Software Development",
+    "Full Stack Development",
+    "Data Analytics",
+    "Cybersecurity",
+    "Artificial Intelligence",
+    "Machine Learning",
+    "React",
+    "Next.js",
+    "TypeScript",
+    "JavaScript",
+    "Python",
+    "SQL",
+    "FastAPI",
+  ],
+
+  alumniOf: [
+    {
       "@type": "EducationalOrganization",
-      "name": "University"
+      name: "United Institute of Technology",
     },
-    "worksOn": [
-      {
-        "@type": "SoftwareApplication",
-        "name": "SecureNet IDS",
-        "description": "Intelligent Intrusion Detection System",
-        "url": "https://github.com/pathakpk7/SecureNet_IDS.git"
-      }
-    ]
-  }
+    {
+      "@type": "EducationalOrganization",
+      name: "Chandauli Polytechnic",
+    },
+  ],
+
+  worksOn: [
+    {
+      "@type": "SoftwareApplication",
+
+      name: "SecureNet IDS",
+
+      description:
+        "AI-powered intrusion detection system for real-time network monitoring, machine-learning-based attack detection, threat intelligence enrichment, and security analytics.",
+
+      url: "https://github.com/pathakpk7/SecureNet_IDS",
+    },
+  ],
+})
+
+/* =========================================================
+   SAFE JSON-LD SERIALIZATION
+========================================================= */
+
+function serializeJsonLd(
+  data: Record<string, unknown>
+) {
+  return JSON.stringify(data).replace(
+    /</g,
+    "\\u003c"
+  )
 }
 
-// SEO Head component
-export const SEOHead = React.forwardRef<HTMLHeadElement, {
+/* =========================================================
+   SEO HEAD
+========================================================= */
+
+interface SEOHeadProps {
   title?: string
   description?: string
   image?: string
   url?: string
   type?: string
-  keywords?: string[]
+  keywords?: readonly string[]
   noIndex?: boolean
-}>(({ 
+}
+
+export function SEOHead({
   title = SEO_CONFIG.title,
   description = SEO_CONFIG.description,
   image = SEO_CONFIG.image,
   url = SEO_CONFIG.url,
   type = SEO_CONFIG.type,
   keywords = SEO_CONFIG.keywords,
-  noIndex = false
- }, ref) => {
-  const structuredData = generateStructuredData()
+  noIndex = false,
+}: SEOHeadProps) {
+  const structuredData =
+    generateStructuredData()
+
+  const absoluteImage =
+    image.startsWith("http")
+      ? image
+      : `${SEO_CONFIG.url}${image}`
 
   return (
-    <Head ref={ref}>
-      {/* Basic Meta Tags */}
-      <title>{title}</title>
-      <meta name="description" content={description} />
-      <meta name="keywords" content={keywords.join(", ")} />
-      <meta name="author" content={SEO_CONFIG.author} />
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <meta name="robots" content={noIndex ? "noindex, nofollow" : "index, follow"} />
-      
-      {/* Open Graph Tags */}
-      <meta property="og:title" content={title} />
-      <meta property="og:description" content={description} />
-      <meta property="og:image" content={image} />
-      <meta property="og:image:width" content="1200" />
-      <meta property="og:image:height" content="630" />
-      <meta property="og:image:alt" content={title} />
-      <meta property="og:url" content={url} />
-      <meta property="og:type" content={type} />
-      <meta property="og:site_name" content={SEO_CONFIG.siteName} />
-      <meta property="og:locale" content={SEO_CONFIG.locale} />
-      
-      {/* Twitter Card Tags */}
-      <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:site" content={SEO_CONFIG.twitterHandle} />
-      <meta name="twitter:creator" content={SEO_CONFIG.twitterHandle} />
-      <meta name="twitter:title" content={title} />
-      <meta name="twitter:description" content={description} />
-      <meta name="twitter:image" content={image} />
-      <meta name="twitter:image:alt" content={title} />
-      
-      {/* Additional Meta Tags */}
-      <meta name="theme-color" content="#1a1a1a" />
-      <meta name="msapplication-TileColor" content="#1a1a1a" />
-      <meta name="application-name" content={SEO_CONFIG.siteName} />
-      
-      {/* Canonical URL */}
-      <link rel="canonical" href={url} />
-      
-      {/* Structured Data */}
-      <script
+    <>
+      {/* ===================================================
+          STANDARD HEAD METADATA
+      =================================================== */}
+
+      <Head>
+        <title>{title}</title>
+
+        <meta
+          name="description"
+          content={description}
+        />
+
+        <meta
+          name="keywords"
+          content={keywords.join(", ")}
+        />
+
+        <meta
+          name="author"
+          content={SEO_CONFIG.author}
+        />
+
+        <meta
+          name="robots"
+          content={
+            noIndex
+              ? "noindex, nofollow"
+              : "index, follow"
+          }
+        />
+
+        {/* Open Graph */}
+
+        <meta
+          property="og:title"
+          content={title}
+        />
+
+        <meta
+          property="og:description"
+          content={description}
+        />
+
+        <meta
+          property="og:image"
+          content={absoluteImage}
+        />
+
+        <meta
+          property="og:image:width"
+          content="1200"
+        />
+
+        <meta
+          property="og:image:height"
+          content="630"
+        />
+
+        <meta
+          property="og:image:alt"
+          content={title}
+        />
+
+        <meta
+          property="og:url"
+          content={url}
+        />
+
+        <meta
+          property="og:type"
+          content={type}
+        />
+
+        <meta
+          property="og:site_name"
+          content={SEO_CONFIG.siteName}
+        />
+
+        <meta
+          property="og:locale"
+          content={SEO_CONFIG.locale}
+        />
+
+        {/* Twitter / X */}
+
+        <meta
+          name="twitter:card"
+          content="summary_large_image"
+        />
+
+        <meta
+          name="twitter:creator"
+          content="@panditpk7"
+        />
+
+        <meta
+          name="twitter:title"
+          content={title}
+        />
+
+        <meta
+          name="twitter:description"
+          content={description}
+        />
+
+        <meta
+          name="twitter:image"
+          content={absoluteImage}
+        />
+
+        <meta
+          name="twitter:image:alt"
+          content={title}
+        />
+
+        {/* Browser */}
+
+        <meta
+          name="theme-color"
+          content="#050810"
+        />
+
+        <meta
+          name="application-name"
+          content={SEO_CONFIG.siteName}
+        />
+
+        {/* Canonical */}
+
+        <link
+          rel="canonical"
+          href={url}
+        />
+
+        {/* Connections */}
+
+        <link
+          rel="preconnect"
+          href="https://fonts.googleapis.com"
+        />
+
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+      </Head>
+
+      {/* ===================================================
+          JSON-LD
+
+          IMPORTANT:
+          Next.js Script is used instead of a raw <script>.
+      =================================================== */}
+
+      <Script
+        id="person-structured-data"
         type="application/ld+json"
+        strategy="afterInteractive"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(structuredData)
+          __html:
+            serializeJsonLd(
+              structuredData
+            ),
         }}
       />
-      
-      {/* Preconnect to external domains */}
-      <link rel="preconnect" href="https://fonts.googleapis.com" />
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-      <link rel="preconnect" href="https://github.com" />
-      <link rel="preconnect" href="https://vercel.com" />
-    </Head>
+    </>
   )
-})
+}
 
-SEOHead.displayName = "SEOHead"
+/* =========================================================
+   METADATA GENERATOR
 
-// Dynamic metadata generator for pages
-export const generateMetadata = (overrides: Partial<Metadata> = {}): Metadata => {
-  return {
-    title: overrides.title || SEO_CONFIG.title,
-    description: overrides.description || SEO_CONFIG.description,
-    keywords: overrides.keywords || SEO_CONFIG.keywords,
-    authors: [{ name: SEO_CONFIG.author }],
+   NOTE:
+   This function should only be consumed from server-side
+   Next.js metadata files/components.
+========================================================= */
+
+export function generateMetadata(
+  overrides: Partial<Metadata> = {}
+): Metadata {
+  const defaultMetadata: Metadata = {
+    metadataBase: new URL(
+      SEO_CONFIG.url
+    ),
+
+    title: SEO_CONFIG.title,
+
+    description:
+      SEO_CONFIG.description,
+
+    keywords: [
+      ...SEO_CONFIG.keywords,
+    ],
+
+    authors: [
+      {
+        name: SEO_CONFIG.author,
+      },
+    ],
+
     creator: SEO_CONFIG.author,
+
     openGraph: {
-      title: overrides.title || SEO_CONFIG.title,
-      description: overrides.description || SEO_CONFIG.description,
-      url: overrides.url || SEO_CONFIG.url,
-      siteName: SEO_CONFIG.siteName,
+      title: SEO_CONFIG.title,
+
+      description:
+        SEO_CONFIG.description,
+
+      url: SEO_CONFIG.url,
+
+      siteName:
+        SEO_CONFIG.siteName,
+
       images: [
         {
-          url: overrides.image || SEO_CONFIG.image,
+          url: SEO_CONFIG.image,
+
           width: 1200,
+
           height: 630,
-          alt: overrides.title || SEO_CONFIG.title,
+
+          alt: SEO_CONFIG.title,
         },
       ],
+
       locale: SEO_CONFIG.locale,
-      type: overrides.type || SEO_CONFIG.type,
+
+      type: "website",
     },
+
     twitter: {
       card: "summary_large_image",
-      site: SEO_CONFIG.twitterHandle,
-      creator: SEO_CONFIG.twitterHandle,
-      title: overrides.title || SEO_CONFIG.title,
-      description: overrides.description || SEO_CONFIG.description,
-      images: [overrides.image || SEO_CONFIG.image],
+
+      creator: "@panditpk7",
+
+      title: SEO_CONFIG.title,
+
+      description:
+        SEO_CONFIG.description,
+
+      images: [
+        SEO_CONFIG.image,
+      ],
     },
+
     robots: {
-      index: !overrides.noIndex,
-      follow: !overrides.noIndex,
+      index: true,
+
+      follow: true,
+
       googleBot: {
-        index: !overrides.noIndex,
-        follow: !overrides.noIndex,
+        index: true,
+
+        follow: true,
+
         "max-video-preview": -1,
-        "max-image-preview": "large",
+
+        "max-image-preview":
+          "large",
+
         "max-snippet": -1,
       },
     },
-    verification: {
-      google: "your-google-verification-code",
-      yandex: "your-yandex-verification-code",
-    },
+
     alternates: {
-      canonical: overrides.url || SEO_CONFIG.url,
+      canonical:
+        SEO_CONFIG.url,
     },
-    ...overrides
+  }
+
+  return {
+    ...defaultMetadata,
+    ...overrides,
   }
 }
 
-// Structured data component for specific content
-export const StructuredData = React.forwardRef<HTMLScriptElement, {
+/* =========================================================
+   GENERIC STRUCTURED DATA
+========================================================= */
+
+interface StructuredDataProps {
+  id?: string
   type: string
-  data: Record<string, any>
-}>(({ type, data }, ref) => {
+  data: Record<string, unknown>
+}
+
+export function StructuredData({
+  id,
+  type,
+  data,
+}: StructuredDataProps) {
   const structuredData = {
-    "@context": "https://schema.org",
+    "@context":
+      "https://schema.org",
+
     "@type": type,
-    ...data
+
+    ...data,
   }
 
+  const scriptId =
+    id ??
+    `structured-data-${type
+      .toLowerCase()
+      .replace(
+        /[^a-z0-9]+/g,
+        "-"
+      )}`
+
   return (
-    <script
-      ref={ref}
+    <Script
+      id={scriptId}
       type="application/ld+json"
+      strategy="afterInteractive"
       dangerouslySetInnerHTML={{
-        __html: JSON.stringify(structuredData)
+        __html:
+          serializeJsonLd(
+            structuredData
+          ),
       }}
     />
   )
-})
+}
 
-StructuredData.displayName = "StructuredData"
+/* =========================================================
+   PROJECT STRUCTURED DATA
+========================================================= */
 
-// Project structured data
-export const ProjectStructuredData = React.forwardRef<HTMLScriptElement, {
+interface ProjectStructuredDataProps {
   project: {
     name: string
     description: string
@@ -236,30 +522,63 @@ export const ProjectStructuredData = React.forwardRef<HTMLScriptElement, {
     technologies: string[]
     image?: string
   }
-}>(({ project }, ref) => {
-  const data = {
-    "@type": "SoftwareApplication",
-    "name": project.name,
-    "description": project.description,
-    "url": project.url,
-    "applicationCategory": "DeveloperApplication",
-    "operatingSystem": "Any",
-    "programmingLanguage": project.technologies,
-    "screenshot": project.image,
-    "offers": {
+}
+
+export function ProjectStructuredData({
+  project,
+}: ProjectStructuredDataProps) {
+  const data: Record<
+    string,
+    unknown
+  > = {
+    name: project.name,
+
+    description:
+      project.description,
+
+    url: project.url,
+
+    applicationCategory:
+      "DeveloperApplication",
+
+    operatingSystem: "Any",
+
+    programmingLanguage:
+      project.technologies,
+
+    offers: {
       "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    }
+
+      price: "0",
+
+      priceCurrency: "USD",
+    },
   }
 
-  return <StructuredData ref={ref} type="SoftwareApplication" data={data} />
-})
+  if (project.image) {
+    data.screenshot =
+      project.image
+  }
 
-ProjectStructuredData.displayName = "ProjectStructuredData"
+  return (
+    <StructuredData
+      id={`project-${project.name
+        .toLowerCase()
+        .replace(
+          /[^a-z0-9]+/g,
+          "-"
+        )}`}
+      type="SoftwareApplication"
+      data={data}
+    />
+  )
+}
 
-// Blog post structured data
-export const BlogPostStructuredData = React.forwardRef<HTMLScriptElement, {
+/* =========================================================
+   BLOG STRUCTURED DATA
+========================================================= */
+
+interface BlogPostStructuredDataProps {
   post: {
     title: string
     description: string
@@ -269,52 +588,110 @@ export const BlogPostStructuredData = React.forwardRef<HTMLScriptElement, {
     author: string
     image?: string
   }
-}>(({ post }, ref) => {
-  const data = {
-    "@type": "BlogPosting",
-    "headline": post.title,
-    "description": post.description,
-    "url": post.url,
-    "datePublished": post.datePublished,
-    "dateModified": post.dateModified || post.datePublished,
-    "author": {
+}
+
+export function BlogPostStructuredData({
+  post,
+}: BlogPostStructuredDataProps) {
+  const data: Record<
+    string,
+    unknown
+  > = {
+    headline: post.title,
+
+    description:
+      post.description,
+
+    url: post.url,
+
+    datePublished:
+      post.datePublished,
+
+    dateModified:
+      post.dateModified ??
+      post.datePublished,
+
+    author: {
       "@type": "Person",
-      "name": post.author
+
+      name: post.author,
     },
-    "image": post.image,
-    "publisher": {
-      "@type": "Organization",
-      "name": SEO_CONFIG.siteName,
-      "logo": {
-        "@type": "ImageObject",
-        "url": SEO_CONFIG.image
-      }
-    }
+
+    publisher: {
+      "@type":
+        "Organization",
+
+      name:
+        SEO_CONFIG.siteName,
+
+      logo: {
+        "@type":
+          "ImageObject",
+
+        url: `${SEO_CONFIG.url}${SEO_CONFIG.image}`,
+      },
+    },
   }
 
-  return <StructuredData ref={ref} type="BlogPosting" data={data} />
-})
+  if (post.image) {
+    data.image = post.image
+  }
 
-BlogPostStructuredData.displayName = "BlogPostStructuredData"
+  return (
+    <StructuredData
+      id={`blog-${post.title
+        .toLowerCase()
+        .replace(
+          /[^a-z0-9]+/g,
+          "-"
+        )}`}
+      type="BlogPosting"
+      data={data}
+    />
+  )
+}
 
-// Breadcrumb structured data
-export const BreadcrumbStructuredData = React.forwardRef<HTMLScriptElement, {
+/* =========================================================
+   BREADCRUMB STRUCTURED DATA
+========================================================= */
+
+interface BreadcrumbStructuredDataProps {
   breadcrumbs: Array<{
     name: string
     url: string
   }>
-}>(({ breadcrumbs }, ref) => {
+}
+
+export function BreadcrumbStructuredData({
+  breadcrumbs,
+}: BreadcrumbStructuredDataProps) {
   const data = {
-    "@type": "BreadcrumbList",
-    "itemListElement": breadcrumbs.map((breadcrumb, index) => ({
-      "@type": "ListItem",
-      "position": index + 1,
-      "name": breadcrumb.name,
-      "item": breadcrumb.url
-    }))
+    itemListElement:
+      breadcrumbs.map(
+        (
+          breadcrumb,
+          index
+        ) => ({
+          "@type":
+            "ListItem",
+
+          position:
+            index + 1,
+
+          name:
+            breadcrumb.name,
+
+          item:
+            breadcrumb.url,
+        })
+      ),
   }
 
-  return <StructuredData ref={ref} type="BreadcrumbList" data={data} />
-})
-
-BreadcrumbStructuredData.displayName = "BreadcrumbStructuredData"
+  return (
+    <StructuredData
+      id="breadcrumb-structured-data"
+      type="BreadcrumbList"
+      data={data}
+    />
+  )
+}

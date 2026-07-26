@@ -1,10 +1,43 @@
 "use client"
 
 import * as React from "react"
-import { createContext, useContext, useEffect, useRef, useState } from "react"
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react"
+
+interface LenisScrollData {
+  scroll: number
+  limit: number
+  progress: number
+  direction: number
+}
+
+interface LenisInstance {
+  scrollTo: (
+    value: number,
+    options?: {
+      offset?: number
+    }
+  ) => void
+  on: (
+    event: "scroll",
+    callback: (data: LenisScrollData) => void
+  ) => void
+  raf: (time: number) => void
+  destroy: () => void
+}
 
 interface SmoothScrollContextType {
-  scrollTo: (element: string | HTMLElement, offset?: number) => void
+  scrollTo: (
+    element: string | HTMLElement,
+    offset?: number
+  ) => void
   scrollY: number
   isScrolling: boolean
   lenis: LenisInstance | null
@@ -12,193 +45,241 @@ interface SmoothScrollContextType {
   direction: "up" | "down"
 }
 
-// Type definition for Lenis
-interface LenisInstance {
-  scrollTo: (value: number) => void
-  on: (event: string, callback: (data: LenisScrollData) => void) => void
-  raf: (time: number) => void
-  destroy: () => void
-}
-
-interface LenisScrollData {
-  scroll: number
-  limit: number
-  progress: number
-  direction: "up" | "down"
-}
-
-interface LenisOptions {
-  duration: number
-  easing: (t: number) => number
-  direction: "vertical"
-  gestureDirection: "vertical"
-  smooth: boolean
-  mouseMultiplier: number
-  smoothTouch: boolean
-  touchMultiplier: number
-  infinite: boolean
-}
-
-const SmoothScrollContext = createContext<SmoothScrollContextType | undefined>(undefined)
-
-export function useSmoothScroll() {
-  const context = useContext(SmoothScrollContext)
-  if (!context) {
-    throw new Error("useSmoothScroll must be used within SmoothScrollProvider")
-  }
-  return context
-}
-
 interface SmoothScrollProviderProps {
   children: React.ReactNode
   duration?: number
-  easing?: (t: number) => number
   smooth?: boolean
 }
 
-export function SmoothScrollProvider({ 
-  children, 
+const SmoothScrollContext =
+  createContext<SmoothScrollContextType | undefined>(undefined)
+
+const DEFAULT_EASING = (t: number) =>
+  Math.min(1, 1.001 - Math.pow(2, -10 * t))
+
+export function useSmoothScroll() {
+  const context = useContext(SmoothScrollContext)
+
+  if (!context) {
+    throw new Error(
+      "useSmoothScroll must be used within SmoothScrollProvider"
+    )
+  }
+
+  return context
+}
+
+export function SmoothScrollProvider({
+  children,
   duration = 1.2,
-  easing = (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-  smooth = true 
+  smooth = true,
 }: SmoothScrollProviderProps) {
   const [scrollY, setScrollY] = useState(0)
   const [isScrolling, setIsScrolling] = useState(false)
   const [progress, setProgress] = useState(0)
-  const [direction, setDirection] = useState<"up" | "down">("down")
-  const [lenisInstance, setLenisInstance] = useState<LenisInstance | null>(null)
-  const lenisRef = useRef<LenisInstance | null>(null)
-  const scrollTimeout = useRef<NodeJS.Timeout | null>(null)
-  const lastScrollY = useRef(0)
+  const [direction, setDirection] =
+    useState<"up" | "down">("down")
+  const [lenisInstance, setLenisInstance] =
+    useState<LenisInstance | null>(null)
 
-  // Initialize Lenis smooth scrolling
+  const lenisRef = useRef<LenisInstance | null>(null)
+  const rafIdRef = useRef<number | null>(null)
+  const scrollTimeoutRef =
+    useRef<ReturnType<typeof setTimeout> | null>(null)
+
   useEffect(() => {
     if (!smooth) return
 
-    const initLenis = async () => {
+    let mounted = true
+
+    const initializeLenis = async () => {
       try {
-        // Dynamically import Lenis to avoid SSR issues
         const Lenis = (await import("lenis")).default
-        
+
+        if (!mounted) return
+
         const lenis = new Lenis({
-          duration: duration,
-          easing: easing,
-          direction: "vertical",
-          gestureDirection: "vertical",
-          smooth: true,
-          mouseMultiplier: 1,
-          smoothTouch: true,
+          duration,
+          easing: DEFAULT_EASING,
+          orientation: "vertical",
+          gestureOrientation: "vertical",
+          smoothWheel: true,
+          wheelMultiplier: 1,
           touchMultiplier: 2,
           infinite: false,
-        } as LenisOptions)
-
-        const raf = (time: number) => {
-          lenis.raf(time)
-          requestAnimationFrame(raf)
-        }
-        
-        requestAnimationFrame(raf)
-
-        // Update scroll state
-        lenis.on("scroll", ({ scroll, progress, direction }: LenisScrollData) => {
-          setScrollY(scroll)
-          setProgress(progress)
-          setDirection(direction)
-          setIsScrolling(true)
-          
-          if (scrollTimeout.current) {
-            clearTimeout(scrollTimeout.current)
-          }
-          
-          scrollTimeout.current = setTimeout(() => {
-            setIsScrolling(false)
-          }, 150)
         })
 
         lenisRef.current = lenis
-        setLenisInstance(lenis)
-      } catch {
-        console.warn("Lenis not available, falling back to native scroll")
+        setLenisInstance(lenis as unknown as LenisInstance)
+
+        const raf = (time: number) => {
+          if (!mounted) return
+
+          lenis.raf(time)
+          rafIdRef.current = requestAnimationFrame(raf)
+        }
+
+        rafIdRef.current = requestAnimationFrame(raf)
+
+        lenis.on("scroll", (event) => {
+          if (!mounted) return
+
+          setScrollY(event.scroll)
+          setProgress(event.progress)
+
+          setDirection(
+            event.direction < 0 ? "up" : "down"
+          )
+
+          setIsScrolling(true)
+
+          if (scrollTimeoutRef.current) {
+            clearTimeout(scrollTimeoutRef.current)
+          }
+
+          scrollTimeoutRef.current = setTimeout(() => {
+            if (mounted) {
+              setIsScrolling(false)
+            }
+          }, 150)
+        })
+      } catch (error) {
+        console.warn(
+          "Lenis initialization failed. Using native scrolling.",
+          error
+        )
       }
     }
 
-    initLenis()
+    initializeLenis()
 
     return () => {
+      mounted = false
+
+      if (rafIdRef.current !== null) {
+        cancelAnimationFrame(rafIdRef.current)
+        rafIdRef.current = null
+      }
+
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current)
+        scrollTimeoutRef.current = null
+      }
+
       if (lenisRef.current) {
         lenisRef.current.destroy()
+        lenisRef.current = null
       }
-    }
-  }, [duration, easing, smooth])
 
-  // Fallback scroll listener for non-smooth mode
+      setLenisInstance(null)
+    }
+  }, [duration, smooth])
+
   useEffect(() => {
     if (smooth) return
+
+    let ticking = false
 
     const handleScroll = () => {
-      const currentScrollY = window.scrollY
-      setScrollY(currentScrollY)
-      setDirection(currentScrollY > lastScrollY.current ? "down" : "up")
-      setIsScrolling(true)
-      
-      if (scrollTimeout.current) {
-        clearTimeout(scrollTimeout.current)
-      }
-      
-      scrollTimeout.current = setTimeout(() => {
-        setIsScrolling(false)
-      }, 100)
-      
-      lastScrollY.current = currentScrollY
-    }
+      if (ticking) return
 
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [smooth])
+      ticking = true
 
-  // Update progress for non-smooth mode
-  useEffect(() => {
-    if (smooth) return
+      requestAnimationFrame(() => {
+        const currentY = window.scrollY
+        const maxScroll =
+          document.documentElement.scrollHeight -
+          window.innerHeight
 
-    const updateProgress = () => {
-      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight
-      const currentProgress = window.scrollY / scrollHeight
-      setProgress(currentProgress)
-    }
+        setDirection(
+          currentY >= scrollY ? "down" : "up"
+        )
 
-    window.addEventListener("scroll", updateProgress)
-    updateProgress()
-    
-    return () => window.removeEventListener("scroll", updateProgress)
-  }, [smooth])
+        setScrollY(currentY)
 
-  const scrollTo = (element: string | HTMLElement, offset = 0) => {
-    const target = typeof element === "string" 
-      ? document.querySelector(element) 
-      : element
-    
-    if (!target) return
+        setProgress(
+          maxScroll > 0
+            ? Math.min(1, Math.max(0, currentY / maxScroll))
+            : 0
+        )
 
-    const targetY = target.getBoundingClientRect().top + window.scrollY + offset
+        setIsScrolling(true)
 
-    if (lenisRef.current) {
-      lenisRef.current.scrollTo(targetY)
-    } else {
-      window.scrollTo({
-        top: targetY,
-        behavior: "smooth"
+        if (scrollTimeoutRef.current) {
+          clearTimeout(scrollTimeoutRef.current)
+        }
+
+        scrollTimeoutRef.current = setTimeout(() => {
+          setIsScrolling(false)
+        }, 150)
+
+        ticking = false
       })
     }
-  }
 
-  const value: SmoothScrollContextType = {
-    scrollTo,
-    scrollY,
-    isScrolling,
-    lenis: lenisInstance,
-    progress,
-    direction
-  }
+    window.addEventListener("scroll", handleScroll, {
+      passive: true,
+    })
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll)
+
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current)
+      }
+    }
+  }, [smooth, scrollY])
+
+  const scrollTo = useCallback(
+    (element: string | HTMLElement, offset = 0) => {
+      const target =
+        typeof element === "string"
+          ? document.querySelector<HTMLElement>(element)
+          : element
+
+      if (!target) return
+
+      if (lenisRef.current) {
+        const targetY =
+          target.getBoundingClientRect().top +
+          window.scrollY +
+          offset
+
+        lenisRef.current.scrollTo(targetY)
+        return
+      }
+
+      const targetY =
+        target.getBoundingClientRect().top +
+        window.scrollY +
+        offset
+
+      window.scrollTo({
+        top: targetY,
+        behavior: "smooth",
+      })
+    },
+    []
+  )
+
+  const value = useMemo<SmoothScrollContextType>(
+    () => ({
+      scrollTo,
+      scrollY,
+      isScrolling,
+      lenis: lenisInstance,
+      progress,
+      direction,
+    }),
+    [
+      scrollTo,
+      scrollY,
+      isScrolling,
+      lenisInstance,
+      progress,
+      direction,
+    ]
+  )
 
   return (
     <SmoothScrollContext.Provider value={value}>

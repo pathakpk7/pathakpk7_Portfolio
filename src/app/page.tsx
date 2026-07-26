@@ -24,6 +24,10 @@ const CertificationSection = dynamic(() => import('@/sections/certification-sect
   loading: () => <div className="min-h-20 flex items-center justify-center">Loading...</div>
 })
 
+const ExperienceSection = dynamic(() => import('@/sections/experience-section').then(mod => ({ default: mod.ExperienceSection })), {
+  loading: () => <div className="min-h-20 flex items-center justify-center">Loading...</div>
+})
+
 export default function Home() {
   return (
     <ErrorBoundary>
@@ -54,7 +58,14 @@ export default function Home() {
           <ProjectsSection />
         </Suspense>
       </ErrorBoundary>
-      
+
+      {/* Experience Section */}
+      <ErrorBoundary>
+        <Suspense fallback={<div className="min-h-20 flex items-center justify-center">Loading...</div>}>
+          <ExperienceSection />
+        </Suspense>
+      </ErrorBoundary>
+
       {/* Certification Section */}
       <ErrorBoundary>
         <Suspense fallback={<div className="min-h-20 flex items-center justify-center">Loading...</div>}>

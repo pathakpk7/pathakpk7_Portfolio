@@ -1,521 +1,1151 @@
 "use client"
 
 import * as React from "react"
-import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion"
 import Image from "next/image"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui"
-import { Container, SectionWrapper } from "@/components/layout"
-import { HeroScene } from "@/components/3d"
-import { useMousePosition } from "@/hooks"
-import { FaLinkedin, FaEnvelope, FaTwitter } from "react-icons/fa"
-import { SiGithub, SiLeetcode, SiInstagram, SiGeeksforgeeks } from "react-icons/si"
+import { motion } from "framer-motion"
+import { ArrowDown, Download } from "lucide-react"
 
-// Premium quotes for rotation
-const PREMIUM_QUOTES = [
-  "First, solve the problem. Then, write the code.",
-  "Security is not a product, but a process.",
-  "Stay curious. Stay dangerous.",
-  "Code is like humor. When you have to explain it, it's bad.",
-  "The best way to predict the future is to invent it.",
-  "Simplicity is the soul of efficiency.",
-  "Innovation distinguishes between a leader and a follower.",
-  "Technology is best when it brings people together.",
-  "The only way to do great work is to love what you do.",
-  "Think different.",
-  "Security is always excessive until it's not enough.",
-  "Code never lies, comments sometimes do.",
-  "Any fool can write code that a computer can understand. Good programmers write code that humans can understand.",
-  "First, make it work. Then, make it fast. Then, make it beautiful.",
-  "The most disastrous thing that you can ever learn is your first programming language.",
+import {
+  FaLinkedinIn as LinkedinIcon,
+  FaGithub as GitHub,
+  FaInstagram as Instagram,
+} from "react-icons/fa"
+
+import {
+  SiGeeksforgeeks as GeeksforGeeksIcon,
+  SiLeetcode as LeetCodeIcon,
+} from "react-icons/si"
+
+import { cn } from "@/lib/utils"
+import { Container, SectionWrapper } from "@/components/layout"
+
+/* =========================================================
+   DATA
+   ========================================================= */
+
+const socialLinks = [
+  {
+    name: "GitHub",
+    href: "https://github.com/pathakpk7",
+    icon: GitHub,
+  },
+  {
+    name: "LinkedIn",
+    href: "https://www.linkedin.com/in/prasoon7pathak07/",
+    icon: LinkedinIcon,
+  },
+  {
+    name: "Instagram",
+    href: "https://www.instagram.com/_.prasoon_._._/",
+    icon: Instagram,
+  },
+  {
+    name: "LeetCode",
+    href: "https://leetcode.com/u/pathakMahi/",
+    icon: LeetCodeIcon,
+  },
+  {
+    name: "GeeksforGeeks",
+    href: "https://www.geeksforgeeks.org/profile/prasoon7pathak",
+    icon: GeeksforGeeksIcon,
+  },
 ]
 
-interface HeroSectionProps {
-  className?: string;
+/* =========================================================
+   ANIMATION
+   ========================================================= */
+
+const containerVariants = {
+  hidden: {
+    opacity: 0,
+  },
+
+  visible: {
+    opacity: 1,
+
+    transition: {
+      staggerChildren: 0.11,
+      delayChildren: 0.1,
+    },
+  },
 }
+
+const itemVariants = {
+  hidden: {
+    opacity: 0,
+    y: 22,
+  },
+
+  visible: {
+    opacity: 1,
+    y: 0,
+
+    transition: {
+      duration: 0.75,
+      ease: [0.25, 0.1, 0.25, 1] as const,
+    },
+  },
+}
+
+/* =========================================================
+   SOCIAL ICON
+   ========================================================= */
+
+interface SocialIconProps {
+  name: string
+  href: string
+  icon: React.ComponentType<{
+    className?: string
+  }>
+}
+
+function SocialIcon({
+  name,
+  href,
+  icon: Icon,
+}: SocialIconProps) {
+  return (
+    <motion.a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={name}
+      title={name}
+      whileHover={{
+        y: -4,
+        scale: 1.1,
+      }}
+      whileTap={{
+        scale: 0.9,
+      }}
+      transition={{
+        duration: 0.22,
+      }}
+      className={cn(
+        "group/social",
+        "relative",
+        "flex",
+        "h-10 w-10",
+        "items-center",
+        "justify-center",
+        "overflow-hidden",
+        "rounded-2xl",
+        "border",
+        "border-white/[0.07]",
+        "bg-white/[0.025]",
+        "text-white/45",
+        "backdrop-blur-xl",
+        "transition-all",
+        "duration-300",
+
+        "hover:border-cyan-400/20",
+        "hover:bg-cyan-400/[0.065]",
+        "hover:text-cyan-200",
+        "hover:shadow-[0_0_22px_rgba(103,232,249,0.10)]",
+
+        "sm:h-11 sm:w-11"
+      )}
+    >
+      {/* ICON GLOW */}
+
+      <span
+        aria-hidden="true"
+        className={cn(
+          "absolute",
+          "h-6 w-6",
+          "rounded-full",
+          "bg-cyan-300/0",
+          "blur-lg",
+          "transition-colors",
+          "duration-300",
+          "group-hover/social:bg-cyan-300/20"
+        )}
+      />
+
+      <Icon
+        className={cn(
+          "relative z-10",
+          "h-[17px] w-[17px]",
+          "transition-transform",
+          "duration-300",
+          "group-hover/social:scale-110"
+        )}
+      />
+    </motion.a>
+  )
+}
+
+/* =========================================================
+   PROFILE VISUAL
+   ========================================================= */
+
+function ProfileVisual() {
+  return (
+    <motion.div
+      initial={{
+        opacity: 0,
+        x: 55,
+        scale: 0.93,
+      }}
+      animate={{
+        opacity: 1,
+        x: 0,
+        scale: 1,
+      }}
+      transition={{
+        duration: 1.1,
+        delay: 0.18,
+        ease: [0.25, 0.1, 0.25, 1],
+      }}
+      className={cn(
+        "relative",
+        "flex",
+        "h-full w-full",
+        "items-center",
+        "justify-end"
+      )}
+    >
+      {/* =====================================================
+          LARGE AMBIENT CYAN GLOW
+          ===================================================== */}
+
+      <motion.div
+        aria-hidden="true"
+        animate={{
+          scale: [1, 1.12, 1],
+          opacity: [0.15, 0.3, 0.15],
+        }}
+        transition={{
+          duration: 6,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+        className={cn(
+          "pointer-events-none",
+          "absolute",
+          "right-[0%]",
+          "top-1/2",
+          "h-[72%]",
+          "w-[88%]",
+          "-translate-y-1/2",
+          "rounded-full",
+          "bg-cyan-400/[0.10]",
+          "blur-[90px]",
+          "lg:blur-[120px]"
+        )}
+      />
+
+      {/* =====================================================
+          PURPLE GLOW
+          ===================================================== */}
+
+      <motion.div
+        aria-hidden="true"
+        animate={{
+          x: [0, -18, 0],
+          y: [0, 15, 0],
+          scale: [1, 1.08, 1],
+        }}
+        transition={{
+          duration: 8,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+        className={cn(
+          "pointer-events-none",
+          "absolute",
+          "bottom-[12%]",
+          "right-[5%]",
+          "h-[42%]",
+          "w-[50%]",
+          "rounded-full",
+          "bg-violet-500/[0.10]",
+          "blur-[90px]"
+        )}
+      />
+
+      {/* =====================================================
+          OUTER ORBIT
+          ===================================================== */}
+
+      <motion.div
+        aria-hidden="true"
+        animate={{
+          rotate: 360,
+        }}
+        transition={{
+          duration: 34,
+          repeat: Infinity,
+          ease: "linear",
+        }}
+        className={cn(
+          "pointer-events-none",
+          "absolute",
+          "right-[-2%]",
+          "top-1/2",
+          "aspect-square",
+          "w-[105%]",
+          "max-w-[610px]",
+          "-translate-y-1/2",
+          "rounded-full",
+          "border",
+          "border-cyan-400/[0.10]"
+        )}
+      >
+        <span
+          className={cn(
+            "absolute",
+            "left-1/2",
+            "top-[-4px]",
+            "h-2 w-2",
+            "-translate-x-1/2",
+            "rounded-full",
+            "bg-cyan-300",
+            "shadow-[0_0_16px_rgba(103,232,249,0.9)]"
+          )}
+        />
+      </motion.div>
+
+      {/* =====================================================
+          SECOND ORBIT
+          ===================================================== */}
+
+      <motion.div
+        aria-hidden="true"
+        animate={{
+          rotate: -360,
+        }}
+        transition={{
+          duration: 43,
+          repeat: Infinity,
+          ease: "linear",
+        }}
+        className={cn(
+          "pointer-events-none",
+          "absolute",
+          "right-[5%]",
+          "top-1/2",
+          "aspect-square",
+          "w-[88%]",
+          "max-w-[525px]",
+          "-translate-y-1/2",
+          "rounded-full",
+          "border",
+          "border-violet-400/[0.08]"
+        )}
+      >
+        <span
+          className={cn(
+            "absolute",
+            "bottom-[13%]",
+            "left-[7%]",
+            "h-1.5 w-1.5",
+            "rounded-full",
+            "bg-violet-300",
+            "shadow-[0_0_14px_rgba(196,181,253,0.85)]"
+          )}
+        />
+      </motion.div>
+
+      {/* =====================================================
+          PROFILE
+          ===================================================== */}
+
+      <motion.div
+        whileHover={{
+          scale: 1.018,
+        }}
+        transition={{
+          duration: 0.45,
+        }}
+        className={cn(
+          "relative z-10",
+
+          /*
+           * Larger than previous version.
+           */
+
+          "aspect-[4/5]",
+          "w-[105%]",
+          "max-w-[510px]",
+
+          "sm:w-[100%]",
+          "md:w-[96%]",
+          "lg:w-[94%]",
+          "xl:max-w-[560px]"
+        )}
+      >
+        {/* IMAGE HALO */}
+
+        <motion.div
+          aria-hidden="true"
+          animate={{
+            opacity: [0.16, 0.3, 0.16],
+            scale: [0.96, 1.04, 0.96],
+          }}
+          transition={{
+            duration: 5,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className={cn(
+            "absolute",
+            "inset-[10%]",
+            "rounded-[45%]",
+            "bg-cyan-400/[0.14]",
+            "blur-[55px]"
+          )}
+        />
+
+        {/* IMAGE */}
+
+        <div
+          className={cn(
+            "relative",
+            "h-full w-full",
+            "overflow-hidden"
+          )}
+        >
+          <Image
+            src="/profile.png"
+            alt="Prasoon Pathak"
+            fill
+            priority
+            sizes="(max-width: 640px) 48vw, (max-width: 1024px) 48vw, 560px"
+            className={cn(
+              "object-contain",
+              "object-bottom",
+              "drop-shadow-[0_28px_50px_rgba(0,0,0,0.50)]"
+            )}
+          />
+
+          {/* LOWER FADE */}
+
+          <div
+            aria-hidden="true"
+            className={cn(
+              "pointer-events-none",
+              "absolute",
+              "bottom-0 left-0 right-0",
+              "h-[18%]",
+              "bg-linear-to-t",
+              "from-background",
+              "via-background/25",
+              "to-transparent"
+            )}
+          />
+        </div>
+
+        {/* ===================================================
+            FLOATING PARTICLES
+            =================================================== */}
+
+        <motion.span
+          aria-hidden="true"
+          animate={{
+            y: [0, -12, 0],
+            x: [0, 4, 0],
+            opacity: [0.3, 0.85, 0.3],
+          }}
+          transition={{
+            duration: 4,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className={cn(
+            "absolute",
+            "right-[4%]",
+            "top-[22%]",
+            "h-1.5 w-1.5",
+            "rounded-full",
+            "bg-cyan-300",
+            "shadow-[0_0_16px_rgba(103,232,249,0.9)]"
+          )}
+        />
+
+        <motion.span
+          aria-hidden="true"
+          animate={{
+            y: [0, 10, 0],
+            x: [0, -5, 0],
+            opacity: [0.25, 0.7, 0.25],
+          }}
+          transition={{
+            duration: 5,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 0.8,
+          }}
+          className={cn(
+            "absolute",
+            "left-[4%]",
+            "top-[42%]",
+            "h-1.5 w-1.5",
+            "rounded-full",
+            "bg-violet-300",
+            "shadow-[0_0_14px_rgba(196,181,253,0.9)]"
+          )}
+        />
+      </motion.div>
+    </motion.div>
+  )
+}
+
+/* =========================================================
+   HERO
+   ========================================================= */
 
 const HeroSection = React.forwardRef<
   React.ElementRef<typeof SectionWrapper>,
-  HeroSectionProps
->(({ className }, ref) => {
-    const [currentQuoteIndex, setCurrentQuoteIndex] = React.useState(0)
-    const mousePosition = useMousePosition()
-    const { scrollY } = useScroll()
-    const imageScale = useTransform(scrollY, [0, 500], [1, 1.05])
-    const imageY = useTransform(scrollY, [0, 500], [0, -20])
+  Omit<
+    React.ComponentPropsWithoutRef<typeof SectionWrapper>,
+    "children"
+  >
+>(({ className, ...props }, ref) => {
+  const scrollToAbout = () => {
+    const aboutSection =
+      document.getElementById("about")
 
-    // Quote rotation effect
-    React.useEffect(() => {
-      const interval = setInterval(() => {
-        setCurrentQuoteIndex((prev) => (prev + 1) % PREMIUM_QUOTES.length)
-      }, 4000) // Change quote every 4 seconds
+    if (!aboutSection) return
 
-      return () => clearInterval(interval)
-    }, [])
+    aboutSection.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    })
+  }
 
-    // Calculate mouse-follow effect for luxury feel
-    const mouseX = mousePosition.clientX
-    const mouseY = mousePosition.clientY
-    const centerX = typeof window !== "undefined" ? window.innerWidth / 2 : 0
-    const centerY = typeof window !== "undefined" ? window.innerHeight / 2 : 0
-    const moveX = (mouseX - centerX) * 0.01
-    const moveY = (mouseY - centerY) * 0.01
+  return (
+    <SectionWrapper
+      ref={ref}
+      id="home"
+      animate={false}
+      className={cn(
+        "relative",
+        "min-h-[100svh]",
+        "w-full",
+        "overflow-hidden",
 
-    return (
-      <SectionWrapper
-        ref={ref}
-        id="home"
-        className={cn("min-h-screen flex items-center justify-center relative overflow-hidden", className)}
-        background="cinematic"
-        animate={false}
+        /*
+         * Reduced top spacing.
+         * Content begins much closer to floating navbar.
+         */
+
+        "pt-[72px]",
+        "sm:pt-[74px]",
+        "lg:pt-[76px]",
+
+        className
+      )}
+      {...props}
+    >
+      {/* =====================================================
+          BACKGROUND
+          ===================================================== */}
+
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0"
       >
-        {/* 3D Background */}
-        <HeroScene className="absolute inset-0" />
-        
-        {/* Cinematic overlay */}
-        <div className="absolute inset-0 bg-linear-to-b from-transparent via-background/20 to-background/40 pointer-events-none" />
-        
-        {/* Content */}
-        <Container size="cinematic" className="relative z-20">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center min-h-[60vh] lg:min-h-[80vh]">
-            
-            {/* Left Content - Text */}
-            <motion.div 
-              className="space-y-4 lg:space-y-12 order-1 lg:order-1"
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1.2, ease: [0.25, 0.1, 0.25, 1] }}
-              style={{
-                transform: `translateX(${moveX}px) translateY(${moveY}px)`
-              }}
+        {/* GRID */}
+
+        <div
+          className={cn(
+            "absolute inset-0",
+            "opacity-[0.022]",
+            "[background-image:linear-gradient(rgba(255,255,255,0.25)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.25)_1px,transparent_1px)]",
+            "[background-size:56px_56px]",
+            "[mask-image:linear-gradient(to_bottom,black_5%,black_70%,transparent_100%)]"
+          )}
+        />
+
+        {/* CYAN FIELD */}
+
+        <motion.div
+          animate={{
+            x: [-20, 25, -20],
+            y: [0, -20, 0],
+          }}
+          transition={{
+            duration: 13,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className={cn(
+            "absolute",
+            "left-[46%]",
+            "top-[35%]",
+            "h-[520px]",
+            "w-[520px]",
+            "rounded-full",
+            "bg-cyan-400/[0.035]",
+            "blur-[140px]"
+          )}
+        />
+
+        {/* PURPLE FIELD */}
+
+        <motion.div
+          animate={{
+            x: [20, -25, 20],
+            y: [-10, 20, -10],
+          }}
+          transition={{
+            duration: 16,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className={cn(
+            "absolute",
+            "-left-[8%]",
+            "top-[20%]",
+            "h-[420px]",
+            "w-[420px]",
+            "rounded-full",
+            "bg-violet-500/[0.035]",
+            "blur-[130px]"
+          )}
+        />
+
+        {/* BOTTOM FADE */}
+
+        <div
+          className={cn(
+            "absolute",
+            "bottom-0 left-0 right-0",
+            "h-36",
+            "bg-linear-to-t",
+            "from-background",
+            "to-transparent"
+          )}
+        />
+      </div>
+
+      {/* =====================================================
+          CONTENT
+          ===================================================== */}
+
+      <Container
+        size="cinematic"
+        className={cn(
+          "relative z-10",
+
+          /*
+           * We subtract navbar space instead of creating
+           * another full 100vh content block.
+           */
+
+          "flex",
+          "min-h-[calc(100svh-76px)]",
+          "items-center"
+        )}
+      >
+        <div
+          className={cn(
+            "grid",
+            "w-full",
+            "grid-cols-[55%_45%]",
+            "items-center",
+            "gap-0",
+
+            "sm:grid-cols-[53%_47%]",
+            "md:grid-cols-[51%_49%]",
+
+            "lg:grid-cols-[48%_52%]",
+            "lg:gap-4",
+
+            "xl:grid-cols-[47%_53%]"
+          )}
+        >
+          {/* =================================================
+              LEFT
+              ================================================= */}
+
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className={cn(
+              "relative z-20",
+              "flex",
+              "flex-col",
+              "items-start",
+              "justify-center",
+
+              /*
+               * Significantly less vertical padding than
+               * previous hero.
+               */
+
+              "py-5",
+              "sm:py-7",
+              "lg:py-8"
+            )}
+          >
+            {/* =================================================
+                MICRO INTRO
+                ================================================= */}
+
+            <motion.div
+              variants={itemVariants}
+              className="mb-3"
             >
-              {/* Luxury Name Display */}
-              <div className="space-y-2 lg:space-y-4">
-                <motion.h1 
-                  className="text-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black tracking-tight gradient-text-cyber text-shadow-glow"
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 1, delay: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
+              <div
+                className={cn(
+                  "flex",
+                  "items-center",
+                  "gap-2.5"
+                )}
+              >
+                <span className="relative flex h-2 w-2">
+                  <motion.span
+                    animate={{
+                      scale: [1, 1.8, 1],
+                      opacity: [0.6, 0, 0.6],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                    }}
+                    className={cn(
+                      "absolute",
+                      "h-full w-full",
+                      "rounded-full",
+                      "bg-cyan-300"
+                    )}
+                  />
+
+                  <span
+                    className={cn(
+                      "relative",
+                      "h-2 w-2",
+                      "rounded-full",
+                      "bg-cyan-300",
+                      "shadow-[0_0_10px_rgba(103,232,249,0.85)]"
+                    )}
+                  />
+                </span>
+
+                <span
+                  className={cn(
+                    "text-[8px]",
+                    "font-medium",
+                    "uppercase",
+                    "tracking-[0.24em]",
+                    "text-white/40",
+
+                    "sm:text-[9px]",
+                    "md:text-[10px]"
+                  )}
+                >
+                  Hello, I&apos;m
+                </span>
+              </div>
+            </motion.div>
+
+            {/* =================================================
+                MASSIVE FOOTER-STYLE NAME
+                ================================================= */}
+
+            <motion.div
+              variants={itemVariants}
+              className="relative"
+            >
+              {/* NAME GLOW */}
+
+              <motion.div
+                aria-hidden="true"
+                animate={{
+                  opacity: [0.08, 0.18, 0.08],
+                  scale: [0.95, 1.05, 0.95],
+                }}
+                transition={{
+                  duration: 5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+                className={cn(
+                  "pointer-events-none",
+                  "absolute",
+                  "left-[35%]",
+                  "top-1/2",
+                  "h-[80%]",
+                  "w-[80%]",
+                  "-translate-x-1/2",
+                  "-translate-y-1/2",
+                  "rounded-full",
+                  "bg-cyan-300",
+                  "blur-[75px]"
+                )}
+              />
+
+              <motion.h1
+                whileHover={{
+                  letterSpacing: "-0.035em",
+                }}
+                transition={{
+                  duration: 0.45,
+                }}
+                className={cn(
+                  "relative",
+                  "select-none",
+                  "font-black",
+                  "uppercase",
+                  "leading-[0.79]",
+                  "tracking-[-0.06em]",
+
+                  "text-[clamp(2.45rem,10.5vw,4.3rem)]",
+                  "sm:text-[clamp(3.6rem,9vw,5.8rem)]",
+                  "md:text-[clamp(4.6rem,8vw,7.3rem)]",
+                  "lg:text-[clamp(5.4rem,7.2vw,8.8rem)]"
+                )}
+              >
+                {/* PRASOON */}
+
+                <span
+                  className={cn(
+                    "block",
+                    "bg-linear-to-b",
+                    "from-white/[0.96]",
+                    "via-cyan-100/[0.88]",
+                    "to-cyan-300/[0.58]",
+                    "bg-clip-text",
+                    "text-transparent",
+                    "drop-shadow-[0_0_18px_rgba(103,232,249,0.12)]"
+                  )}
                 >
                   PRASOON
-                </motion.h1>
-                <motion.h1 
-                  className="text-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black tracking-tight gradient-text-cyber text-shadow-glow"
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 1, delay: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
+                </span>
+
+                {/* PATHAK */}
+
+                <span
+                  className={cn(
+                    "block",
+                    "bg-linear-to-r",
+                    "from-cyan-300",
+                    "via-cyan-100",
+                    "to-violet-300",
+                    "bg-clip-text",
+                    "text-transparent",
+                    "drop-shadow-[0_0_24px_rgba(103,232,249,0.16)]"
+                  )}
                 >
                   PATHAK
-                </motion.h1>
-              </div>
-
-              {/* Random Quote Rotation */}
-              <div className="h-10 lg:h-12 flex items-center">
-                <AnimatePresence mode="wait">
-                  <motion.p
-                    key={currentQuoteIndex}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
-                    className="text-sm md:text-lg lg:text-xl text-muted-foreground italic font-medium"
-                  >
-                    {PREMIUM_QUOTES[currentQuoteIndex]}
-                  </motion.p>
-                </AnimatePresence>
-              </div>
-
-              {/* Subheadline */}
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
-                className="text-base md:text-lg lg:text-xl text-foreground font-medium"
-              >
-                Cybersecurity Enthusiast | Full Stack Developer | AI/ML Learner
-              </motion.p>
-
-              {/* Short Intro */}
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
-                className="text-sm md:text-base lg:text-lg text-muted-foreground max-w-lg leading-relaxed"
-              >
-                Motivated Computer Science Engineering student with a Diploma background in Mechanical Engineering and strong interest in Cybersecurity, Full Stack Development, AI/ML, and Cloud Technologies.
-              </motion.p>
-
-              {/* CTA Buttons */}
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 1, ease: [0.25, 0.1, 0.25, 1] }}
-                className="flex flex-wrap gap-3 lg:gap-4"
-              >
-                <Button variant="cyber" size="lg" className="hover-lift group">
-                  <span className="relative z-10">Resume Download</span>
-                  <div className="absolute inset-0 bg-linear-to-br from-cyber-blue-600 to-cyber-purple-600 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                </Button>
-                
-                <Button variant="glass" size="lg" className="hover-lift">
-                  Contact Me
-                </Button>
-                
-                <Button 
-                  variant="minimal" 
-                  size="lg" 
-                  className="hover-lift"
-                  onClick={() => window.open('https://github.com/pathakpk7', '_blank', 'noopener,noreferrer')}
-                >
-                  <SiGithub className="w-4 h-4 mr-2" />
-                  GitHub
-                </Button>
-                
-                <Button 
-                  variant="minimal" 
-                  size="lg" 
-                  className="hover-lift"
-                  onClick={() => window.open('https://www.linkedin.com/in/prasoon7pathak07/', '_blank', 'noopener,noreferrer')}
-                >
-                  <FaLinkedin className="w-4 h-4 mr-2" />
-                  LinkedIn
-                </Button>
-                
-                <Button 
-                  variant="minimal" 
-                  size="lg" 
-                  className="hover-lift"
-                  onClick={() => window.open('https://leetcode.com/u/pathakMahi/', '_blank', 'noopener,noreferrer')}
-                >
-                  <SiLeetcode className="w-4 h-4 mr-2" />
-                  LeetCode
-                </Button>
-                
-                <Button 
-                  variant="minimal" 
-                  size="lg" 
-                  className="hover-lift"
-                  onClick={() => window.open('https://twitter.com/panditpk7', '_blank', 'noopener,noreferrer')}
-                >
-                  <FaTwitter className="w-4 h-4 mr-2" />
-                  Twitter
-                </Button>
-                
-                <Button 
-                  variant="minimal" 
-                  size="lg" 
-                  className="hover-lift"
-                  onClick={() => window.open('https://www.instagram.com/_.prasoon_._._/', '_blank', 'noopener,noreferrer')}
-                >
-                  <SiInstagram className="w-4 h-4 mr-2" />
-                  Instagram
-                </Button>
-                
-                <Button 
-                  variant="minimal" 
-                  size="lg" 
-                  className="hover-lift"
-                  onClick={() => window.open('https://www.geeksforgeeks.org/profile/prasoon7pathak', '_blank', 'noopener,noreferrer')}
-                >
-                  <SiGeeksforgeeks className="w-4 h-4 mr-2" />
-                  GFG
-                </Button>
-                
-                <Button 
-                  variant="minimal" 
-                  size="lg" 
-                  className="hover-lift"
-                  onClick={() => window.open('mailto:prasoon7pathak@gmail.com', '_blank')}
-                >
-                  <FaEnvelope className="w-4 h-4 mr-2" />
-                  Email
-                </Button>
-              </motion.div>
+                </span>
+              </motion.h1>
             </motion.div>
 
-            {/* Right Content - Immersive Profile Image */}
+            {/* =================================================
+                ANIMATED ENERGY LINE
+                ================================================= */}
+
             <motion.div
-              className="relative flex justify-center lg:justify-end items-center order-2 lg:order-2"
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1.2, delay: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+              variants={itemVariants}
+              className={cn(
+                "relative",
+                "mt-5",
+                "h-px",
+                "w-[88%]",
+                "max-w-[520px]",
+                "overflow-visible",
+                "bg-linear-to-r",
+                "from-cyan-400/5",
+                "via-white/[0.13]",
+                "to-transparent"
+              )}
             >
-              {/* Immersive Image Container */}
-              <div className="relative w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-2xl mx-auto">
-                
-                {/* Layer 1: Background HUD Rings (Behind Image) */}
-                <div className="absolute inset-0 pointer-events-none">
-                  {/* Outer rotating ring */}
-                  <motion.div
-                    className="absolute w-[120%] h-[120%] left-[-10%] top-[-10%]"
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
-                  >
-                    <div className="w-full h-full rounded-full border border-cyber-blue/20" />
-                    <div className="absolute top-0 left-1/2 w-2 h-2 bg-cyber-blue/40 rounded-full -translate-x-1/2" />
-                    <div className="absolute bottom-0 left-1/2 w-2 h-2 bg-cyber-blue/40 rounded-full -translate-x-1/2" />
-                    <div className="absolute left-0 top-1/2 w-2 h-2 bg-cyber-blue/40 rounded-full -translate-y-1/2" />
-                    <div className="absolute right-0 top-1/2 w-2 h-2 bg-cyber-blue/40 rounded-full -translate-y-1/2" />
-                  </motion.div>
-                  
-                  {/* Inner counter-rotating ring */}
-                  <motion.div
-                    className="absolute w-full h-full left-0 top-0"
-                    animate={{ rotate: -360 }}
-                    transition={{ duration: 45, repeat: Infinity, ease: "linear" }}
-                  >
-                    <div className="w-full h-full rounded-full border border-cyber-purple/15 border-dashed" />
-                  </motion.div>
-                  
-                  {/* Pulsing holographic circles */}
-                  {[...Array(3)].map((_, i) => (
-                    <motion.div
-                      key={`holo-${i}`}
-                      className="absolute rounded-full border border-cyber-blue/10"
-                      style={{
-                        width: `${80 + i * 15}%`,
-                        height: `${80 + i * 15}%`,
-                        left: `${10 - i * 7.5}%`,
-                        top: `${10 - i * 7.5}%`,
-                      }}
-                      animate={{
-                        scale: [1, 1.05, 1],
-                        opacity: [0.1, 0.2, 0.1],
-                      }}
-                      transition={{
-                        duration: 4 + i,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                        delay: i * 0.5,
-                      }}
-                    />
-                  ))}
-                </div>
+              <motion.div
+                animate={{
+                  left: ["-15%", "100%"],
+                }}
+                transition={{
+                  duration: 4.5,
+                  repeat: Infinity,
+                  ease: "linear",
+                }}
+                className={cn(
+                  "absolute",
+                  "top-1/2",
+                  "h-px",
+                  "w-20",
+                  "-translate-y-1/2",
+                  "bg-linear-to-r",
+                  "from-transparent",
+                  "via-cyan-300",
+                  "to-transparent",
+                  "shadow-[0_0_12px_rgba(103,232,249,0.75)]"
+                )}
+              />
+            </motion.div>
 
-                {/* Layer 2: Scanning Grid Effect */}
-                <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                  <motion.div
-                    className="absolute inset-0 bg-linear-to-b from-transparent via-cyber-blue/5 to-transparent"
-                    animate={{ y: ['-100%', '100%'] }}
-                    transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+            {/* =================================================
+                TAGLINE
+                ================================================= */}
+
+            <motion.p
+              variants={itemVariants}
+              className={cn(
+                "mt-5",
+                "max-w-[270px]",
+                "text-[11px]",
+                "font-medium",
+                "leading-[1.65]",
+                "tracking-[-0.01em]",
+                "text-white/55",
+
+                "sm:max-w-[390px]",
+                "sm:text-sm",
+
+                "md:max-w-[500px]",
+                "md:text-base",
+
+                "lg:max-w-[560px]",
+                "lg:text-[17px]"
+              )}
+            >
+              Shaping Ideas through{" "}
+              <span className="text-cyan-200">
+                Logic
+              </span>
+              ,{" "}
+              <span className="text-violet-200">
+                Intelligence
+              </span>{" "}
+              &amp; Innovation.
+            </motion.p>
+
+            {/* =================================================
+                CONTROLS
+                ================================================= */}
+
+            <motion.div
+              variants={itemVariants}
+              className={cn(
+                "mt-6",
+                "flex",
+                "flex-wrap",
+                "items-center",
+                "gap-3"
+              )}
+            >
+              {/* RESUME */}
+
+              <motion.a
+                href="/resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{
+                  y: -3,
+                  scale: 1.025,
+                }}
+                whileTap={{
+                  scale: 0.96,
+                }}
+                className={cn(
+                  "group/resume",
+                  "relative",
+                  "flex",
+                  "h-10",
+                  "items-center",
+                  "gap-2.5",
+                  "overflow-hidden",
+                  "rounded-full",
+                  "border",
+                  "border-cyan-400/20",
+                  "bg-cyan-400/[0.055]",
+                  "px-4",
+                  "text-[10px]",
+                  "font-semibold",
+                  "tracking-[0.06em]",
+                  "text-cyan-100",
+                  "backdrop-blur-xl",
+                  "transition-all",
+                  "duration-300",
+
+                  "hover:border-cyan-300/35",
+                  "hover:bg-cyan-400/[0.09]",
+                  "hover:shadow-[0_0_25px_rgba(103,232,249,0.10)]",
+
+                  "sm:h-11",
+                  "sm:px-5",
+                  "sm:text-xs"
+                )}
+              >
+                <span
+                  aria-hidden="true"
+                  className={cn(
+                    "absolute",
+                    "-left-8",
+                    "top-0",
+                    "h-full",
+                    "w-6",
+                    "rotate-12",
+                    "bg-white/[0.12]",
+                    "blur-sm",
+                    "transition-transform",
+                    "duration-700",
+                    "group-hover/resume:translate-x-32"
+                  )}
+                />
+
+                <span className="relative z-10">
+                  Resume
+                </span>
+
+                <Download
+                  className={cn(
+                    "relative z-10",
+                    "h-3.5 w-3.5",
+                    "transition-transform",
+                    "duration-300",
+                    "group-hover/resume:translate-y-0.5"
+                  )}
+                />
+              </motion.a>
+
+              {/* =================================================
+                  FLOATING SOCIAL DOCK
+                  ================================================= */}
+
+              <div
+                className={cn(
+                  "flex",
+                  "items-center",
+                  "gap-1",
+                  "rounded-[20px]",
+                  "border",
+                  "border-white/[0.06]",
+                  "bg-white/[0.018]",
+                  "p-1",
+                  "shadow-[0_12px_35px_rgba(0,0,0,0.20)]",
+                  "backdrop-blur-2xl"
+                )}
+              >
+                {socialLinks.map((social) => (
+                  <SocialIcon
+                    key={social.name}
+                    {...social}
                   />
-                </div>
-
-                {/* Layer 3: Main Image with Edge Blending */}
-                <motion.div 
-                  className="relative"
-                  style={{
-                    scale: imageScale,
-                    y: imageY,
-                  }}
-                >
-                  {/* Mouse-reactive spotlight */}
-                  <motion.div
-                    className="absolute inset-0 rounded-full blur-3xl"
-                    style={{
-                      background: `radial-gradient(circle at ${mouseX}px ${mouseY}px, rgba(59, 130, 246, 0.15) 0%, transparent 50%)`,
-                    }}
-                  />
-                  
-                  {/* Image container with mask for edge blending */}
-                  <div 
-                    className="relative w-full aspect-square md:aspect-3/4 lg:aspect-square"
-                    style={{
-                      maskImage: 'radial-gradient(ellipse 70% 80% at 50% 50%, black 40%, transparent 80%)',
-                      WebkitMaskImage: 'radial-gradient(ellipse 70% 80% at 50% 50%, black 40%, transparent 80%)',
-                    }}
-                  >
-                    <Image 
-                      src="/images/profile.jpg" 
-                      alt="Prasoon Pathak"
-                      fill
-                      className="object-cover object-center"
-                      style={{
-                        filter: 'brightness(1.1) contrast(1.15) saturate(1.1)',
-                      }}
-                      priority
-                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    />
-                  </div>
-
-                  {/* Edge gradient overlays for seamless blending */}
-                  <div className="absolute inset-0 pointer-events-none">
-                    {/* Radial fade from center */}
-                    <div 
-                      className="absolute inset-0"
-                      style={{
-                        background: 'radial-gradient(ellipse 60% 70% at 50% 50%, transparent 30%, rgba(15, 23, 42, 0.3) 70%, rgba(15, 23, 42, 0.8) 100%)',
-                      }}
-                    />
-                    
-                    {/* Corner fog effects */}
-                    <div className="absolute top-0 left-0 w-1/2 h-1/2 bg-linear-to-br from-cyber-blue/10 via-transparent to-transparent" />
-                    <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-linear-to-bl from-cyber-purple/10 via-transparent to-transparent" />
-                    <div className="absolute bottom-0 left-0 w-1/2 h-1/2 bg-linear-to-tr from-cyber-blue/10 via-transparent to-transparent" />
-                    <div className="absolute bottom-0 right-0 w-1/2 h-1/2 bg-linear-to-tl from-cyber-purple/10 via-transparent to-transparent" />
-                  </div>
-                </motion.div>
-
-                {/* Layer 4: Ambient Particles (Multiple Parallax Layers) */}
-                <div className="absolute inset-0 pointer-events-none">
-                  {/* Background particles (slow) */}
-                  {[...Array(8)].map((_, i) => (
-                    <motion.div
-                      key={`bg-particle-${i}`}
-                      className="absolute w-1 h-1 bg-cyber-blue/30 rounded-full"
-                      style={{
-                        left: `${10 + i * 12}%`,
-                        top: `${15 + i * 10}%`,
-                      }}
-                      animate={{
-                        y: [0, -30, 0],
-                        x: [0, 15, 0],
-                        opacity: [0.2, 0.5, 0.2],
-                      }}
-                      transition={{
-                        duration: 8 + i,
-                        repeat: Infinity,
-                        delay: i * 0.3,
-                        ease: "easeInOut",
-                      }}
-                    />
-                  ))}
-                  
-                  {/* Mid-ground particles (medium speed) */}
-                  {[...Array(6)].map((_, i) => (
-                    <motion.div
-                      key={`mid-particle-${i}`}
-                      className="absolute w-1.5 h-1.5 bg-cyber-purple/40 rounded-full"
-                      style={{
-                        left: `${20 + i * 15}%`,
-                        top: `${25 + i * 12}%`,
-                      }}
-                      animate={{
-                        y: [0, -25, 0],
-                        x: [0, -10, 0],
-                        opacity: [0.3, 0.6, 0.3],
-                      }}
-                      transition={{
-                        duration: 6 + i * 0.5,
-                        repeat: Infinity,
-                        delay: i * 0.4,
-                        ease: "easeInOut",
-                      }}
-                    />
-                  ))}
-                  
-                  {/* Foreground particles (fast, closer to viewer) */}
-                  {[...Array(4)].map((_, i) => (
-                    <motion.div
-                      key={`fg-particle-${i}`}
-                      className="absolute w-2 h-2 bg-cyan-400/50 rounded-full"
-                      style={{
-                        left: `${30 + i * 18}%`,
-                        top: `${35 + i * 15}%`,
-                      }}
-                      animate={{
-                        y: [0, -20, 0],
-                        x: [0, 20, 0],
-                        opacity: [0.4, 0.8, 0.4],
-                        scale: [1, 1.2, 1],
-                      }}
-                      transition={{
-                        duration: 4 + i * 0.3,
-                        repeat: Infinity,
-                        delay: i * 0.5,
-                        ease: "easeInOut",
-                      }}
-                    />
-                  ))}
-                </div>
-
-                {/* Layer 5: Cyber Scan Lines */}
-                <div className="absolute inset-0 pointer-events-none opacity-20">
-                  {[...Array(20)].map((_, i) => (
-                    <motion.div
-                      key={`scan-${i}`}
-                      className="absolute w-full h-px bg-cyber-blue/50"
-                      style={{ top: `${i * 5}%` }}
-                      animate={{ opacity: [0.1, 0.3, 0.1] }}
-                      transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                        delay: i * 0.1,
-                        ease: "easeInOut",
-                      }}
-                    />
-                  ))}
-                </div>
-
-                {/* Layer 6: Tech Nodes (Animated HUD Elements) */}
-                <div className="absolute inset-0 pointer-events-none">
-                  {[...Array(4)].map((_, i) => (
-                    <motion.div
-                      key={`node-${i}`}
-                      className="absolute w-3 h-3 border border-cyber-blue/40 rotate-45"
-                      style={{
-                        left: `${15 + i * 20}%`,
-                        top: `${20 + i * 18}%`,
-                      }}
-                      animate={{
-                        rotate: [45, 135, 45],
-                        scale: [1, 1.2, 1],
-                        opacity: [0.3, 0.6, 0.3],
-                      }}
-                      transition={{
-                        duration: 5 + i,
-                        repeat: Infinity,
-                        delay: i * 0.6,
-                        ease: "easeInOut",
-                      }}
-                    />
-                  ))}
-                </div>
-
-                {/* Layer 7: Rim Lighting Effect */}
-                <div className="absolute inset-0 pointer-events-none">
-                  <div 
-                    className="absolute inset-0 rounded-full"
-                    style={{
-                      background: 'conic-gradient(from 0deg, transparent 0%, rgba(59, 130, 246, 0.1) 25%, transparent 50%, rgba(147, 51, 234, 0.1) 75%, transparent 100%)',
-                      animation: 'spin 10s linear infinite',
-                    }}
-                  />
-                </div>
-
+                ))}
               </div>
             </motion.div>
-          </div>
-        </Container>
+          </motion.div>
 
-        {/* Floating ambient elements */}
-        <div className="absolute inset-0 pointer-events-none">
-          {[...Array(8)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute w-1 h-1 bg-cyber-purple-500 rounded-full opacity-40"
-              style={{
-                left: `${10 + i * 12}%`,
-                top: `${20 + i * 8}%`,
-              }}
-              animate={{
-                y: [0, -30, 0],
-                x: [0, 20, 0],
-                opacity: [0.4, 0.8, 0.4],
-              }}
-              transition={{
-                duration: 8 + i * 2,
-                repeat: Infinity,
-                delay: i * 0.5,
-                ease: "easeInOut",
-              }}
-            />
-          ))}
+          {/* =================================================
+              RIGHT — ALWAYS RIGHT
+              ================================================= */}
+
+          <div
+            className={cn(
+              "relative",
+
+              /*
+               * Bigger portrait while preserving two-column
+               * layout even on small screens.
+               */
+
+              "h-[63svh]",
+              "min-h-[400px]",
+
+              "sm:h-[72svh]",
+              "sm:min-h-[500px]",
+
+              "md:h-[79svh]",
+              "md:min-h-[560px]",
+
+              "lg:h-[84svh]",
+              "lg:min-h-[630px]"
+            )}
+          >
+            <ProfileVisual />
+          </div>
         </div>
-      </SectionWrapper>
-    )
-  }
-)
+      </Container>
+
+      {/* =====================================================
+          EXPLORE
+          ===================================================== */}
+
+      <motion.button
+        type="button"
+        onClick={scrollToAbout}
+        aria-label="Scroll to About section"
+        initial={{
+          opacity: 0,
+          y: 10,
+        }}
+        animate={{
+          opacity: 1,
+          y: 0,
+        }}
+        transition={{
+          delay: 1.25,
+          duration: 0.6,
+        }}
+        className={cn(
+          "absolute",
+          "bottom-4",
+          "left-1/2",
+          "z-30",
+          "-translate-x-1/2",
+          "hidden",
+          "flex-col",
+          "items-center",
+          "gap-1.5",
+          "text-white/25",
+          "transition-colors",
+          "duration-300",
+          "hover:text-cyan-300",
+          "sm:flex"
+        )}
+      >
+        <span
+          className={cn(
+            "text-[8px]",
+            "font-medium",
+            "uppercase",
+            "tracking-[0.22em]"
+          )}
+        >
+          Explore
+        </span>
+
+        <motion.span
+          animate={{
+            y: [0, 5, 0],
+          }}
+          transition={{
+            duration: 1.8,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        >
+          <ArrowDown className="h-3.5 w-3.5" />
+        </motion.span>
+      </motion.button>
+
+      {/* =====================================================
+          BOTTOM ENERGY LINE
+          ===================================================== */}
+
+      <div
+        aria-hidden="true"
+        className={cn(
+          "pointer-events-none",
+          "absolute",
+          "bottom-0",
+          "left-0 right-0",
+          "h-px",
+          "bg-linear-to-r",
+          "from-transparent",
+          "via-cyan-400/30",
+          "to-transparent"
+        )}
+      />
+    </SectionWrapper>
+  )
+})
+
 HeroSection.displayName = "HeroSection"
 
 export { HeroSection }
