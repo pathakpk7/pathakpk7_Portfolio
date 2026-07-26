@@ -1,7 +1,7 @@
 <div align="center">
 
 # 🚀 Prasoon Pathak Portfolio
-
+![Project Preview](./og-image.png)
 **Shaping Ideas through Logic, Intelligence & Innovation**
 
 A premium, immersive, and cinematic developer portfolio built to showcase projects, certifications, achievements, and technical expertise through modern web technologies and interactive user experiences.
