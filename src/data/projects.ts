@@ -152,6 +152,8 @@ export const projects: Project[] = [
 
     github:
       "https://github.com/pathakpk7/SecureNet_IDS.git",
+
+    screenshot: "/projects/securenet-ids/screenshot.png",
   },
 
   /* =======================================================
