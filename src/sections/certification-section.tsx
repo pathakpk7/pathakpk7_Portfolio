@@ -4,16 +4,11 @@ import * as React from "react"
 import { AnimatePresence, motion } from "framer-motion"
 import {
   Award,
-  BrainCircuit,
   CalendarDays,
   CheckCircle2,
   ChevronDown,
-  Cloud,
   ExternalLink,
   Fingerprint,
-  MonitorSmartphone,
-  Network,
-  ShieldCheck,
   Sparkles,
 } from "lucide-react"
 
@@ -22,144 +17,10 @@ import { FaLinkedin } from "react-icons/fa"
 import { cn } from "@/lib/utils"
 import { SectionWrapper } from "@/components/layout"
 
-/* =========================================================
-   TYPES
-   ========================================================= */
-
-interface Certification {
-  id: string
-  title: string
-  issuer: string
-  date: string
-  credentialId: string
-  level?: string
-  duration?: string
-  credits?: string
-  description: string
-  skills: string[]
-  credentialUrl?: string
-  icon: React.ComponentType<{
-    className?: string
-  }>
-}
-
-/* =========================================================
-   CERTIFICATION DATA
-   ========================================================= */
-
-const certifications: Certification[] = [
-  {
-    id: "digital-application-fundamentals",
-    title: "Digital Application Fundamentals (STEM)",
-    issuer: "NASSCOM / FutureSkills Prime",
-    date: "Sep 2025",
-    credentialId:
-      "32914-1e19031a-8bc3-11f0-bdec-005056b48b54",
-    description:
-      "Completed Digital Application Fundamentals (STEM), aligned with competency standards developed by the IT-ITeS Sector Skills Council NASSCOM.",
-    skills: [
-      "Digital Literacy",
-      "Information Technology",
-      "Digital Transformation",
-    ],
-    credentialUrl:
-      "https://www.futureskillsprime.in/iDH/user/credential/view/32914-1e19031a-8bc3-11f0-bdec-005056b48b54?utm_source=chatgpt.com",
-    icon: MonitorSmartphone,
-  },
-
-  {
-    id: "ibm-generative-ai",
-    title: "Generative AI Virtual Internship",
-    issuer: "IBM",
-    date: "Sep 2025",
-    credentialId:
-      "df3cf03090654c00bc62355321ca720d",
-    description:
-      "Completed IBM's Generative AI Virtual Internship with practical exposure to Generative AI, Prompt Engineering, Responsible AI and enterprise AI workflows.",
-    skills: [
-      "Generative AI",
-      "Prompt Engineering",
-      "Artificial Intelligence",
-    ],
-    credentialUrl:
-      "https://courses.ibmmooc.skillsnetwork.site/certificates/df3cf03090654c00bc62355321ca720d?utm_source=chatgpt.com",
-    icon: BrainCircuit,
-  },
-
-  {
-    id: "microsoft-soar",
-    title: "SOAR – AI to Aspire",
-    issuer: "Microsoft",
-    date: "Nov 2025",
-    credentialId:
-      "2025090245651375-172634",
-    level: "NSQF Level 4",
-    duration: "15 Hours",
-    credits: "0.5",
-    description:
-      "Earned the SOAR – AI to Aspire Certificate for Skill Competency, supported by Microsoft and recognized by NCVET.",
-    skills: [
-      "Artificial Intelligence",
-      "Generative AI",
-      "Responsible AI",
-    ],
-    icon: BrainCircuit,
-  },
-
-  {
-    id: "cpps",
-    title: "Certified Phishing Prevention Specialist",
-    issuer: "Hack & Fix",
-    date: "Dec 2025",
-    credentialId:
-      "7527-9509-6062-7605",
-    description:
-      "Earned the CPPS credential with a focus on phishing prevention, security awareness and protection against social engineering threats.",
-    skills: [
-      "Cybersecurity",
-      "Phishing",
-      "Security Awareness",
-    ],
-    icon: ShieldCheck,
-  },
-
-  {
-    id: "aws-solutions-architecture",
-    title: "AWS Solutions Architecture Job Simulation",
-    issuer: "Forage",
-    date: "Jan 2026",
-    credentialId:
-      "GNdgpChEtnHnho67r",
-    description:
-      "Completed the AWS Solutions Architecture Job Simulation, gaining practical experience designing a simple and scalable hosting architecture.",
-    skills: [
-      "Amazon Web Services",
-      "Solution Architecture",
-      "Cloud Computing",
-    ],
-    credentialUrl:
-      "https://www.theforage.com/completion-certificates/pmnMSL4QiQ9JCgE3W/kkE9HyeNcw6rwCRGw_pmnMSL4QiQ9JCgE3W_GNdgpChEtnHnho67r_1767903302247_completion_certificate.pdf?utm_source=chatgpt.com",
-    icon: Cloud,
-  },
-
-  {
-    id: "cisco-packet-tracer",
-    title: "Getting Started with Cisco Packet Tracer",
-    issuer: "Cisco Networking Academy",
-    date: "Jul 2026",
-    credentialId:
-      "b2f600e7-0c5f-4aa8-b9b4-1b57e57c48bf",
-    description:
-      "Completed Cisco Networking Academy's Packet Tracer course, developing foundational skills in network simulation, topology design and device configuration.",
-    skills: [
-      "Cisco Packet Tracer",
-      "Computer Networking",
-      "Network Configuration",
-    ],
-    icon: Network,
-  },
-]
-
+import {
+  certifications,
+  type Certification,
+} from "@/data/certifications"
 /* =========================================================
    CERTIFICATION CARD
    ========================================================= */

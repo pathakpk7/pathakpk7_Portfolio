@@ -39,13 +39,6 @@ const STATUS_CONFIG: Record<
     background: string
   }
 > = {
-  "Working Currently": {
-    dot: "bg-cyan-300",
-    text: "text-cyan-200",
-    border: "border-cyan-400/25",
-    background: "bg-cyan-400/[0.07]",
-  },
-
   Completed: {
     dot: "bg-emerald-300",
     text: "text-emerald-200",
@@ -53,27 +46,36 @@ const STATUS_CONFIG: Record<
     background: "bg-emerald-400/[0.07]",
   },
 
-  Active: {
+  "In Development": {
+    dot: "bg-cyan-300",
+    text: "text-cyan-200",
+    border: "border-cyan-400/25",
+    background: "bg-cyan-400/[0.07]",
+  },
+
+  "Frontend Prototype": {
+    dot: "bg-amber-300",
+    text: "text-amber-200",
+    border: "border-amber-400/25",
+    background: "bg-amber-400/[0.07]",
+  },
+
+  Prototype: {
     dot: "bg-violet-300",
     text: "text-violet-200",
     border: "border-violet-400/25",
     background: "bg-violet-400/[0.07]",
   },
 
-  "Open to Work": {
+  "Final Year Project": {
     dot: "bg-blue-300",
     text: "text-blue-200",
     border: "border-blue-400/25",
     background: "bg-blue-400/[0.07]",
   },
-
-  "Need Future Enhancements": {
-    dot: "bg-amber-300",
-    text: "text-amber-200",
-    border: "border-amber-400/25",
-    background: "bg-amber-400/[0.07]",
-  },
 }
+
+
 
 const FALLBACK_STATUS =
   STATUS_CONFIG.Completed
@@ -430,7 +432,7 @@ export function ProjectFolderCard({
     project.techStack.slice(0, 4)
 
   const features =
-    project.keyFeatures?.slice(0, 5) ?? []
+    project.features?.slice(0, 5) ?? []
 
   const stopPropagation = (
     event: React.MouseEvent<HTMLElement>
@@ -733,7 +735,7 @@ export function ProjectFolderCard({
 
                 <div className="mt-6 flex flex-wrap gap-3">
                   <a
-                    href={project.github}
+                    href={project.githubUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={
@@ -745,11 +747,9 @@ export function ProjectFolderCard({
                     GitHub
                   </a>
 
-                  {project.liveDemo && (
+                  {project.liveUrl && (
                     <a
-                      href={
-                        project.liveDemo
-                      }
+                      href={project.liveUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={
@@ -812,30 +812,25 @@ export function ProjectFolderCard({
                   )}
                 </div>
 
-                {project.futureRoadmap &&
-                  project.futureRoadmap
-                    .length > 0 && (
+                {project.roadmap &&
+project.roadmap.length > 0 && (
                     <div className="mt-6">
                       <h4 className="text-[11px] font-bold uppercase tracking-[0.15em] text-amber-200/80">
                         Next
                       </h4>
 
                       <div className="mt-3 space-y-2">
-                        {project.futureRoadmap
-                          .slice(0, 3)
-                          .map((item) => (
-                            <div
-                              key={item}
-                              className="flex items-start gap-2 text-[13px] text-white/55"
-                            >
-                              <ArrowRight className="mt-[2px] h-3.5 w-3.5 shrink-0 text-amber-300/70" />
-
-                              <span>
-                                {item}
-                              </span>
-                            </div>
-                          ))}
-                      </div>
+                      {project.roadmap
+                        .slice(0, 3)
+                            .map((item) => (
+                        <div
+                          key={item}
+                          className="flex items-start gap-2 text-[13px] text-white/55">
+                          <ArrowRight className="mt-[2px] h-3.5 w-3.5 shrink-0 text-amber-300/70" />
+                        <span>{item}</span>
+                        </div>
+                        ))}
+                        </div>
                     </div>
                   )}
               </div>

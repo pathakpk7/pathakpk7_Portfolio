@@ -1,50 +1,75 @@
 export type ProjectStatus =
-  | "Working Currently"
   | "Completed"
-  | "Active"
-  | "Open to Work"
-  | "Need Future Enhancements"
+  | "In Development"
+  | "Frontend Prototype"
+  | "Prototype"
+  | "Final Year Project"
 
 export interface Project {
   id: string
+
   name: string
+
   tagline: string
-  category: "final-year" | "group" | "personal"
+
+  category:
+    | "AI & Cybersecurity"
+    | "Generative AI"
+    | "Full Stack"
+    | "Frontend"
+    | "Game Development"
+    | "Productivity"
+    | "Web Application"
+
   status: ProjectStatus
+
   featured: boolean
 
   overview: string
-  problemSolved: string
 
-  keyFeatures: string[]
+  problem: string
+
+  features: string[]
+
   techStack: string[]
 
   architecture?: string
 
-  challenges?: Array<{
+  challenges?: {
     challenge: string
     solution: string
-  }>
+  }[]
 
   keyLearnings?: string[]
-  futureRoadmap?: string[]
+
+  roadmap?: string[]
+
   projectImpact?: string
 
   role?: string
 
-  github: string
-  liveDemo?: string
+  githubUrl: string
+
+  liveUrl?: string
+
   screenshot?: string
 
-  frontend?: string
-  backend?: string
-  database?: string
+  screenshots?: string[]
+
+  frontend?: string[]
+
+  backend?: string[]
+
+  database?: string[]
+
   authentication?: string
 
-  apisUsed?: string[]
+  apis?: string[]
 
   hosting?: string
+
   orm?: string
+
   storage?: string
 
   aiModels?: string[]
@@ -57,539 +82,768 @@ export interface Project {
 ========================================================= */
 
 export const projects: Project[] = [
-  /* =======================================================
-     1. SECURENET IDS
-  ======================================================= */
-
   {
-    id: "securenet-ids",
-
-    name: "SecureNet IDS",
-
-    tagline:
-      "AI-Powered Real-Time Intrusion Detection System",
-
-    category: "final-year",
-
-    status: "Working Currently",
-
-    featured: true,
+  id: "securenet-ids",
+
+  name: "SecureNet IDS",
+
+  featured: true,
+
+  status: "Final Year Project",
+
+  category: "AI & Cybersecurity",
+
+  tagline:
+    "AI-Powered Intrusion Detection System for Real-Time Threat Detection",
+
+  overview:
+    "SecureNet IDS is my final-year project focused on building an intelligent Intrusion Detection System capable of monitoring live network traffic, extracting flow features, detecting attacks using Machine Learning models, and presenting actionable security insights through a modern dashboard. The project is currently under active development.",
+
+  problem:
+    "Traditional network monitoring tools often require multiple disconnected solutions for packet capture, threat detection, analytics, and reporting. SecureNet IDS aims to consolidate these capabilities into one intelligent platform.",
+
+  features: [
+    "Real-time packet capture",
+    "Network flow feature extraction",
+    "Machine Learning-based intrusion detection",
+    "Threat intelligence integration",
+    "Interactive security dashboard",
+    "Live network monitoring",
+    "Historical traffic analytics",
+    "Attack classification",
+    "Risk-level visualization",
+    "Security event logging",
+  ],
+
+  techStack: [
+    "React",
+    "FastAPI",
+    "Python",
+    "TensorFlow",
+    "Supabase",
+    "PostgreSQL",
+  ],
+
+  frontend: [
+    "React",
+    "TypeScript",
+    "Tailwind CSS",
+    "Chart.js",
+  ],
+
+  backend: [
+    "FastAPI",
+    "Python",
+  ],
+
+  database: [
+    "Supabase",
+    "PostgreSQL",
+  ],
+
+  aiModels: [
+    "TensorFlow",
+    "Scikit-Learn",
+  ],
+
+  apis: [
+    "VirusTotal",
+    "AbuseIPDB",
+    "URLScan.io",
+    "AlienVault OTX",
+  ],
+
+  role:
+    "Full Stack Developer • AI/ML Developer",
+
+  githubUrl:
+    "https://github.com/pathakpk7/SecureNet_IDS.git",
+
+  screenshot:
+    "/projects/securenet-ids/thumbnail.png",
+
+  screenshots: [
+    "/projects/securenet-ids/dashboard.png",
+    "/projects/securenet-ids/traffic.png",
+    "/projects/securenet-ids/threats.png",
+    "/projects/securenet-ids/analytics.png",
+  ],
+
+  roadmap: [
+    "Complete backend integration",
+    "Improve detection accuracy",
+    "Add SIEM integration",
+    "Implement SOAR workflows",
+    "Deploy production version",
+  ],
+},
+
+{
+  id: "vsbh-cricket-league",
+
+  name: "VSBH Cricket League",
+
+  featured: true,
 
-    overview:
-      "SecureNet IDS is an AI-powered Intrusion Detection System designed to capture and analyze network traffic in real time, identify malicious activity using machine learning, enrich detections using threat intelligence services, and visualize security events through an interactive monitoring dashboard.",
+  status: "Completed",
 
-    problemSolved:
-      "Traditional network monitoring can struggle with large traffic volumes, fragmented threat intelligence, and manual investigation. SecureNet IDS combines machine learning, real-time packet analysis, threat intelligence, and centralized security monitoring into a single platform.",
+  category: "Full Stack",
 
-    keyFeatures: [
-      "Real-Time Packet Capture",
-      "ML-Based Intrusion Detection",
-      "Threat Intelligence Integration",
-      "IP Reputation Analysis",
-      "URL Scanning",
-      "Flow-Based Feature Extraction",
-      "Risk Assessment Engine",
-      "WebSocket Live Monitoring",
-      "Security Analytics Dashboard",
-      "Supabase Security Logging",
-    ],
-
-    techStack: [
-      "React",
-      "Vite",
-      "Chart.js",
-      "GSAP",
-      "Python",
-      "FastAPI",
-      "Scikit-Learn",
-      "Pandas",
-      "NumPy",
-      "PyShark",
-      "Scapy",
-      "WebSockets",
-      "Supabase PostgreSQL",
-    ],
-
-    frontend:
-      "React, Vite, Chart.js, GSAP",
-
-    backend:
-      "Python, FastAPI, WebSockets",
-
-    database:
-      "Supabase PostgreSQL",
-
-    apisUsed: [
-      "VirusTotal API",
-      "AbuseIPDB API",
-      "URLScan.io API",
-      "AlienVault OTX API",
-      "Google Safe Browsing API",
-    ],
-
-    authentication:
-      "JWT-based API Security",
-
-    hosting:
-      "Docker Containers, Nginx Reverse Proxy",
-
-    aiModels: [
-      "CICIDS2017 Machine Learning Model",
-      "Scikit-Learn Random Forest",
-    ],
+  tagline:
+    "Cricket League & Tournament Management Platform",
 
-    role:
-      "Designed the security dashboard, developed FastAPI backend services, integrated threat intelligence APIs, implemented the machine-learning detection pipeline, and connected security logs with Supabase.",
+  overview:
+    "A full-stack web application developed to manage cricket tournaments including teams, fixtures, points tables, and league information through a centralized dashboard.",
 
-    futureRoadmap: [
-      "SIEM Integration",
-      "LSTM-Based Threat Detection",
-      "Autoencoder Anomaly Detection",
-      "SOAR Integration",
-      "Automatic Threat Blocking",
-      "Cloud-Native Deployment",
-    ],
+  problem:
+    "Managing local cricket tournaments manually is time-consuming. This application digitizes tournament management and provides an organized interface for league administration.",
 
-    github:
-      "https://github.com/pathakpk7/SecureNet_IDS.git",
-
-    screenshot: "/projects/securenet-ids/screenshot.png",
-  },
-
-  /* =======================================================
-     2. SOCIAL MEDIA GENERATOR
-  ======================================================= */
-
-  {
-    id: "social-media-generator",
-
-    name: "Social Media Post & Caption Generator",
+  features: [
+    "Team management",
+    "League dashboard",
+    "Fixtures management",
+    "Points table",
+    "Responsive UI",
+    "Tournament overview",
+  ],
 
-    tagline:
-      "AI-Powered Social Content Creation Assistant",
+  techStack: [
+    "React",
+    "Node.js",
+    "Express.js",
+    "PostgreSQL",
+  ],
 
-    category: "group",
+  frontend: [
+    "React",
+    "JavaScript",
+    "CSS",
+  ],
 
-    status: "Completed",
+  backend: [
+    "Node.js",
+    "Express.js",
+  ],
 
-    featured: true,
+  database: [
+    "PostgreSQL",
+  ],
 
-    overview:
-      "An AI-powered application that generates social-media captions, hashtags, and content suggestions using generative AI models.",
+  role:
+    "Full Stack Developer",
 
-    problemSolved:
-      "Content creators and businesses often spend significant time generating engaging captions and relevant hashtags. The application simplifies this workflow using prompt-driven AI content generation.",
+  githubUrl:
+    "https://github.com/pathakpk7/vsbh-cricleague.git",
 
-    keyFeatures: [
-      "AI Caption Generation",
-      "Hashtag Suggestions",
-      "Prompt-Based Generation",
-      "Content Templates",
-      "AI Content Suggestions",
-    ],
+  liveUrl:
+    "https://vsbh-cl.vercel.app",
 
-    techStack: [
-      "HTML",
-      "CSS",
-      "JavaScript",
-      "Python",
-      "Gradio",
-      "Google Gemini API",
-      "Hugging Face",
-    ],
+  screenshot:
+    "/projects/vsbh-cricket-league/thumbnail.png",
 
-    frontend:
-      "HTML, CSS, JavaScript, Gradio UI",
+  screenshots: [
+    "/projects/vsbh-cricket-league/dashboard.png",
+    "/projects/vsbh-cricket-league/teams.png",
+    "/projects/vsbh-cricket-league/fixtures.png",
+  ],
 
-    backend: "Python",
+  roadmap: [],
+},
 
-    database: "None",
+{
+  id: "social-media-generator",
 
-    aiModels: [
-      "Google Gemini",
-      "Hugging Face Models",
-    ],
+  name:
+    "AI Social Media Post & Caption Generator",
 
-    futureRoadmap: [
-      "Content Calendar",
-      "Brand Voice Customization",
-      "Multi-Language Support",
-      "Social Platform Integrations",
-    ],
+  featured: true,
 
-    github:
-      "https://github.com/pathakpk7/Social_Media_Post_and_Caption_Generator.git",
-  },
+  status: "Completed",
 
-  /* =======================================================
-     3. MURDER MYSTERY
-  ======================================================= */
+  category: "Generative AI",
 
-  {
-    id: "murder-mystery",
+  tagline:
+    "Generate Social Media Posts & Captions using Large Language Models",
 
-    name: "Murder Mystery Game",
+  overview:
+    "An AI-powered web application that generates engaging social media posts and captions using prompt engineering and Large Language Models to help creators produce content more efficiently.",
 
-    tagline:
-      "Interactive Detective & Investigation Experience",
+  problem:
+    "Creating engaging social media content consistently is time-consuming. This application assists users by generating AI-powered captions and posts from simple prompts.",
 
-    category: "personal",
+  features: [
+    "AI-generated captions",
+    "AI-generated posts",
+    "Prompt-based generation",
+    "Clean web interface",
+    "Fast content generation",
+  ],
 
-    status: "Active",
+  techStack: [
+    "Python",
+    "Svelte",
+    "Google Gemini API",
+    "Hugging Face",
+  ],
+
+  frontend: [
+    "Svelte",
+  ],
 
-    featured: true,
+  backend: [
+    "Python",
+  ],
 
-    overview:
-      "An interactive detective game where players investigate fictional crimes by collecting evidence, questioning suspects, tracking clues, and applying deductive reasoning.",
+  aiModels: [
+    "Google Gemini",
+    "Hugging Face",
+  ],
 
-    problemSolved:
-      "Creates an interactive browser-based detective experience centered around logical reasoning, evidence analysis, and investigation.",
+  role:
+    "AI Developer",
 
-    keyFeatures: [
-      "Evidence Collection",
-      "Suspect Interrogation",
-      "Multiple Cases",
-      "Investigation System",
-      "Case Progression",
-      "Detective Gameplay",
-    ],
+  githubUrl:
+    "https://github.com/pathakpk7/Social_Media_Post_and_Caption_Generator.git",
 
-    techStack: [
-      "HTML",
-      "CSS",
-      "JavaScript",
-      "Node.js",
-      "Express.js",
-      "Supabase PostgreSQL",
-      "JWT",
-    ],
+  screenshot:
+    "/projects/social-media-generator/thumbnail.png",
 
-    frontend:
-      "HTML, CSS, JavaScript",
+  screenshots: [
+    "/projects/social-media-generator/home.png",
+    "/projects/social-media-generator/output.png",
+    "/projects/social-media-generator/history.png",
+  ],
 
-    backend:
-      "Node.js, Express.js",
+  roadmap: [],
+},
+{
+  id: "murder-mystery-game",
 
-    database:
-      "Supabase PostgreSQL",
+  name: "Murder Mystery Game",
 
-    authentication:
-      "JWT Authentication",
+  featured: true,
 
-    futureRoadmap: [
-      "Multiplayer Investigations",
-      "AI-Generated Cases",
-      "Achievement System",
-      "Global Leaderboards",
-    ],
+  status: "In Development",
 
-    github:
-      "https://github.com/pathakpk7/Murder_Mystery_Game.git",
-  },
+  category: "Game Development",
 
-  /* =======================================================
-     4. VSBH CRICKET LEAGUE
-  ======================================================= */
+  tagline:
+    "Interactive Detective Game with Branching Storylines & Multiple Endings",
 
-  {
-    id: "vsbh-cricket",
+  overview:
+    "An interactive browser-based detective game where players investigate crimes, collect evidence, interrogate suspects, and solve mysteries through branching narratives. The project is currently under active development with additional gameplay, stories, and puzzles being added.",
 
-    name: "VSBH Cricket League",
+  problem:
+    "Most web-based mystery games provide linear gameplay with limited player interaction. This project aims to create a replayable detective experience with meaningful choices and multiple endings.",
 
-    tagline:
-      "Real-Time Cricket League & Auction Platform",
+  features: [
+    "Interactive detective gameplay",
+    "Branching storyline",
+    "Evidence collection",
+    "Character interactions",
+    "Puzzle solving",
+    "Multiple endings",
+    "Dialogue-driven progression",
+    "Case-based gameplay",
+  ],
 
-    category: "personal",
+  techStack: [
+    "HTML",
+    "CSS",
+    "JavaScript",
+  ],
 
-    status: "Completed",
+  frontend: [
+    "HTML",
+    "CSS",
+    "JavaScript",
+  ],
 
-    featured: true,
+  role:
+    "Game Designer • Frontend Developer",
 
-    overview:
-      "A cricket league management platform designed to organize teams, conduct live player auctions, manage tournament information, and provide league analytics.",
+  githubUrl:
+    "https://github.com/pathakpk7/Murder_Mystery_Game.git",
 
-    problemSolved:
-      "Simplifies cricket tournament and player-auction management by bringing bidding, team management, and league information into a centralized digital platform.",
+  screenshot:
+    "/projects/murder-mystery-game/thumbnail.png",
 
-    keyFeatures: [
-      "Live Player Auction",
-      "Real-Time Bidding",
-      "Team Management",
-      "League Dashboard",
-      "Tournament Analytics",
-      "Google Sheets Integration",
-    ],
+  screenshots: [
+    "/projects/murder-mystery-game/home.png",
+    "/projects/murder-mystery-game/story.png",
+    "/projects/murder-mystery-game/gameplay.png",
+    "/projects/murder-mystery-game/case.png",
+  ],
 
-    techStack: [
-      "React 19",
-      "TypeScript",
-      "React Router",
-      "Context API",
-      "Axios",
-      "Socket.IO",
-      "Node.js",
-      "Express.js",
-      "Supabase PostgreSQL",
-    ],
+  roadmap: [
+    "Add more cases",
+    "Expand story branches",
+    "Improve UI & animations",
+    "Add save/load system",
+    "Background music & sound effects",
+  ],
+},
 
-    frontend:
-      "React 19, TypeScript, React Router, Context API, Axios, Socket.IO Client",
+{
+  id: "weatheros",
 
-    backend:
-      "Node.js, Express.js, Socket.IO",
+  name: "WeatherOS",
 
-    database:
-      "Supabase PostgreSQL",
+  featured: true,
 
-    authentication:
-      "Admin Authentication System",
+  status: "Completed",
 
-    hosting:
-      "Vercel, Render",
+  category: "Web Application",
 
-    futureRoadmap: [
-      "Live Match Scoring",
-      "Fantasy Cricket Module",
-      "Mobile Application",
-      "Player Performance Analytics",
-    ],
+  tagline:
+    "Modern Weather Dashboard with Real-Time Forecasts",
 
-    github:
-      "https://github.com/pathakpk7/vsbh-cricleague.git",
-  },
+  overview:
+    "WeatherOS is a responsive weather application that provides current weather conditions and forecasts through a clean, modern user interface using a public weather API.",
 
-  /* =======================================================
-     5. SPOTIFY CLONE
-  ======================================================= */
+  problem:
+    "Users often need a lightweight weather application that delivers essential weather information without unnecessary complexity.",
 
-  {
-    id: "spotify-clone",
+  features: [
+    "Current weather",
+    "Location search",
+    "Temperature details",
+    "Weather conditions",
+    "Responsive interface",
+    "Modern dashboard",
+  ],
+
+  techStack: [
+    "React",
+    "JavaScript",
+    "OpenWeather API",
+  ],
 
-    name: "Spotify Clone",
+  frontend: [
+    "React",
+    "JavaScript",
+  ],
 
-    tagline:
-      "Spotify-Inspired Music Streaming Interface",
+  apis: [
+    "OpenWeather API",
+  ],
 
-    category: "personal",
+  role:
+    "Frontend Developer",
 
-    status: "Open to Work",
+  githubUrl:
+    "https://github.com/pathakpk7/WeatherOS.git",
 
-    featured: false,
+  screenshot:
+    "/projects/weatheros/thumbnail.png",
 
-    overview:
-      "A Spotify-inspired frontend application recreating the visual experience of a modern music streaming platform.",
+  screenshots: [
+    "/projects/weatheros/dashboard.png",
+    "/projects/weatheros/search.png",
+    "/projects/weatheros/forecast.png",
+  ],
 
-    problemSolved:
-      "Developed to practice responsive frontend architecture, audio interfaces, playlist navigation, and recreation of a production-style user interface.",
+  roadmap: [],
+},
 
-    keyFeatures: [
-      "Spotify-Inspired UI",
-      "Playlist Navigation",
-      "Music Controls",
-      "Responsive Design",
-      "Audio Interface",
-    ],
+{
+  id: "retask",
 
-    techStack: [
-      "HTML",
-      "CSS",
-      "JavaScript",
-    ],
+  name: "ReTask",
 
-    frontend:
-      "HTML, CSS, JavaScript",
+  featured: true,
 
-    backend: "None",
+  status: "In Development",
 
-    database: "None",
+  category: "Productivity",
 
-    authentication: "None",
+  tagline:
+    "Smart Task & Productivity Manager for Daily Workflow",
 
-    futureRoadmap: [
-      "Spotify API Integration",
-      "User Authentication",
-      "Playlist Management",
-      "React Migration",
-    ],
+  overview:
+    "ReTask is a productivity application focused on intelligent task management. It is being developed to provide recurring tasks, smart scheduling, daily planning, analytics, and productivity-focused workflows.",
 
-    github:
-      "https://github.com/pathakpk7/Spotify_clone.git",
-  },
+  problem:
+    "Most traditional to-do applications simply store tasks without helping users build consistent habits or manage recurring work efficiently.",
 
-  /* =======================================================
-     6. ONLINE BOOK STORE
-  ======================================================= */
+  features: [
+    "Task management",
+    "Recurring tasks",
+    "Daily planner",
+    "Task categories",
+    "Productivity dashboard",
+    "Pomodoro timer",
+    "Task history",
+    "Smart carry-forward (planned)",
+  ],
 
-  {
-    id: "online-book-store",
+  techStack: [
+    "HTML",
+    "CSS",
+    "JavaScript",
+  ],
 
-    name: "Online Book Store",
+  frontend: [
+    "HTML",
+    "CSS",
+    "JavaScript",
+  ],
 
-    tagline:
-      "Responsive Book Shopping Experience",
+  role:
+    "Frontend Developer",
 
-    category: "personal",
+  githubUrl:
+    "https://github.com/pathakpk7/ReTask.git",
 
-    status: "Completed",
+  screenshot:
+    "/projects/retask/thumbnail.png",
 
-    featured: false,
+  screenshots: [
+    "/projects/retask/dashboard.png",
+    "/projects/retask/tasks.png",
+    "/projects/retask/analytics.png",
+  ],
 
-    overview:
-      "A responsive online bookstore interface providing book discovery, product browsing, shopping-cart interactions, login, and registration workflows.",
+  roadmap: [
+    "Task reminders",
+    "Cloud sync",
+    "Calendar integration",
+    "User authentication",
+    "Cross-device synchronization",
+  ],
+},
+{
+  id: "currency-converter",
 
-    problemSolved:
-      "Demonstrates the core frontend experience of an e-commerce bookstore with organized catalogue browsing and cart interactions.",
+  name: "Currency Converter",
 
-    keyFeatures: [
-      "Book Catalogue",
-      "Shopping Cart",
-      "Login",
-      "Registration",
-      "Contact System",
-      "Product Browsing",
-    ],
+  featured: true,
 
-    techStack: [
-      "HTML",
-      "CSS",
-      "JavaScript",
-    ],
+  status: "Completed",
 
-    frontend:
-      "HTML, CSS, JavaScript",
+  category: "Web Application",
 
-    backend: "None",
+  tagline:
+    "Real-Time Currency Conversion with Live Exchange Rates",
 
-    database: "None",
+  overview:
+    "A lightweight web application that converts currencies using real-time exchange rate data through an external API. The project focuses on providing a fast, responsive, and intuitive conversion experience.",
 
-    authentication:
-      "Frontend Login/Register Workflow",
+  problem:
+    "Manual currency conversion is inconvenient and often inaccurate without up-to-date exchange rates. This application simplifies the process through live conversion.",
 
-    futureRoadmap: [
-      "Payment Gateway",
-      "Backend Integration",
-      "User Profiles",
-      "Order Tracking",
-    ],
+  features: [
+    "Real-time currency conversion",
+    "Multiple currency support",
+    "Responsive interface",
+    "Fast conversion",
+    "User-friendly design",
+  ],
 
-    github:
-      "https://github.com/pathakpk7/Online_Book_Store.git",
-  },
+  techStack: [
+    "HTML",
+    "CSS",
+    "JavaScript",
+  ],
 
-  /* =======================================================
-     7. CURRENCY CONVERTER
-  ======================================================= */
+  frontend: [
+    "HTML",
+    "CSS",
+    "JavaScript",
+  ],
 
-  {
-    id: "currency-converter",
+  role:
+    "Frontend Developer",
 
-    name: "Currency Converter",
+  githubUrl:
+    "https://github.com/pathakpk7/Currency_converter.git",
 
-    tagline:
-      "Simple Real-Time Currency Conversion Tool",
+  screenshot:
+    "/projects/currency-converter/thumbnail.png",
 
-    category: "personal",
+  screenshots: [
+    "/projects/currency-converter/home.png",
+    "/projects/currency-converter/converter.png",
+    "/projects/currency-converter/result.png",
+  ],
 
-    status: "Completed",
+  roadmap: [],
+},
 
-    featured: false,
+{
+  id: "food-order-delivery",
 
-    overview:
-      "A responsive currency conversion application designed to calculate values between multiple currencies using exchange-rate data.",
+  name: "Food Order & Delivery System",
 
-    problemSolved:
-      "Provides a straightforward interface for quickly converting values between currencies.",
+  featured: false,
 
-    keyFeatures: [
-      "Currency Conversion",
-      "Multi-Currency Support",
-      "Responsive UI",
-      "Real-Time Calculations",
-      "Exchange Rate Integration",
-    ],
+  status: "Frontend Prototype",
 
-    techStack: [
-      "HTML",
-      "CSS",
-      "JavaScript",
-      "Exchange Rate API",
-    ],
+  category: "Frontend",
 
-    frontend:
-      "HTML, CSS, JavaScript",
+  tagline:
+    "Responsive Food Ordering User Interface",
 
-    apisUsed: [
-      "Exchange Rate API",
-    ],
+  overview:
+    "A frontend prototype of an online food ordering platform built to demonstrate restaurant browsing, food listings, shopping cart interaction, and a responsive ordering experience.",
 
-    futureRoadmap: [
-      "Historical Exchange Rates",
-      "Currency Trend Charts",
-      "Favorite Currency Pairs",
-    ],
+  problem:
+    "The project was created to practice responsive frontend development and modern user interface design for food ordering platforms.",
 
-    github:
-      "https://github.com/pathakpk7/Currency_converter.git",
-  },
+  features: [
+    "Restaurant browsing",
+    "Food listings",
+    "Shopping cart UI",
+    "Responsive layout",
+    "Category navigation",
+    "Modern interface",
+  ],
 
-  /* =======================================================
-     8. FOOD ORDER & DELIVERY
-  ======================================================= */
+  techStack: [
+    "HTML",
+    "CSS",
+    "JavaScript",
+  ],
 
-  {
-    id: "food-order",
+  frontend: [
+    "HTML",
+    "CSS",
+    "JavaScript",
+  ],
 
-    name: "Food Order & Delivery System",
+  role:
+    "Frontend Developer",
 
-    tagline:
-      "Responsive Restaurant Ordering Experience",
+  githubUrl:
+    "https://github.com/pathakpk7/Food-order-and-delivery.git",
 
-    category: "personal",
+  screenshot:
+    "/projects/food-order-delivery/thumbnail.png",
 
-    status: "Need Future Enhancements",
+  screenshots: [
+    "/projects/food-order-delivery/home.png",
+    "/projects/food-order-delivery/menu.png",
+    "/projects/food-order-delivery/cart.png",
+  ],
 
-    featured: false,
+  roadmap: [
+    "Backend integration",
+    "Authentication",
+    "Payment gateway",
+    "Order tracking",
+    "Restaurant management",
+  ],
+},
 
-    overview:
-      "A responsive food-ordering interface featuring menu browsing, cart management, dynamic price calculation, and an ordering workflow.",
+{
+  id: "online-book-store",
 
-    problemSolved:
-      "Provides a simplified digital food-ordering experience while demonstrating cart management and dynamic frontend interactions.",
+  name: "Online Book Store",
 
-    keyFeatures: [
-      "Food Menu",
-      "Cart System",
-      "Order Management",
-      "Responsive Layout",
-      "Dynamic Price Calculation",
-    ],
+  featured: false,
 
-    techStack: [
-      "HTML",
-      "CSS",
-      "JavaScript",
-    ],
+  status: "Frontend Prototype",
 
-    frontend:
-      "HTML, CSS, JavaScript",
+  category: "Frontend",
 
-    backend: "None",
+  tagline:
+    "Responsive Online Book Shopping Interface",
 
-    database: "None",
+  overview:
+    "A frontend bookstore application developed to demonstrate catalog browsing, product search, shopping cart interaction, and a clean e-commerce user experience.",
 
-    authentication: "None",
+  problem:
+    "Designed as a frontend learning project to explore e-commerce layouts, responsive interfaces, and user interaction patterns.",
 
-    futureRoadmap: [
-      "Payment Gateway",
-      "Real-Time Order Tracking",
-      "User Authentication",
-      "Restaurant Dashboard",
-      "Backend Integration",
-    ],
+  features: [
+    "Book catalog",
+    "Search interface",
+    "Book details",
+    "Shopping cart UI",
+    "Responsive design",
+    "Category browsing",
+  ],
+
+  techStack: [
+    "HTML",
+    "CSS",
+    "JavaScript",
+  ],
 
-    github:
-      "https://github.com/pathakpk7/Food-order-and-delivery.git",
-  },
+  frontend: [
+    "HTML",
+    "CSS",
+    "JavaScript",
+  ],
+
+  role:
+    "Frontend Developer",
+
+  githubUrl:
+    "https://github.com/pathakpk7/Online_Book_Store.git",
+
+  screenshot:
+    "/projects/online-book-store/thumbnail.png",
+
+  screenshots: [
+    "/projects/online-book-store/home.png",
+    "/projects/online-book-store/books.png",
+    "/projects/online-book-store/cart.png",
+  ],
+
+  roadmap: [
+    "Backend integration",
+    "User authentication",
+    "Wishlist",
+    "Order management",
+    "Payment gateway",
+  ],
+},
+{
+  id: "spotify-clone",
+
+  name: "Spotify Clone",
+
+  featured: false,
+
+  status: "Frontend Prototype",
+
+  category: "Frontend",
+
+  tagline:
+    "Spotify-inspired Music Streaming Interface",
+
+  overview:
+    "A frontend recreation of Spotify's modern user interface built to practice responsive layouts, component-based architecture, and contemporary music application design. The project focuses on UI implementation rather than streaming functionality.",
+
+  problem:
+    "The project was developed to strengthen frontend development skills by recreating the interface of a widely used music streaming platform.",
+
+  features: [
+    "Spotify-inspired UI",
+    "Responsive design",
+    "Sidebar navigation",
+    "Playlist interface",
+    "Music player layout",
+    "Modern component design",
+  ],
+
+  techStack: [
+    "HTML",
+    "CSS",
+    "JavaScript",
+  ],
+
+  frontend: [
+    "HTML",
+    "CSS",
+    "JavaScript",
+  ],
+
+  role:
+    "Frontend Developer",
+
+  githubUrl:
+    "https://github.com/pathakpk7/Spotify_clone.git",
+
+  screenshot:
+    "/projects/spotify-clone/thumbnail.png",
+
+  screenshots: [
+    "/projects/spotify-clone/home.png",
+    "/projects/spotify-clone/player.png",
+    "/projects/spotify-clone/playlist.png",
+  ],
+
+  roadmap: [
+    "Spotify API integration",
+    "Authentication",
+    "Music playback",
+    "Playlist management",
+    "Search functionality",
+  ],
+},
+
+{
+  id: "findora",
+
+  name: "Findora",
+
+  featured: false,
+
+  status: "Prototype",
+
+  category: "Full Stack",
+
+  tagline:
+    "Campus Lost & Found Management Platform",
+
+  overview:
+    "Findora is a campus-focused Lost & Found platform designed to simplify reporting, discovering, and managing lost items through a centralized web application. The project is currently in the prototype stage and active development is paused.",
+
+  problem:
+    "Students often struggle to recover lost belongings due to fragmented communication channels. Findora aims to provide a single platform for reporting and finding lost items.",
+
+  features: [
+    "Lost item reporting",
+    "Found item reporting",
+    "Item browsing",
+    "Search interface",
+    "Category management",
+    "Prototype responsive UI",
+  ],
+
+  techStack: [
+    "Next.js",
+    "React",
+    "TypeScript",
+    "Tailwind CSS",
+    "Supabase",
+    "Prisma",
+  ],
+
+  frontend: [
+    "Next.js",
+    "React",
+    "Tailwind CSS",
+    "TypeScript",
+  ],
+
+  backend: [
+    "NestJS (Planned)",
+  ],
+
+  database: [
+    "Supabase",
+    "PostgreSQL",
+    "Prisma",
+  ],
+
+  role:
+    "Full Stack Developer",
+
+  githubUrl:
+    "https://github.com/pathakpk7/Findora.git",
+
+  screenshot:
+    "/projects/findora/thumbnail.png",
+
+  screenshots: [
+    "/projects/findora/home.png",
+    "/projects/findora/report-item.png",
+    "/projects/findora/dashboard.png",
+  ],
+
+  roadmap: [
+    "Complete backend",
+    "Authentication",
+    "Image uploads",
+    "Role-based access control",
+    "Email notifications",
+    "Admin dashboard",
+  ],
+},
+
 ]
 
 /* =========================================================
