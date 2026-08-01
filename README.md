@@ -13,6 +13,18 @@ A premium, immersive, and cinematic developer portfolio built to showcase projec
 </div>
 
 ---
+************************************************************************************************************************************
+If you use it, you can easily personalize it by updating:
+
+src/data/projects.ts for your curated data
+src/public/projects/ folder to update the images for your projects
+src/data/certifications.ts for your curated certifications
+The content inside the src/sections/ directory like About, Education, Experiences, Skills data.
+
+These files are designed so you can change projects, certifications, and section content without redesigning the entire website.
+
+If this project helps you build your own portfolio or gives you ideas, feel free to fork it, adapt it, or leave a ⭐ on the repository. I'd love to see what you create.
+************************************************************************************************************************************
 
 ## 🌟 Overview
 
