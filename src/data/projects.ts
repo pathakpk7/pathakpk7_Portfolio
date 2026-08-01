@@ -312,6 +312,7 @@ export const projects: Project[] = [
     "/projects/social-media-generator/home.png",
     "/projects/social-media-generator/output.png",
     "/projects/social-media-generator/history.png",
+    "/projects/social-media-generator/generator.png",
   ],
 
   roadmap: [],
@@ -369,10 +370,11 @@ export const projects: Project[] = [
     "/projects/murder-mystery-game/thumbnail.png",
 
   screenshots: [
-    "/projects/murder-mystery-game/home.png",
+    "/projects/murder-mystery-game/dashboard.png",
     "/projects/murder-mystery-game/story.png",
     "/projects/murder-mystery-game/gameplay.png",
-    "/projects/murder-mystery-game/case.png",
+    "/projects/murder-mystery-game/cases.png",
+    "/projects/murder-mystery-game/suspects.png"
   ],
 
   roadmap: [
@@ -441,6 +443,7 @@ export const projects: Project[] = [
     "/projects/weatheros/dashboard.png",
     "/projects/weatheros/search.png",
     "/projects/weatheros/forecast.png",
+    "/projects/weatheros/hourly.png",  
   ],
 
   roadmap: [],
@@ -562,9 +565,11 @@ export const projects: Project[] = [
     "/projects/currency-converter/thumbnail.png",
 
   screenshots: [
-    "/projects/currency-converter/home.png",
+    "/projects/currency-converter/dashboard.png",
     "/projects/currency-converter/converter.png",
     "/projects/currency-converter/result.png",
+    "/projects/currency-converter/history.png",
+    "/projects/currency-converter/currencies.png",
   ],
 
   roadmap: [],
@@ -687,8 +692,9 @@ export const projects: Project[] = [
 
   screenshots: [
     "/projects/online-book-store/home.png",
-    "/projects/online-book-store/books.png",
     "/projects/online-book-store/cart.png",
+    "/projects/online-book-store/catalog.png",
+    "/projects/online-book-store/details.png",
   ],
 
   roadmap: [
@@ -753,6 +759,7 @@ export const projects: Project[] = [
     "/projects/spotify-clone/home.png",
     "/projects/spotify-clone/player.png",
     "/projects/spotify-clone/playlist.png",
+    "/projects/spotify-clone/search.png",
   ],
 
   roadmap: [

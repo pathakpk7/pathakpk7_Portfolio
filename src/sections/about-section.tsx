@@ -35,7 +35,7 @@ interface EducationItem {
 }
 
 /* =========================================================
-   EDUCATION DATA
+   EDUCATION DATA --- CHANGE THESE TO YOUR OWN EDUCATION DATA ----
    ========================================================= */
 
 const educationData: EducationItem[] = [

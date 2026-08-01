@@ -51,7 +51,7 @@ interface Experience {
 }
 
 /* =========================================================
-   EXPERIENCE DATA
+   EXPERIENCE DATA --- CHANGE THESE TO YOUR OWN EXPERIENCE DATA ---
    ========================================================= */
 
 const experiences: Experience[] = [

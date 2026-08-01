@@ -20,7 +20,7 @@ import { cn } from "@/lib/utils"
 import { Container, SectionWrapper } from "@/components/layout"
 
 /* =========================================================
-   DATA
+   DATA  ---CHANGE THESE LINKS TO YOUR OWN SOCIAL LINKS ---
    ========================================================= */
 
 const socialLinks = [
