@@ -1072,112 +1072,417 @@ const HeroSection = React.forwardRef<
                   KNOW ME CARD
                   ================================================= */}
 
-              <AnimatePresence initial={false}>
-                {isKnowMeOpen && (
-                  <motion.div
-                    id="know-me-card"
-                    initial={{ opacity: 0, height: 0, y: -8 }}
-                    animate={{ opacity: 1, height: "auto", y: 0 }}
-                    exit={{ opacity: 0, height: 0, y: -8 }}
-                    transition={{ duration: 0.35, ease: [0.25, 0.1, 0.25, 1] }}
-                    className="w-full max-w-[560px] overflow-hidden"
-                  >
-                    <div className="mt-4 rounded-3xl border border-white/[0.08] bg-white/[0.025] p-4 shadow-[0_20px_60px_rgba(0,0,0,0.25)] backdrop-blur-2xl sm:p-5">
-                      <div className="flex items-start justify-between gap-4">
-                        <div>
-                          <p className="text-[9px] font-semibold uppercase tracking-[0.24em] text-cyan-300/70">
-                            A little about me
-                          </p>
-                          <h3 className="mt-1.5 text-base font-semibold text-white sm:text-lg">
-                            {aboutData.name}
-                          </h3>
-                          <p className="mt-1 text-[10px] text-white/40 sm:text-xs">
-                            {aboutData.role}
-                          </p>
-                        </div>
+<AnimatePresence initial={false}>
+  {isKnowMeOpen && (
+    <>
+      {/* =================================================
+          MOBILE — COMPACT KNOW ME CARD
+          ================================================= */}
 
-                        <button
-                          type="button"
-                          onClick={() => setIsKnowMeOpen(false)}
-                          aria-label="Close Know Me card"
-                          className="rounded-full p-1.5 text-white/35 transition-colors hover:bg-white/[0.06] hover:text-white/80"
-                        >
-                          <X className="h-4 w-4" />
-                        </button>
-                      </div>
+      <motion.div
+        id="know-me-card"
+        initial={{
+          opacity: 0,
+          height: 0,
+          y: -8,
+        }}
+        animate={{
+          opacity: 1,
+          height: "auto",
+          y: 0,
+        }}
+        exit={{
+          opacity: 0,
+          height: 0,
+          y: -8,
+        }}
+        transition={{
+          duration: 0.3,
+          ease: [0.25, 0.1, 0.25, 1],
+        }}
+        className="w-full overflow-hidden sm:hidden"
+      >
+        <div
+          className={cn(
+            "mt-3",
+            "rounded-2xl",
+            "border border-white/[0.08]",
+            "bg-white/[0.025]",
+            "p-3.5",
+            "shadow-[0_16px_45px_rgba(0,0,0,0.22)]",
+            "backdrop-blur-2xl"
+          )}
+        >
+          {/* HEADER */}
 
-                      <p className="mt-4 max-w-[520px] text-[11px] leading-[1.7] text-white/60 sm:text-sm">
-                        {aboutData.shortIntro}
-                      </p>
-
-                      <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                        <div className="rounded-2xl border border-white/[0.06] bg-black/10 p-3">
-                          <p className="text-[8px] font-semibold uppercase tracking-[0.2em] text-white/30">
-                            Education
-                          </p>
-                          <p className="mt-1.5 text-[10px] leading-[1.6] text-white/55 sm:text-xs">
-                            {aboutData.education}
-                          </p>
-                        </div>
-
-                        <div className="rounded-2xl border border-white/[0.06] bg-black/10 p-3">
-                          <p className="text-[8px] font-semibold uppercase tracking-[0.2em] text-white/30">
-                            Background
-                          </p>
-                          <p className="mt-1.5 text-[10px] leading-[1.6] text-white/55 sm:text-xs">
-                            {aboutData.background}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="mt-4">
-                        <p className="text-[8px] font-semibold uppercase tracking-[0.2em] text-white/30">
-                          Focus Areas
-                        </p>
-                        <div className="mt-2 flex flex-wrap gap-1.5">
-                          {aboutData.focusAreas.map((item) => (
-                            <span
-                              key={item}
-                              className="rounded-full border border-cyan-300/10 bg-cyan-300/[0.04] px-2.5 py-1 text-[9px] text-cyan-100/65 sm:text-[10px]"
-                            >
-                              {item}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div className="mt-4">
-                        <p className="text-[8px] font-semibold uppercase tracking-[0.2em] text-white/30">
-                          Currently Building
-                        </p>
-                        <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1.5">
-                          {aboutData.currentlyBuilding.map((item) => (
-                            <span key={item} className="text-[10px] text-white/50 sm:text-xs">
-                              • {item}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-white/[0.06] pt-4">
-                        <span className="text-[8px] font-semibold uppercase tracking-[0.2em] text-white/30">
-                          My approach
-                        </span>
-                        {aboutData.approach.map((item, index) => (
-                          <React.Fragment key={item}>
-                            {index > 0 && <span className="text-cyan-300/30">→</span>}
-                            <span className="text-[10px] font-medium text-white/60 sm:text-xs">
-                              {item}
-                            </span>
-                          </React.Fragment>
-                        ))}
-                      </div>
-                    </div>
-                  </motion.div>
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              <p
+                className={cn(
+                  "text-[8px]",
+                  "font-semibold",
+                  "uppercase",
+                  "tracking-[0.22em]",
+                  "text-cyan-300/70"
                 )}
-              </AnimatePresence>
+              >
+                A little about me
+              </p>
 
-          </motion.div>
+              <h3 className="mt-1 text-sm font-semibold text-white">
+                {aboutData.name}
+              </h3>
+
+              <p className="mt-0.5 text-[9px] text-white/40">
+                CSE Student &amp; Developer
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setIsKnowMeOpen(false)}
+              aria-label="Close Know Me card"
+              className={cn(
+                "shrink-0",
+                "rounded-full",
+                "p-1",
+                "text-white/35",
+                "transition-colors",
+                "hover:bg-white/[0.06]",
+                "hover:text-white/80"
+              )}
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          </div>
+
+          {/* SHORT INTRO */}
+
+          <p
+            className={cn(
+              "mt-3",
+              "text-[10px]",
+              "leading-[1.6]",
+              "text-white/55"
+            )}
+          >
+            {aboutData.shortIntro}
+          </p>
+
+          {/* FOCUS */}
+
+          <div className="mt-3">
+            <p
+              className={cn(
+                "text-[7px]",
+                "font-semibold",
+                "uppercase",
+                "tracking-[0.2em]",
+                "text-white/30"
+              )}
+            >
+              Focus
+            </p>
+
+            <div className="mt-1.5 flex flex-wrap gap-1">
+              {aboutData.focusAreas.map((item) => (
+                <span
+                  key={item}
+                  className={cn(
+                    "rounded-full",
+                    "border border-cyan-300/10",
+                    "bg-cyan-300/[0.04]",
+                    "px-2",
+                    "py-0.5",
+                    "text-[8px]",
+                    "text-cyan-100/65"
+                  )}
+                >
+                  {item}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* CURRENTLY BUILDING */}
+
+          <div className="mt-3 border-t border-white/[0.06] pt-2.5">
+            <p
+              className={cn(
+                "text-[7px]",
+                "font-semibold",
+                "uppercase",
+                "tracking-[0.2em]",
+                "text-white/30"
+              )}
+            >
+              Currently
+            </p>
+
+            <p
+              className={cn(
+                "mt-1",
+                "text-[9px]",
+                "leading-[1.5]",
+                "text-white/50"
+              )}
+            >
+              Building web applications, AI-powered applications &amp;
+              cybersecurity projects.
+            </p>
+          </div>
+        </div>
+      </motion.div>
+      {/* =================================================
+    TABLET / DESKTOP — FULL KNOW ME CARD
+    ================================================= */}
+
+<motion.div
+  initial={{
+    opacity: 0,
+    height: 0,
+    y: -8,
+  }}
+  animate={{
+    opacity: 1,
+    height: "auto",
+    y: 0,
+  }}
+  exit={{
+    opacity: 0,
+    height: 0,
+    y: -8,
+  }}
+  transition={{
+    duration: 0.35,
+    ease: [0.25, 0.1, 0.25, 1],
+  }}
+  className="hidden w-full max-w-[560px] overflow-hidden sm:block"
+>
+  <div
+    className={cn(
+      "mt-4",
+      "rounded-3xl",
+      "border border-white/[0.08]",
+      "bg-white/[0.025]",
+      "p-4",
+      "shadow-[0_20px_60px_rgba(0,0,0,0.25)]",
+      "backdrop-blur-2xl",
+      "sm:p-5"
+    )}
+  >
+    {/* HEADER */}
+
+    <div className="flex items-start justify-between gap-4">
+      <div className="min-w-0">
+        <p
+          className={cn(
+            "text-[9px]",
+            "font-semibold",
+            "uppercase",
+            "tracking-[0.24em]",
+            "text-cyan-300/70"
+          )}
+        >
+          A little about me
+        </p>
+
+        <h3 className="mt-1.5 text-base font-semibold text-white sm:text-lg">
+          {aboutData.name}
+        </h3>
+
+        <p className="mt-1 text-[10px] text-white/40 sm:text-xs">
+          {aboutData.role}
+        </p>
+      </div>
+
+      <button
+        type="button"
+        onClick={() => setIsKnowMeOpen(false)}
+        aria-label="Close Know Me card"
+        className={cn(
+          "shrink-0",
+          "rounded-full",
+          "p-1.5",
+          "text-white/35",
+          "transition-colors",
+          "hover:bg-white/[0.06]",
+          "hover:text-white/80"
+        )}
+      >
+        <X className="h-4 w-4" />
+      </button>
+    </div>
+
+    {/* INTRODUCTION */}
+
+    <p
+      className={cn(
+        "mt-4",
+        "max-w-[520px]",
+        "text-[11px]",
+        "leading-[1.7]",
+        "text-white/60",
+        "sm:text-sm"
+      )}
+    >
+      {aboutData.shortIntro}
+    </p>
+
+    {/* EDUCATION + BACKGROUND */}
+
+    <div className="mt-4 grid gap-3 sm:grid-cols-2">
+      <div
+        className={cn(
+          "rounded-2xl",
+          "border border-white/[0.06]",
+          "bg-black/10",
+          "p-3"
+        )}
+      >
+        <p
+          className={cn(
+            "text-[8px]",
+            "font-semibold",
+            "uppercase",
+            "tracking-[0.2em]",
+            "text-white/30"
+          )}
+        >
+          Education
+        </p>
+
+        <p className="mt-1.5 text-[10px] leading-[1.6] text-white/55 sm:text-xs">
+          {aboutData.education}
+        </p>
+      </div>
+
+      <div
+        className={cn(
+          "rounded-2xl",
+          "border border-white/[0.06]",
+          "bg-black/10",
+          "p-3"
+        )}
+      >
+        <p
+          className={cn(
+            "text-[8px]",
+            "font-semibold",
+            "uppercase",
+            "tracking-[0.2em]",
+            "text-white/30"
+          )}
+        >
+          Background
+        </p>
+
+        <p className="mt-1.5 text-[10px] leading-[1.6] text-white/55 sm:text-xs">
+          {aboutData.background}
+        </p>
+      </div>
+    </div>
+
+    {/* FOCUS AREAS */}
+
+    <div className="mt-4">
+      <p
+        className={cn(
+          "text-[8px]",
+          "font-semibold",
+          "uppercase",
+          "tracking-[0.2em]",
+          "text-white/30"
+        )}
+      >
+        Focus Areas
+      </p>
+
+      <div className="mt-2 flex flex-wrap gap-1.5">
+        {aboutData.focusAreas.map((item) => (
+          <span
+            key={item}
+            className={cn(
+              "rounded-full",
+              "border border-cyan-300/10",
+              "bg-cyan-300/[0.04]",
+              "px-2.5",
+              "py-1",
+              "text-[9px]",
+              "text-cyan-100/65",
+              "sm:text-[10px]"
+            )}
+          >
+            {item}
+          </span>
+        ))}
+      </div>
+    </div>
+
+    {/* CURRENTLY BUILDING */}
+
+    <div className="mt-4">
+      <p
+        className={cn(
+          "text-[8px]",
+          "font-semibold",
+          "uppercase",
+          "tracking-[0.2em]",
+          "text-white/30"
+        )}
+      >
+        Currently Building
+      </p>
+
+      <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1.5">
+        {aboutData.currentlyBuilding.map((item) => (
+          <span
+            key={item}
+            className="text-[10px] text-white/50 sm:text-xs"
+          >
+            • {item}
+          </span>
+        ))}
+      </div>
+    </div>
+
+    {/* APPROACH */}
+
+    <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-white/[0.06] pt-4">
+      <span
+        className={cn(
+          "text-[8px]",
+          "font-semibold",
+          "uppercase",
+          "tracking-[0.2em]",
+          "text-white/30"
+        )}
+      >
+        My approach
+      </span>
+
+      {aboutData.approach.map((item, index) => (
+        <React.Fragment key={item}>
+          {index > 0 && (
+            <span className="text-cyan-300/30">
+              →
+            </span>
+          )}
+
+          <span className="text-[10px] font-medium text-white/60 sm:text-xs">
+            {item}
+          </span>
+        </React.Fragment>
+      ))}
+    </div>
+  </div>
+</motion.div>
+
+      </>
+    )}
+</AnimatePresence>
+
+            </motion.div>
 
           {/* =================================================
               RIGHT — ALWAYS RIGHT
