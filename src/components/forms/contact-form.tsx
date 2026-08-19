@@ -140,7 +140,7 @@ const ContactForm = React.forwardRef<HTMLFormElement, ContactFormProps>(
               "transition-all duration-300 resize-none",
               "focus:outline-none focus:ring-2 focus:ring-cyber-blue/20 focus:border-cyber-blue",
               "placeholder:text-muted-foreground/50",
-              "min-h-[120px]"
+              "min-h-120px"
             )}
             placeholder="Tell me about your project..."
             value={formData.message}
