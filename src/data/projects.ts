@@ -280,8 +280,7 @@ export const projects: Project[] = [
   ],
 
   techStack: [
-    "Python",
-    "Svelte",
+    "React",
     "Google Gemini API",
     "Hugging Face",
   ],
