@@ -83,6 +83,7 @@ export interface Project {
 
 export const projects: Project[] = [
   {
+  // ___________________________________________SECURENET IDS__________________________________
   id: "securenet-ids",
 
   name: "SecureNet IDS",
@@ -177,7 +178,7 @@ export const projects: Project[] = [
     "Deploy production version",
   ],
 },
-
+// ___________________________________________VSBH CRICKET LEAGUE__________________________________
 {
   id: "vsbh-cricket-league",
 
@@ -249,7 +250,7 @@ export const projects: Project[] = [
 
   roadmap: [],
 },
-
+// ____________________________________________AI SOCIAL MEDIA POST & CAPTION GENERATOR__________________________________
 {
   id: "social-media-generator",
 
@@ -286,7 +287,7 @@ export const projects: Project[] = [
   ],
 
   frontend: [
-    "Svelte",
+    "React",
   ],
 
   backend: [
@@ -316,6 +317,7 @@ export const projects: Project[] = [
 
   roadmap: [],
 },
+// ____________________________________________________________MURDER MYSTERY GAME________________________________
 {
   id: "murder-mystery-game",
 
@@ -323,7 +325,7 @@ export const projects: Project[] = [
 
   featured: true,
 
-  status: "In Development",
+  status: "Completed",
 
   category: "Game Development",
 
@@ -348,14 +350,14 @@ export const projects: Project[] = [
   ],
 
   techStack: [
-    "HTML",
-    "CSS",
+    "React - Tailwind CSS",
     "JavaScript",
+    "PostgreSQL",
   ],
 
   frontend: [
-    "HTML",
-    "CSS",
+    "React",
+    "Tailwind CSS",
     "JavaScript",
   ],
 
@@ -384,7 +386,7 @@ export const projects: Project[] = [
     "Background music & sound effects",
   ],
 },
-
+// ____________________________________________________________WEATHEROS________________________________
 {
   id: "weatheros",
 
@@ -447,7 +449,7 @@ export const projects: Project[] = [
 
   roadmap: [],
 },
-
+// ____________________________________________________________RE-TASK________________________________
 {
   id: "retask",
 
@@ -514,6 +516,7 @@ export const projects: Project[] = [
     "Cross-device synchronization",
   ],
 },
+//_____________________________________________________________CURRENCY CONVERTER________________________________
 {
   id: "currency-converter",
 
@@ -573,7 +576,7 @@ export const projects: Project[] = [
 
   roadmap: [],
 },
-
+// ___________________________________________________________FOOD ORDER & DELIVERY SYSTEM________________________________
 {
   id: "food-order-delivery",
 
@@ -638,7 +641,7 @@ export const projects: Project[] = [
     "Restaurant management",
   ],
 },
-
+// ___________________________________________________________ONLINE BOOK STORE________________________________
 {
   id: "online-book-store",
 
@@ -704,6 +707,7 @@ export const projects: Project[] = [
     "Payment gateway",
   ],
 },
+// ___________________________________________________________SPOTIFY CLONE________________________________
 {
   id: "spotify-clone",
 
@@ -769,7 +773,7 @@ export const projects: Project[] = [
     "Search functionality",
   ],
 },
-
+// ___________________________________________________________FINDORA________________________________
 {
   id: "findora",
 
