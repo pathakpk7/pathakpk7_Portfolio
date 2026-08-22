@@ -506,6 +506,7 @@ export const projects: Project[] = [
     "/projects/retask/dashboard.png",
     "/projects/retask/tasks.png",
     "/projects/retask/analytics.png",
+    "/projects/retask/planner.png",
   ],
 
   roadmap: [
