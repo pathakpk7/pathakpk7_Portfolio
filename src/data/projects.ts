@@ -386,6 +386,102 @@ export const projects: Project[] = [
     "Background music & sound effects",
   ],
 },
+// ____________________________________________________________JEEVA AI________________________________
+{
+  id: "jeeva-ai",
+
+  name: "JeevaAi",
+
+  featured: true,
+
+  status: "Completed",
+
+  category: "Generative AI",
+
+  tagline:
+    "Evidence-Grounded Medical Knowledge Assistant using RAG",
+
+  overview:
+    "JeevaAi is a Generative AI medical knowledge assistant and knowledge explorer built around Retrieval-Augmented Generation (RAG). It combines dense semantic search, BM25 lexical retrieval, Reciprocal Rank Fusion, grounded LLM generation, programmatic citations, and conversational query rewriting to provide evidence-grounded educational answers from The Gale Encyclopedia of Medicine (2nd Edition).",
+
+  problem:
+    "General-purpose AI systems can produce unsupported medical answers. JeevaAi is designed to keep responses grounded in retrieved medical reference material while providing transparent citations and educational disclaimers.",
+
+  features: [
+    "Evidence-grounded RAG pipeline",
+    "Hybrid semantic and BM25 search",
+    "Reciprocal Rank Fusion (RRF)",
+    "Medical knowledge explorer",
+    "Programmatic source citations",
+    "Conversational query rewriting",
+    "Multi-turn conversational memory",
+    "Persistent ChromaDB vector store",
+    "Request ID tracing",
+    "Readiness probes",
+    "Docker deployment support",
+    "Automated test suite",
+  ],
+
+  techStack: [
+    "Python",
+    "Flask",
+    "LangChain",
+    "OpenAI",
+    "Sentence Transformers",
+    "ChromaDB",
+    "BM25",
+    "HTML5",
+    "CSS3",
+    "Docker",
+  ],
+
+  frontend: [
+    "HTML5",
+    "CSS3",
+  ],
+
+  backend: [
+    "Python",
+    "Flask",
+    "Waitress",
+    "Gunicorn",
+  ],
+
+  database: [
+    "ChromaDB",
+  ],
+
+  authentication:
+    "Not specified in the repository documentation.",
+
+  aiModels: [
+    "OpenAI",
+    "all-MiniLM-L6-v2",
+  ],
+
+  role:
+    "Generative AI Developer",
+
+  githubUrl:
+    "https://github.com/pathakpk7/JeevaAi.git",
+
+  screenshot:
+    "/projects/jeeva-ai/thumbnail.png",
+
+  screenshots: [
+    "/projects/jeeva-ai/home.png",
+    "/projects/jeeva-ai/chat.png",
+    "/projects/jeeva-ai/search.png",
+    "/projects/jeeva-ai/results.png",
+  ],
+
+  roadmap: [],
+
+  projectImpact:
+    "The hybrid retrieval pipeline is reported with 94.44% Recall@4, 86.11% Precision@4, and 0.9028 MRR, with 51 automated tests passing in the repository documentation.",
+},
+
+
 // ____________________________________________________________WEATHEROS________________________________
 {
   id: "weatheros",
@@ -449,6 +545,90 @@ export const projects: Project[] = [
 
   roadmap: [],
 },
+
+// ____________________________________________________________IAIP________________________________
+{
+  id: "iaip",
+
+  name: "IAIP",
+
+  featured: true,
+
+  status: "In Development",
+
+  category: "Full Stack",
+
+  tagline:
+    "Data Analytics & Machine Learning Internship Project Portfolio",
+
+  overview:
+    "IAIP is a collection of projects completed as part of my Data Analytics Internship at Intern Alpha. The repository documents practical work in exploratory data analysis, visualization, business insights, and machine learning, including Sales Data Analysis and Customer Segmentation using K-Means clustering.",
+
+  problem:
+    "Businesses need to convert raw datasets into meaningful insights and actionable decisions. IAIP focuses on applying structured data-analysis and machine-learning workflows to real-world-style datasets.",
+
+  features: [
+    "Sales data analysis",
+    "Exploratory data analysis",
+    "Sales and profit trend analysis",
+    "Seasonality analysis",
+    "Customer segment analysis",
+    "Product and category analysis",
+    "Regional performance analysis",
+    "Discount vs profitability analysis",
+    "K-Means customer segmentation",
+    "Cluster profiling",
+    "Business recommendations",
+    "Data visualization",
+  ],
+
+  techStack: [
+    "Python",
+    "Pandas",
+    "NumPy",
+    "Matplotlib",
+    "Seaborn",
+    "Scikit-learn",
+    "Jupyter Notebook",
+  ],
+
+  frontend: [
+    "Jupyter Notebook",
+  ],
+
+  aiModels: [
+    "K-Means Clustering",
+  ],
+
+  role:
+    "Data Analytics Intern • Data Analyst",
+
+  githubUrl:
+    "https://github.com/pathakpk7/IAIP.git",
+
+  screenshot:
+    "/projects/iaip/thumbnail.png",
+
+  screenshots: [
+    "/projects/iaip/sales-analysis.png",
+    "/projects/iaip/customer-segmentation.png",
+    "/projects/iaip/visualizations.png",
+    "/projects/iaip/recommendations.png"
+  ],
+
+  roadmap: [
+    "Complete Customer Segmentation task",
+    "Add additional internship analytics projects",
+    "Expand machine learning analysis",
+    "Document further business insights",
+  ],
+
+  projectImpact:
+    "The repository reports 9,994 retail records analyzed in the Sales Data Analysis task, with approximately $2.30M in sales, $286K in profit, and a 12.47% overall profit margin. Customer Segmentation applies K-Means to age, annual income, and spending score features.",
+},
+
+
+
 // ____________________________________________________________RE-TASK________________________________
 {
   id: "retask",
@@ -854,6 +1034,10 @@ export const projects: Project[] = [
     "Admin dashboard",
   ],
 },
+
+
+
+
 
 ]
 
