@@ -368,7 +368,7 @@ export const projects: Project[] = [
     "https://github.com/pathakpk7/Murder_Mystery_Game.git",
 
   liveUrl:
-  "https://murder-mystery-game-nine.vercel.app/"
+  "https://murder-mystery-game-nine.vercel.app/",
 
   screenshot:
     "/projects/murder-mystery-game/thumbnail.png",
