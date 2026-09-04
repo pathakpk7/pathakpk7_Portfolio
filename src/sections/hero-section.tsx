@@ -782,12 +782,6 @@ const HeroSection = React.forwardRef<
               />
 
               <motion.h1
-                whileHover={{
-                  letterSpacing: "-0.035em",
-                }}
-                transition={{
-                  duration: 0.45,
-                }}
                 className={cn(
                   "relative",
                   "select-none",

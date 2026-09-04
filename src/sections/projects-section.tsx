@@ -74,12 +74,10 @@ const ProjectsSection = React.forwardRef<
       const containerRect =
         container.getBoundingClientRect()
 
-      const containerCenter =
-        containerRect.left +
-        containerRect.width / 2
+      /* Measure distance relative to left start of container */
+      const targetX = containerRect.left + 48
 
       let closestIndex = 0
-
       let closestDistance =
         Number.POSITIVE_INFINITY
 
@@ -87,12 +85,8 @@ const ProjectsSection = React.forwardRef<
         const cardRect =
           card.getBoundingClientRect()
 
-        const cardCenter =
-          cardRect.left +
-          cardRect.width / 2
-
         const distance = Math.abs(
-          containerCenter - cardCenter
+          cardRect.left - targetX
         )
 
         if (
@@ -316,21 +310,10 @@ const ProjectsSection = React.forwardRef<
 
         if (!target) return
 
-        const containerRect =
-          container.getBoundingClientRect()
-
-        const targetRect =
-          target.getBoundingClientRect()
-
-        const targetCenter =
-          targetRect.left -
-          containerRect.left +
-          container.scrollLeft +
-          targetRect.width / 2
-
         const desiredScrollLeft =
-          targetCenter -
-          container.clientWidth / 2
+          target.offsetLeft -
+          container.offsetLeft -
+          16
 
         container.scrollTo({
           left: Math.max(
@@ -770,7 +753,7 @@ const ProjectsSection = React.forwardRef<
 
           <div
             ref={scrollRef}
-            className="projects-scrollbar-hide flex snap-x snap-mandatory items-start gap-5 overflow-x-auto overflow-y-hidden px-[6vw] pb-6 pt-4 sm:gap-6 sm:px-[10vw] lg:px-[calc(50%-220px)]"
+            className="projects-scrollbar-hide flex snap-x snap-mandatory items-start gap-5 overflow-x-auto overflow-y-hidden px-5 pb-6 pt-4 sm:gap-6 sm:px-8 lg:px-12"
             style={{
               scrollbarWidth:
                 "none",
@@ -839,7 +822,7 @@ const ProjectsSection = React.forwardRef<
                       },
                     }}
                     className={cn(
-                      "shrink-0 snap-center",
+                      "shrink-0 snap-start",
 
                       /*
                        * EXPANDED

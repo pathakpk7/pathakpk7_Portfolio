@@ -6,9 +6,12 @@ import {
   ArrowRight,
   ArrowUpRight,
   Check,
+  ChevronDown,
   ChevronLeft,
   ChevronRight,
+  ChevronUp,
   FolderOpen,
+  Maximize2,
   X,
 } from "lucide-react"
 import { SiGithub } from "react-icons/si"
@@ -289,6 +292,95 @@ function StackedPreview({
 }
 
 /* =========================================================
+   EXPANDED SCREENSHOT (UNCROPPED FIT & LIGHTBOX)
+========================================================= */
+
+function ExpandedScreenshot({
+  src,
+  projectName,
+  index,
+}: {
+  src?: string
+  projectName: string
+  index: number
+}) {
+  const [isLightboxOpen, setIsLightboxOpen] = React.useState(false)
+
+  if (!src) {
+    return <FallbackPreview index={index} />
+  }
+
+  return (
+    <>
+      <div className="relative flex h-full w-full items-center justify-center overflow-hidden bg-[#060a12]">
+        {/* Ambient Blur Background */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={src}
+          alt=""
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 h-full w-full scale-110 object-cover opacity-30 blur-2xl"
+        />
+
+        {/* Uncropped Main Screenshot */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={src}
+          alt={`${projectName} project preview`}
+          className="relative z-10 max-h-full max-w-full object-contain drop-shadow-[0_12px_35px_rgba(0,0,0,0.65)]"
+        />
+
+        {/* Lightbox Trigger */}
+        <button
+          type="button"
+          onClick={(event) => {
+            event.stopPropagation()
+            setIsLightboxOpen(true)
+          }}
+          title="View Full Resolution Image"
+          className="absolute bottom-3 right-3 z-20 flex items-center gap-1.5 rounded-xl border border-white/20 bg-black/60 px-3 py-1.5 text-xs font-medium text-white/85 backdrop-blur-md transition hover:border-cyan-400/40 hover:bg-black/80 hover:text-white"
+        >
+          <Maximize2 className="h-3.5 w-3.5" />
+          <span>Full Image</span>
+        </button>
+      </div>
+
+      {/* Lightbox Modal */}
+      {isLightboxOpen && (
+        <div
+          className="fixed inset-0 z-[999] flex items-center justify-center bg-black/92 p-4 backdrop-blur-xl"
+          onClick={(event) => {
+            event.stopPropagation()
+            setIsLightboxOpen(false)
+          }}
+        >
+          <div className="relative flex max-h-[92vh] max-w-[94vw] flex-col items-center justify-center">
+            <button
+              type="button"
+              onClick={(event) => {
+                event.stopPropagation()
+                setIsLightboxOpen(false)
+              }}
+              className="absolute -top-11 right-0 flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white backdrop-blur-md transition hover:bg-white/20"
+              aria-label="Close image lightbox"
+            >
+              <X className="h-5 w-5" />
+            </button>
+
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={src}
+              alt={`${projectName} screenshot full resolution`}
+              className="max-h-[86vh] max-w-[92vw] rounded-2xl border border-white/15 object-contain shadow-2xl"
+            />
+          </div>
+        </div>
+      )}
+    </>
+  )
+}
+
+/* =========================================================
    EXPANDED GALLERY
 ========================================================= */
 
@@ -328,7 +420,7 @@ function ExpandedGallery({
   return (
     <div>
       <div className="relative overflow-hidden rounded-[20px] border border-white/[0.12] bg-black/20 p-3">
-        <div className="relative h-[210px] overflow-hidden rounded-[14px] border border-white/[0.08] bg-[#070c14] sm:h-[260px] lg:h-[290px]">
+        <div className="relative h-[250px] overflow-hidden rounded-[14px] border border-white/[0.08] bg-[#070c14] sm:h-[320px] lg:h-[380px]">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeImage}
@@ -349,7 +441,7 @@ function ExpandedGallery({
               }}
               className="absolute inset-0"
             >
-              <Screenshot
+              <ExpandedScreenshot
                 src={gallery[activeImage]}
                 projectName={project.name}
                 index={index}
@@ -423,6 +515,9 @@ export function ProjectFolderCard({
   isExpanded,
   onToggle,
 }: ProjectFolderCardProps) {
+  const [isDescriptionExpanded, setIsDescriptionExpanded] =
+    React.useState(false)
+
   const status =
     STATUS_CONFIG[
       project.status as ProjectStatus
@@ -727,9 +822,119 @@ export function ProjectFolderCard({
                   Description
                 </h4>
 
-                <p className="mt-3 line-clamp-5 text-[13px] leading-6 text-white/65 sm:text-sm">
+                <p
+                  className={cn(
+                    "mt-3 text-[13px] leading-6 text-white/65 sm:text-sm",
+                    !isDescriptionExpanded && "line-clamp-4"
+                  )}
+                >
                   {project.overview}
                 </p>
+
+                {/* Know More / Show Less Button */}
+                <button
+                  type="button"
+                  onClick={(event) => {
+                    event.stopPropagation()
+                    setIsDescriptionExpanded((prev) => !prev)
+                  }}
+                  className="mt-2.5 inline-flex items-center gap-1.5 rounded-lg border border-cyan-400/20 bg-cyan-400/[0.08] px-3 py-1.5 text-xs font-semibold text-cyan-200 transition hover:border-cyan-400/40 hover:bg-cyan-400/[0.15]"
+                >
+                  <span>{isDescriptionExpanded ? "Show Less" : "Know More"}</span>
+                  {isDescriptionExpanded ? (
+                    <ChevronUp className="h-3.5 w-3.5" />
+                  ) : (
+                    <ChevronDown className="h-3.5 w-3.5" />
+                  )}
+                </button>
+
+                {/* Expanded Details */}
+                {isDescriptionExpanded && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.25 }}
+                    className="mt-4 space-y-4 border-t border-white/10 pt-4"
+                  >
+                    {project.problem && (
+                      <div>
+                        <h5 className="text-[10px] font-bold uppercase tracking-[0.14em] text-cyan-300">
+                          Problem Statement
+                        </h5>
+                        <p className="mt-1 text-xs leading-relaxed text-white/70">
+                          {project.problem}
+                        </p>
+                      </div>
+                    )}
+
+                    {project.architecture && (
+                      <div>
+                        <h5 className="text-[10px] font-bold uppercase tracking-[0.14em] text-violet-300">
+                          Architecture
+                        </h5>
+                        <p className="mt-1 text-xs leading-relaxed text-white/70">
+                          {project.architecture}
+                        </p>
+                      </div>
+                    )}
+
+                    {project.challenges && project.challenges.length > 0 && (
+                      <div>
+                        <h5 className="text-[10px] font-bold uppercase tracking-[0.14em] text-amber-300">
+                          Key Challenges &amp; Solutions
+                        </h5>
+                        <div className="mt-2 space-y-2">
+                          {project.challenges.map((item, idx) => (
+                            <div
+                              key={idx}
+                              className="rounded-xl border border-white/10 bg-white/[0.03] p-3"
+                            >
+                              <p className="text-xs font-semibold text-white/85">
+                                Challenge: {item.challenge}
+                              </p>
+                              <p className="mt-1 text-xs text-white/65">
+                                Solution: {item.solution}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {project.keyLearnings && project.keyLearnings.length > 0 && (
+                      <div>
+                        <h5 className="text-[10px] font-bold uppercase tracking-[0.14em] text-emerald-300">
+                          Key Learnings
+                        </h5>
+                        <ul className="mt-1.5 space-y-1.5">
+                          {project.keyLearnings.map((learning, idx) => (
+                            <li
+                              key={idx}
+                              className="flex items-start gap-2 text-xs text-white/70"
+                            >
+                              <span className="font-bold text-emerald-400">
+                                •
+                              </span>
+                              <span>{learning}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    {project.projectImpact && (
+                      <div>
+                        <h5 className="text-[10px] font-bold uppercase tracking-[0.14em] text-cyan-300">
+                          Project Impact
+                        </h5>
+                        <p className="mt-1 text-xs leading-relaxed text-white/70">
+                          {project.projectImpact}
+                        </p>
+                      </div>
+                    )}
+                  </motion.div>
+                )}
 
                 {/* links */}
 

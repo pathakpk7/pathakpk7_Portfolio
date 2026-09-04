@@ -528,9 +528,6 @@ const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
                 <motion.button
                   type="button"
                   onClick={scrollToTop}
-                  whileHover={{
-                    x: 2,
-                  }}
                   whileTap={{
                     scale: 0.97,
                   }}

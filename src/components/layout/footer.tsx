@@ -306,12 +306,6 @@ const Footer = React.forwardRef<HTMLElement, FooterProps>(
             />
 
             <motion.h2
-              whileHover={{
-                letterSpacing: "0.055em",
-              }}
-              transition={{
-                duration: 0.45,
-              }}
               className={cn(
                 "relative",
                 "select-none",

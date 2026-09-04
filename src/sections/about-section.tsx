@@ -406,17 +406,7 @@ function DesktopMilestone({
       >
         {/* YEAR */}
 
-        <motion.div
-          animate={{
-            y: hovered
-              ? item.position === "top"
-                ? -2
-                : 2
-              : 0,
-          }}
-          transition={{
-            duration: 0.2,
-          }}
+        <div
           className={cn(
             "absolute left-1/2",
             "-translate-x-1/2",
@@ -436,29 +426,13 @@ function DesktopMilestone({
           )}
         >
           {item.period}
-        </motion.div>
+        </div>
 
         {/* MILESTONE CARD */}
 
-        <motion.button
+        <button
           type="button"
           aria-label={`${item.title} ${item.subtitle}`}
-          animate={{
-            /*
-             * Very small movement.
-             * We don't want the card jumping around anymore.
-             */
-            y: hovered
-              ? item.position === "top"
-                ? -2
-                : 2
-              : 0,
-
-            scale: hovered ? 1.025 : 1,
-          }}
-          transition={{
-            duration: 0.2,
-          }}
           className={cn(
             "relative",
 
@@ -576,7 +550,7 @@ function DesktopMilestone({
                 : "bg-cyber-purple"
             )}
           />
-        </motion.button>
+        </button>
 
         {/* POPUP OPENS TOWARD ROAD INTERIOR */}
 
