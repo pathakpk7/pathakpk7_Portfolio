@@ -17,6 +17,11 @@ export const SITE_CONFIG = {
     email: "prasoon7pathak@gmail.com",
 
     /*
+     * Blog Website
+     */
+    blog: "https://pathakpk7blog.vercel.app",
+
+    /*
      * IMPORTANT:
      * Put your resume PDF inside:
      *
@@ -36,6 +41,7 @@ export const SITE_CONFIG = {
    about          -> id="about"
    skills         -> id="skills"
    projects       -> id="projects"
+   blogs          -> id="blogs"
    experience     -> id="experience"
    certifications -> id="certifications"
 
@@ -47,6 +53,7 @@ export const NAVIGATION = {
   about: "About",
   skills: "Skills",
   projects: "Projects",
+  blogs: "My Blogs",
   experience: "Experience",
   certifications: "Certifications",
 } as const

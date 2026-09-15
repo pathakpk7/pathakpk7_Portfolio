@@ -20,11 +20,15 @@ const ProjectsSection = dynamic(() => import('@/sections/projects-section').then
   loading: () => <div className="min-h-20 flex items-center justify-center">Loading...</div>
 })
 
-const CertificationSection = dynamic(() => import('@/sections/certification-section').then(mod => ({ default: mod.CertificationSection })), {
+const BlogSection = dynamic(() => import('@/sections/blog-section').then(mod => ({ default: mod.BlogSection })), {
   loading: () => <div className="min-h-20 flex items-center justify-center">Loading...</div>
 })
 
 const ExperienceSection = dynamic(() => import('@/sections/experience-section').then(mod => ({ default: mod.ExperienceSection })), {
+  loading: () => <div className="min-h-20 flex items-center justify-center">Loading...</div>
+})
+
+const CertificationSection = dynamic(() => import('@/sections/certification-section').then(mod => ({ default: mod.CertificationSection })), {
   loading: () => <div className="min-h-20 flex items-center justify-center">Loading...</div>
 })
 
@@ -56,6 +60,13 @@ export default function Home() {
       <ErrorBoundary>
         <Suspense fallback={<div className="min-h-20 flex items-center justify-center">Loading...</div>}>
           <ProjectsSection />
+        </Suspense>
+      </ErrorBoundary>
+
+      {/* Blog / What I Do When I Don't Code Section */}
+      <ErrorBoundary>
+        <Suspense fallback={<div className="min-h-20 flex items-center justify-center">Loading...</div>}>
+          <BlogSection />
         </Suspense>
       </ErrorBoundary>
 
