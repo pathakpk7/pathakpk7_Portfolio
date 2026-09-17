@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { useEffect, useRef, useState } from "react"
+import Image from "next/image"
 import { AnimatePresence, motion, useSpring } from "framer-motion"
 import { Download, Menu, X } from "lucide-react"
 
@@ -522,51 +523,62 @@ const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
                 )}
               >
                 {/* =========================================
-                    NAME — NO PP
+                    LOGO
                     ========================================= */}
 
                 <motion.button
                   type="button"
                   onClick={scrollToTop}
+                  whileHover={{
+                    scale: 1.05,
+                  }}
                   whileTap={{
-                    scale: 0.97,
+                    scale: 0.95,
                   }}
                   aria-label="Back to top"
                   className={cn(
-                    "group/name",
+                    "group/logo",
+                    "relative",
                     "justify-self-start",
+                    "flex",
+                    "items-center",
+                    "gap-3",
                     "text-left"
                   )}
                 >
-                  <div className="flex flex-col">
-                    <span
-                      className={cn(
-                        "text-[14px]",
-                        "font-black",
-                        "leading-none",
-                        "tracking-[0.12em]",
-                        "text-foreground",
-                        "sm:text-[15px]"
-                      )}
-                    >
-                      PRASOON
-                    </span>
+                  <div
+                    className={cn(
+                      "relative",
+                      "flex",
+                      "h-10 w-10 sm:h-11 sm:w-11",
+                      "items-center",
+                      "justify-center",
+                      "overflow-hidden",
+                      "rounded-2xl",
+                      "border",
+                      "border-cyan-400/30",
+                      "bg-[#070c15]/90",
+                      "p-1.5",
+                      "shadow-[0_0_18px_rgba(6,182,212,0.18)]",
+                      "transition-all",
+                      "duration-300",
+                      "group-hover/logo:border-cyan-300/60",
+                      "group-hover/logo:shadow-[0_0_26px_rgba(6,182,212,0.35)]"
+                    )}
+                  >
+                    <div
+                      aria-hidden="true"
+                      className="absolute inset-0 rounded-2xl bg-linear-to-br from-cyan-400/20 via-transparent to-violet-500/20 opacity-60 transition-opacity duration-300 group-hover/logo:opacity-100"
+                    />
 
-                    <span
-                      className={cn(
-                        "mt-[5px]",
-                        "text-[8px]",
-                        "font-medium",
-                        "leading-none",
-                        "tracking-[0.36em]",
-                        "text-muted-foreground",
-                        "transition-colors duration-300",
-                        "group-hover/name:text-cyan-300/80",
-                        "sm:text-[9px]"
-                      )}
-                    >
-                      PATHAK
-                    </span>
+                    <Image
+                      src="/logo.svg"
+                      alt="Prasoon Pathak Logo"
+                      width={44}
+                      height={44}
+                      priority
+                      className="relative z-10 h-full w-full object-contain"
+                    />
                   </div>
                 </motion.button>
 
@@ -1007,7 +1019,7 @@ const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
                     "py-5"
                   )}
                 >
-                  {/* MOBILE EYES */}
+                  {/* MOBILE LOGO & EYES */}
 
                   <div
                     className={cn(
@@ -1021,28 +1033,40 @@ const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
                       "pb-4"
                     )}
                   >
-                    <div>
-                      <p
-                        className={cn(
-                          "text-[11px]",
-                          "font-bold",
-                          "tracking-[0.15em]",
-                          "text-foreground"
-                        )}
-                      >
-                        PRASOON
-                      </p>
+                    <div className="flex items-center gap-3">
+                      <div className="relative flex h-9 w-9 items-center justify-center overflow-hidden rounded-xl border border-cyan-400/25 bg-[#070c15]/90 p-1 shadow-[0_0_15px_rgba(6,182,212,0.2)]">
+                        <Image
+                          src="/logo.svg"
+                          alt="Prasoon Pathak Logo"
+                          width={36}
+                          height={36}
+                          priority
+                          className="h-full w-full object-contain"
+                        />
+                      </div>
+                      <div>
+                        <p
+                          className={cn(
+                            "text-[11px]",
+                            "font-bold",
+                            "tracking-[0.15em]",
+                            "text-foreground"
+                          )}
+                        >
+                          PRASOON
+                        </p>
 
-                      <p
-                        className={cn(
-                          "mt-1",
-                          "text-[8px]",
-                          "tracking-[0.32em]",
-                          "text-muted-foreground"
-                        )}
-                      >
-                        PATHAK
-                      </p>
+                        <p
+                          className={cn(
+                            "mt-0.5",
+                            "text-[8px]",
+                            "tracking-[0.32em]",
+                            "text-muted-foreground"
+                          )}
+                        >
+                          PATHAK
+                        </p>
+                      </div>
                     </div>
 
                     <div
