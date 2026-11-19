@@ -6,6 +6,8 @@ import {
   ChevronLeft,
   ChevronRight,
   FolderOpen,
+  Sparkles,
+  Layers,
 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -14,7 +16,10 @@ import {
   SectionWrapper,
 } from "@/components/layout"
 import { ProjectFolderCard } from "@/components/projects/project-folder-card"
-import { projects } from "@/data/projects"
+import {
+  projects,
+  type Project,
+} from "@/data/projects"
 
 /* =========================================================
    CARD DIMENSIONS
@@ -23,463 +28,467 @@ import { projects } from "@/data/projects"
 const COLLAPSED_CARD_WIDTH = 440
 
 /* =========================================================
+   PROJECT ROW COMPONENT
+========================================================= */
+
+interface ProjectRowProps {
+  title: string
+  subtitle: string
+  badgeText: string
+  badgeClass: string
+  dotClass: string
+  icon: React.ReactNode
+  projects: Project[]
+  expandedProjectId: string | null
+  onToggleProject: (projectId: string) => void
+}
+
+function ProjectRow({
+  title,
+  subtitle,
+  badgeText,
+  badgeClass,
+  dotClass,
+  icon,
+  projects: rowProjects,
+  expandedProjectId,
+  onToggleProject,
+}: ProjectRowProps) {
+  const scrollRef = React.useRef<HTMLDivElement | null>(null)
+
+  const [activeProjectId, setActiveProjectId] = React.useState<string>(
+    rowProjects[0]?.id ?? ""
+  )
+
+  /* Update active project based on scroll */
+  const updateActiveProject = React.useCallback(() => {
+    const container = scrollRef.current
+    if (!container || rowProjects.length === 0) return
+
+    const cards = Array.from(
+      container.querySelectorAll<HTMLElement>("[data-project-folder]")
+    )
+    if (cards.length === 0) return
+
+    const containerRect = container.getBoundingClientRect()
+    const targetX = containerRect.left + 48
+
+    let closestIndex = 0
+    let closestDistance = Number.POSITIVE_INFINITY
+
+    cards.forEach((card, index) => {
+      const cardRect = card.getBoundingClientRect()
+      const distance = Math.abs(cardRect.left - targetX)
+      if (distance < closestDistance) {
+        closestDistance = distance
+        closestIndex = index
+      }
+    })
+
+    const closestProject = rowProjects[closestIndex]
+    if (!closestProject) return
+
+    setActiveProjectId((currentId) =>
+      currentId === closestProject.id ? currentId : closestProject.id
+    )
+  }, [rowProjects])
+
+  /* Scroll listener */
+  React.useEffect(() => {
+    const container = scrollRef.current
+    if (!container) return
+
+    let animationFrameId: number | null = null
+
+    const handleScroll = () => {
+      if (animationFrameId !== null) {
+        cancelAnimationFrame(animationFrameId)
+      }
+      animationFrameId = requestAnimationFrame(() => {
+        updateActiveProject()
+        animationFrameId = null
+      })
+    }
+
+    container.addEventListener("scroll", handleScroll, { passive: true })
+    updateActiveProject()
+
+    return () => {
+      container.removeEventListener("scroll", handleScroll)
+      if (animationFrameId !== null) {
+        cancelAnimationFrame(animationFrameId)
+      }
+    }
+  }, [updateActiveProject])
+
+  /* Resize listener */
+  React.useEffect(() => {
+    let animationFrameId: number | null = null
+
+    const handleResize = () => {
+      if (animationFrameId !== null) {
+        cancelAnimationFrame(animationFrameId)
+      }
+      animationFrameId = requestAnimationFrame(() => {
+        updateActiveProject()
+        animationFrameId = null
+      })
+    }
+
+    window.addEventListener("resize", handleResize)
+    return () => {
+      window.removeEventListener("resize", handleResize)
+      if (animationFrameId !== null) {
+        cancelAnimationFrame(animationFrameId)
+      }
+    }
+  }, [updateActiveProject])
+
+  /* Mouse wheel -> horizontal scroll */
+  React.useEffect(() => {
+    const container = scrollRef.current
+    if (!container) return
+
+    const handleWheel = (event: WheelEvent) => {
+      if (expandedProjectId !== null) return
+
+      const vertical = Math.abs(event.deltaY)
+      const horizontal = Math.abs(event.deltaX)
+
+      if (vertical > horizontal && event.deltaY !== 0) {
+        event.preventDefault()
+        container.scrollBy({
+          left: event.deltaY * 0.7,
+          behavior: "auto",
+        })
+      }
+    }
+
+    container.addEventListener("wheel", handleWheel, { passive: false })
+    return () => {
+      container.removeEventListener("wheel", handleWheel)
+    }
+  }, [expandedProjectId])
+
+  /* Center project */
+  const centerProject = React.useCallback(
+    (projectId: string, behavior: ScrollBehavior = "smooth") => {
+      const container = scrollRef.current
+      if (!container) return
+
+      const projectIndex = rowProjects.findIndex(
+        (project) => project.id === projectId
+      )
+      if (projectIndex < 0) return
+
+      const cards = Array.from(
+        container.querySelectorAll<HTMLElement>("[data-project-folder]")
+      )
+      const target = cards[projectIndex]
+      if (!target) return
+
+      const desiredScrollLeft =
+        target.offsetLeft - container.offsetLeft - 16
+
+      container.scrollTo({
+        left: Math.max(0, desiredScrollLeft),
+        behavior,
+      })
+    },
+    [rowProjects]
+  )
+
+  const handleCardToggle = React.useCallback(
+    (projectId: string) => {
+      setActiveProjectId(projectId)
+      onToggleProject(projectId)
+
+      window.setTimeout(() => {
+        centerProject(projectId)
+      }, 80)
+
+      window.setTimeout(() => {
+        centerProject(projectId)
+      }, 480)
+    },
+    [centerProject, onToggleProject]
+  )
+
+  /* Previous / Next buttons */
+  const scrollProjects = React.useCallback(
+    (direction: "left" | "right") => {
+      const container = scrollRef.current
+      if (!container) return
+
+      const scrollAmount = expandedProjectId
+        ? Math.min(container.clientWidth * 0.82, 850)
+        : Math.min(container.clientWidth * 0.72, COLLAPSED_CARD_WIDTH + 30)
+
+      container.scrollBy({
+        left: direction === "right" ? scrollAmount : -scrollAmount,
+        behavior: "smooth",
+      })
+    },
+    [expandedProjectId]
+  )
+
+  const scrollToProject = React.useCallback(
+    (projectId: string) => {
+      setActiveProjectId(projectId)
+      centerProject(projectId)
+    },
+    [centerProject]
+  )
+
+  if (rowProjects.length === 0) return null
+
+  return (
+    <div className="relative mb-12 last:mb-0">
+      {/* ===================================================
+          ROW HEADER
+      =================================================== */}
+      <div className="mb-3 flex items-center justify-between px-5 sm:px-8 lg:px-12">
+        <div className="flex items-center gap-3">
+          <div
+            className={cn(
+              "flex h-7 items-center gap-1.5 rounded-full border px-3 py-0.5 text-[11px] font-semibold tracking-wider uppercase backdrop-blur-md",
+              badgeClass
+            )}
+          >
+            {icon}
+            <span className={cn("h-1.5 w-1.5 rounded-full", dotClass)} />
+            {badgeText}
+          </div>
+          <span className="hidden text-xs text-muted-foreground/70 sm:inline">
+            {subtitle}
+          </span>
+        </div>
+
+        <div className="text-xs font-mono tracking-wider text-muted-foreground/60">
+          {rowProjects.length} {rowProjects.length === 1 ? "Project" : "Projects"}
+        </div>
+      </div>
+
+      {/* ===================================================
+          ROW CAROUSEL
+      =================================================== */}
+      <div className="relative mt-1">
+        {/* LEFT FADE */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-y-0 left-0 z-20 hidden w-14 bg-linear-to-r from-background via-background/70 to-transparent lg:block"
+        />
+
+        {/* RIGHT FADE */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-y-0 right-0 z-20 hidden w-14 bg-linear-to-l from-background via-background/70 to-transparent lg:block"
+        />
+
+        {/* PREVIOUS BUTTON */}
+        <motion.button
+          type="button"
+          aria-label={`Previous in ${title}`}
+          onClick={() => scrollProjects("left")}
+          whileHover={{
+            scale: 1.08,
+            x: -2,
+          }}
+          whileTap={{
+            scale: 0.94,
+          }}
+          className="absolute left-1 top-1/2 z-30 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-border/40 bg-background/85 text-muted-foreground shadow-xl backdrop-blur-xl transition-colors hover:border-cyber-purple/50 hover:text-cyber-purple lg:flex"
+        >
+          <ChevronLeft className="h-5 w-5" />
+        </motion.button>
+
+        {/* NEXT BUTTON */}
+        <motion.button
+          type="button"
+          aria-label={`Next in ${title}`}
+          onClick={() => scrollProjects("right")}
+          whileHover={{
+            scale: 1.08,
+            x: 2,
+          }}
+          whileTap={{
+            scale: 0.94,
+          }}
+          className="absolute right-1 top-1/2 z-30 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-border/40 bg-background/85 text-muted-foreground shadow-xl backdrop-blur-xl transition-colors hover:border-cyber-blue/50 hover:text-cyber-blue lg:flex"
+        >
+          <ChevronRight className="h-5 w-5" />
+        </motion.button>
+
+        {/* SCROLLER */}
+        <div
+          ref={scrollRef}
+          className="projects-scrollbar-hide flex snap-x snap-mandatory items-start gap-5 overflow-x-auto overflow-y-hidden px-5 pb-6 pt-4 sm:gap-6 sm:px-8 lg:px-12"
+          style={{
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
+            WebkitOverflowScrolling: "touch",
+          }}
+        >
+          {rowProjects.map((project, index) => {
+            const isActive = activeProjectId === project.id
+            const isExpanded = expandedProjectId === project.id
+            const anotherProjectExpanded =
+              expandedProjectId !== null && !isExpanded
+
+            return (
+              <motion.div
+                layout
+                key={project.id}
+                data-project-folder="true"
+                animate={{
+                  opacity: anotherProjectExpanded
+                    ? 0.2
+                    : isActive
+                      ? 1
+                      : 0.68,
+                  scale: anotherProjectExpanded
+                    ? 0.93
+                    : isActive
+                      ? 1
+                      : 0.975,
+                }}
+                transition={{
+                  layout: {
+                    type: "spring",
+                    stiffness: 220,
+                    damping: 30,
+                  },
+                  opacity: {
+                    duration: 0.25,
+                  },
+                  scale: {
+                    duration: 0.25,
+                  },
+                }}
+                className={cn(
+                  "shrink-0 snap-start",
+                  isExpanded
+                    ? [
+                        "w-[94vw]",
+                        "sm:w-[92vw]",
+                        "lg:w-[980px]",
+                        "lg:max-w-[980px]",
+                      ]
+                    : [
+                        "w-[88vw]",
+                        "sm:w-[440px]",
+                        "lg:w-[440px]",
+                        "lg:max-w-[440px]",
+                      ]
+                )}
+              >
+                <ProjectFolderCard
+                  project={project}
+                  index={index}
+                  isActive={isActive}
+                  isExpanded={isExpanded}
+                  onToggle={() => handleCardToggle(project.id)}
+                />
+              </motion.div>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* ROW INDICATORS */}
+      <div className="mt-1 flex items-center justify-center gap-2">
+        {rowProjects.map((project) => {
+          const active = activeProjectId === project.id
+
+          return (
+            <button
+              key={project.id}
+              type="button"
+              aria-label={`View ${project.name}`}
+              onClick={() => scrollToProject(project.id)}
+              className="relative flex h-5 items-center justify-center"
+            >
+              <motion.span
+                animate={{
+                  width: active ? 24 : 6,
+                  opacity: active ? 1 : 0.35,
+                }}
+                transition={{
+                  duration: 0.25,
+                }}
+                className={cn(
+                  "block h-1.5 rounded-full",
+                  active
+                    ? "bg-linear-to-r from-cyber-blue to-cyber-purple shadow-[0_0_8px_rgba(34,211,238,.45)]"
+                    : "bg-muted-foreground"
+                )}
+              />
+            </button>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+/* =========================================================
    PROJECTS SECTION
 ========================================================= */
 
 const ProjectsSection = React.forwardRef<
   React.ElementRef<typeof SectionWrapper>,
   Omit<
-    React.ComponentPropsWithoutRef<
-      typeof SectionWrapper
-    >,
+    React.ComponentPropsWithoutRef<typeof SectionWrapper>,
     "children"
   >
 >(({ className, ...props }, ref) => {
-  const scrollRef =
-    React.useRef<HTMLDivElement | null>(null)
+  const [expandedProjectId, setExpandedProjectId] = React.useState<
+    string | null
+  >(null)
 
-  const [activeProjectId, setActiveProjectId] =
-    React.useState<string>(
-      projects[0]?.id ?? ""
-    )
+  /* Split into Featured and Non-Featured (Row 1 & Row 2) */
+  const featuredProjects = React.useMemo(
+    () => projects.filter((project) => project.featured),
+    []
+  )
 
-  const [
-    expandedProjectId,
-    setExpandedProjectId,
-  ] = React.useState<string | null>(null)
+  const nonFeaturedProjects = React.useMemo(
+    () => projects.filter((project) => !project.featured),
+    []
+  )
 
-  /* =======================================================
-     UPDATE ACTIVE PROJECT
-  ======================================================= */
-
-  const updateActiveProject =
-    React.useCallback(() => {
-      const container = scrollRef.current
-
-      if (
-        !container ||
-        projects.length === 0
-      ) {
-        return
-      }
-
-      const cards = Array.from(
-        container.querySelectorAll<HTMLElement>(
-          "[data-project-folder]"
-        )
-      )
-
-      if (cards.length === 0) return
-
-      const containerRect =
-        container.getBoundingClientRect()
-
-      /* Measure distance relative to left start of container */
-      const targetX = containerRect.left + 48
-
-      let closestIndex = 0
-      let closestDistance =
-        Number.POSITIVE_INFINITY
-
-      cards.forEach((card, index) => {
-        const cardRect =
-          card.getBoundingClientRect()
-
-        const distance = Math.abs(
-          cardRect.left - targetX
-        )
-
-        if (
-          distance < closestDistance
-        ) {
-          closestDistance = distance
-          closestIndex = index
-        }
-      })
-
-      const closestProject =
-        projects[closestIndex]
-
-      if (!closestProject) return
-
-      setActiveProjectId(
-        (currentId) =>
-          currentId ===
-          closestProject.id
-            ? currentId
-            : closestProject.id
-      )
-    }, [])
-
-  /* =======================================================
-     SCROLL LISTENER
-  ======================================================= */
-
+  /* Close expanded project on Escape */
   React.useEffect(() => {
-    const container =
-      scrollRef.current
+    if (expandedProjectId === null) return
 
-    if (!container) return
-
-    let animationFrameId:
-      | number
-      | null = null
-
-    const handleScroll = () => {
-      if (
-        animationFrameId !== null
-      ) {
-        cancelAnimationFrame(
-          animationFrameId
-        )
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setExpandedProjectId(null)
       }
-
-      animationFrameId =
-        requestAnimationFrame(() => {
-          updateActiveProject()
-          animationFrameId = null
-        })
     }
 
-    container.addEventListener(
-      "scroll",
-      handleScroll,
-      {
-        passive: true,
-      }
-    )
-
-    updateActiveProject()
-
+    window.addEventListener("keydown", handleKeyDown)
     return () => {
-      container.removeEventListener(
-        "scroll",
-        handleScroll
-      )
-
-      if (
-        animationFrameId !== null
-      ) {
-        cancelAnimationFrame(
-          animationFrameId
-        )
-      }
-    }
-  }, [updateActiveProject])
-
-  /* =======================================================
-     RESIZE
-  ======================================================= */
-
-  React.useEffect(() => {
-    let animationFrameId:
-      | number
-      | null = null
-
-    const handleResize = () => {
-      if (
-        animationFrameId !== null
-      ) {
-        cancelAnimationFrame(
-          animationFrameId
-        )
-      }
-
-      animationFrameId =
-        requestAnimationFrame(() => {
-          updateActiveProject()
-          animationFrameId = null
-        })
-    }
-
-    window.addEventListener(
-      "resize",
-      handleResize
-    )
-
-    return () => {
-      window.removeEventListener(
-        "resize",
-        handleResize
-      )
-
-      if (
-        animationFrameId !== null
-      ) {
-        cancelAnimationFrame(
-          animationFrameId
-        )
-      }
-    }
-  }, [updateActiveProject])
-
-  /* =======================================================
-     MOUSE WHEEL -> HORIZONTAL SCROLL
-  ======================================================= */
-
-  React.useEffect(() => {
-    const container =
-      scrollRef.current
-
-    if (!container) return
-
-    const handleWheel = (
-      event: WheelEvent
-    ) => {
-      /*
-       * When a project is expanded,
-       * preserve normal page scrolling.
-       */
-      if (
-        expandedProjectId !== null
-      ) {
-        return
-      }
-
-      const vertical = Math.abs(
-        event.deltaY
-      )
-
-      const horizontal = Math.abs(
-        event.deltaX
-      )
-
-      if (
-        vertical > horizontal &&
-        event.deltaY !== 0
-      ) {
-        event.preventDefault()
-
-        container.scrollBy({
-          left:
-            event.deltaY * 0.7,
-          behavior: "auto",
-        })
-      }
-    }
-
-    container.addEventListener(
-      "wheel",
-      handleWheel,
-      {
-        passive: false,
-      }
-    )
-
-    return () => {
-      container.removeEventListener(
-        "wheel",
-        handleWheel
-      )
+      window.removeEventListener("keydown", handleKeyDown)
     }
   }, [expandedProjectId])
 
-  /* =======================================================
-     CENTER PROJECT
-  ======================================================= */
-
-  const centerProject =
-    React.useCallback(
-      (
-        projectId: string,
-        behavior: ScrollBehavior =
-          "smooth"
-      ) => {
-        const container =
-          scrollRef.current
-
-        if (!container) return
-
-        const projectIndex =
-          projects.findIndex(
-            (project) =>
-              project.id ===
-              projectId
-          )
-
-        if (projectIndex < 0) return
-
-        const cards = Array.from(
-          container.querySelectorAll<HTMLElement>(
-            "[data-project-folder]"
-          )
-        )
-
-        const target =
-          cards[projectIndex]
-
-        if (!target) return
-
-        const desiredScrollLeft =
-          target.offsetLeft -
-          container.offsetLeft -
-          16
-
-        container.scrollTo({
-          left: Math.max(
-            0,
-            desiredScrollLeft
-          ),
-          behavior,
-        })
-      },
-      []
+  const toggleProject = React.useCallback((projectId: string) => {
+    setExpandedProjectId((currentId) =>
+      currentId === projectId ? null : projectId
     )
+  }, [])
 
-  /* =======================================================
-     TOGGLE PROJECT
-  ======================================================= */
-
-  const toggleProject =
-    React.useCallback(
-      (projectId: string) => {
-        setActiveProjectId(
-          projectId
-        )
-
-        setExpandedProjectId(
-          (currentId) =>
-            currentId === projectId
-              ? null
-              : projectId
-        )
-
-        /*
-         * First centering pass:
-         * immediately after toggle.
-         */
-        window.setTimeout(() => {
-          centerProject(projectId)
-        }, 80)
-
-        /*
-         * Second pass:
-         * after layout animation.
-         */
-        window.setTimeout(() => {
-          centerProject(projectId)
-        }, 480)
-      },
-      [centerProject]
-    )
-
-  /* =======================================================
-     ESCAPE -> CLOSE
-  ======================================================= */
-
-  React.useEffect(() => {
-    if (
-      expandedProjectId === null
-    ) {
-      return
-    }
-
-    const handleKeyDown = (
-      event: KeyboardEvent
-    ) => {
-      if (
-        event.key === "Escape"
-      ) {
-        setExpandedProjectId(
-          null
-        )
-      }
-    }
-
-    window.addEventListener(
-      "keydown",
-      handleKeyDown
-    )
-
-    return () => {
-      window.removeEventListener(
-        "keydown",
-        handleKeyDown
-      )
-    }
-  }, [expandedProjectId])
-
-  /* =======================================================
-     PREVIOUS / NEXT
-  ======================================================= */
-
-  const scrollProjects =
-    React.useCallback(
-      (
-        direction:
-          | "left"
-          | "right"
-      ) => {
-        const container =
-          scrollRef.current
-
-        if (!container) return
-
-        /*
-         * When expanded, use a larger
-         * scroll amount.
-         */
-        const scrollAmount =
-          expandedProjectId
-            ? Math.min(
-                container.clientWidth *
-                  0.82,
-                850
-              )
-            : Math.min(
-                container.clientWidth *
-                  0.72,
-                COLLAPSED_CARD_WIDTH +
-                  30
-              )
-
-        container.scrollBy({
-          left:
-            direction === "right"
-              ? scrollAmount
-              : -scrollAmount,
-
-          behavior: "smooth",
-        })
-      },
-      [expandedProjectId]
-    )
-
-  /* =======================================================
-     DOT NAVIGATION
-  ======================================================= */
-
-  const scrollToProject =
-    React.useCallback(
-      (projectId: string) => {
-        setActiveProjectId(
-          projectId
-        )
-
-        centerProject(projectId)
-      },
-      [centerProject]
-    )
-
-  /* =======================================================
-     EMPTY STATE
-  ======================================================= */
-
+  /* Empty state */
   if (projects.length === 0) {
     return (
       <SectionWrapper
         ref={ref}
         id="projects"
-        className={cn(
-          "relative py-12 sm:py-14",
-          className
-        )}
+        className={cn("relative py-12 sm:py-14", className)}
         {...props}
       >
-        <Container
-          size="cinematic"
-          className="relative z-10"
-        >
+        <Container size="cinematic" className="relative z-10">
           <div className="text-center text-muted-foreground">
             No projects available.
           </div>
@@ -487,10 +496,6 @@ const ProjectsSection = React.forwardRef<
       </SectionWrapper>
     )
   }
-
-  /* =======================================================
-     RENDER
-  ======================================================= */
 
   return (
     <SectionWrapper
@@ -504,27 +509,16 @@ const ProjectsSection = React.forwardRef<
       {...props}
     >
       {/* ===================================================
-          BACKGROUND
+          BACKGROUND GLOWS
       =================================================== */}
-
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0"
       >
-        {/* LEFT CYAN GLOW */}
-
         <motion.div
           animate={{
-            x: [
-              -20,
-              25,
-              -20,
-            ],
-            y: [
-              -10,
-              20,
-              -10,
-            ],
+            x: [-20, 25, -20],
+            y: [-10, 20, -10],
           }}
           transition={{
             duration: 12,
@@ -534,20 +528,10 @@ const ProjectsSection = React.forwardRef<
           className="absolute left-[12%] top-[8%] h-[340px] w-[340px] rounded-full bg-cyber-blue/6 blur-[120px]"
         />
 
-        {/* RIGHT PURPLE GLOW */}
-
         <motion.div
           animate={{
-            x: [
-              20,
-              -25,
-              20,
-            ],
-            y: [
-              15,
-              -20,
-              15,
-            ],
+            x: [20, -25, 20],
+            y: [15, -20, 15],
           }}
           transition={{
             duration: 14,
@@ -557,23 +541,16 @@ const ProjectsSection = React.forwardRef<
           className="absolute right-[8%] top-[28%] h-[380px] w-[380px] rounded-full bg-cyber-purple/7 blur-[130px]"
         />
 
-        {/* CENTER AMBIENT LIGHT */}
-
         <div className="absolute left-1/2 top-[48%] h-[420px] w-[65%] -translate-x-1/2 rounded-full bg-cyber-blue/[0.025] blur-[150px]" />
       </div>
 
       {/* ===================================================
           CONTENT
       =================================================== */}
-
-      <Container
-        size="cinematic"
-        className="relative z-10"
-      >
+      <Container size="cinematic" className="relative z-10">
         {/* =================================================
-            HEADER
+            SECTION HEADER
         ================================================= */}
-
         <motion.div
           initial={{
             opacity: 0,
@@ -589,17 +566,11 @@ const ProjectsSection = React.forwardRef<
           }}
           transition={{
             duration: 0.7,
-            ease: [
-              0.22,
-              1,
-              0.36,
-              1,
-            ],
+            ease: [0.22, 1, 0.36, 1],
           }}
-          className="mb-3 flex flex-col items-center text-center"
+          className="mb-8 flex flex-col items-center text-center"
         >
           {/* ICON */}
-
           <motion.div
             whileHover={{
               scale: 1.08,
@@ -613,12 +584,10 @@ const ProjectsSection = React.forwardRef<
             className="relative mb-2 flex h-11 w-11 items-center justify-center overflow-hidden rounded-2xl border border-cyber-purple/25 bg-background/60 backdrop-blur-xl"
           >
             <div className="absolute inset-0 bg-linear-to-br from-cyber-blue/10 to-cyber-purple/10" />
-
             <FolderOpen className="relative z-10 h-5 w-5 text-cyber-purple" />
           </motion.div>
 
           {/* TITLE */}
-
           <motion.h2
             initial={{
               opacity: 0,
@@ -641,7 +610,6 @@ const ProjectsSection = React.forwardRef<
           </motion.h2>
 
           {/* SUBTITLE */}
-
           <motion.p
             initial={{
               opacity: 0,
@@ -658,12 +626,10 @@ const ProjectsSection = React.forwardRef<
             }}
             className="mt-1.5 text-xs tracking-wide text-muted-foreground sm:text-sm"
           >
-            Selected work &amp;
-            experiments.
+            Selected work &amp; experiments.
           </motion.p>
 
           {/* UNDERLINE */}
-
           <motion.div
             initial={{
               width: 0,
@@ -685,246 +651,42 @@ const ProjectsSection = React.forwardRef<
         </motion.div>
 
         {/* =================================================
-            CAROUSEL
+            ROW 1: FEATURED PROJECTS
         ================================================= */}
-
-        <div className="relative mt-1">
-          {/* LEFT FADE */}
-
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-y-0 left-0 z-20 hidden w-14 bg-linear-to-r from-background via-background/70 to-transparent lg:block"
-          />
-
-          {/* RIGHT FADE */}
-
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-y-0 right-0 z-20 hidden w-14 bg-linear-to-l from-background via-background/70 to-transparent lg:block"
-          />
-
-          {/* ===============================================
-              PREVIOUS BUTTON
-          =============================================== */}
-
-          <motion.button
-            type="button"
-            aria-label="Previous projects"
-            onClick={() =>
-              scrollProjects("left")
-            }
-            whileHover={{
-              scale: 1.08,
-              x: -2,
-            }}
-            whileTap={{
-              scale: 0.94,
-            }}
-            className="absolute left-1 top-1/2 z-30 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-border/40 bg-background/85 text-muted-foreground shadow-xl backdrop-blur-xl transition-colors hover:border-cyber-purple/50 hover:text-cyber-purple lg:flex"
-          >
-            <ChevronLeft className="h-5 w-5" />
-          </motion.button>
-
-          {/* ===============================================
-              NEXT BUTTON
-          =============================================== */}
-
-          <motion.button
-            type="button"
-            aria-label="Next projects"
-            onClick={() =>
-              scrollProjects("right")
-            }
-            whileHover={{
-              scale: 1.08,
-              x: 2,
-            }}
-            whileTap={{
-              scale: 0.94,
-            }}
-            className="absolute right-1 top-1/2 z-30 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-border/40 bg-background/85 text-muted-foreground shadow-xl backdrop-blur-xl transition-colors hover:border-cyber-blue/50 hover:text-cyber-blue lg:flex"
-          >
-            <ChevronRight className="h-5 w-5" />
-          </motion.button>
-
-          {/* ===============================================
-              PROJECT SCROLLER
-          =============================================== */}
-
-          <div
-            ref={scrollRef}
-            className="projects-scrollbar-hide flex snap-x snap-mandatory items-start gap-5 overflow-x-auto overflow-y-hidden px-5 pb-6 pt-4 sm:gap-6 sm:px-8 lg:px-12"
-            style={{
-              scrollbarWidth:
-                "none",
-
-              msOverflowStyle:
-                "none",
-
-              WebkitOverflowScrolling:
-                "touch",
-            }}
-          >
-            {projects.map(
-              (
-                project,
-                index
-              ) => {
-                const isActive =
-                  activeProjectId ===
-                  project.id
-
-                const isExpanded =
-                  expandedProjectId ===
-                  project.id
-
-                const anotherProjectExpanded =
-                  expandedProjectId !==
-                    null &&
-                  !isExpanded
-
-                return (
-                  <motion.div
-                    layout
-                    key={
-                      project.id
-                    }
-                    data-project-folder="true"
-                    animate={{
-                      opacity:
-                        anotherProjectExpanded
-                          ? 0.2
-                          : isActive
-                            ? 1
-                            : 0.68,
-
-                      scale:
-                        anotherProjectExpanded
-                          ? 0.93
-                          : isActive
-                            ? 1
-                            : 0.975,
-                    }}
-                    transition={{
-                      layout: {
-                        type: "spring",
-                        stiffness:
-                          220,
-                        damping: 30,
-                      },
-
-                      opacity: {
-                        duration: 0.25,
-                      },
-
-                      scale: {
-                        duration: 0.25,
-                      },
-                    }}
-                    className={cn(
-                      "shrink-0 snap-start",
-
-                      /*
-                       * EXPANDED
-                       */
-                      isExpanded
-                        ? [
-                            "w-[94vw]",
-                            "sm:w-[92vw]",
-                            "lg:w-[980px]",
-                            "lg:max-w-[980px]",
-                          ]
-                        : [
-                            /*
-                             * COLLAPSED
-                             */
-                            "w-[88vw]",
-                            "sm:w-[440px]",
-                            "lg:w-[440px]",
-                            "lg:max-w-[440px]",
-                          ]
-                    )}
-                  >
-                    <ProjectFolderCard
-                      project={
-                        project
-                      }
-                      index={index}
-                      isActive={
-                        isActive
-                      }
-                      isExpanded={
-                        isExpanded
-                      }
-                      onToggle={() =>
-                        toggleProject(
-                          project.id
-                        )
-                      }
-                    />
-                  </motion.div>
-                )
-              }
-            )}
-          </div>
-        </div>
+        <ProjectRow
+          title="Featured Projects"
+          subtitle="Flagship systems, live architectures & major milestones"
+          badgeText="Featured Work"
+          badgeClass="border-cyber-blue/30 bg-cyber-blue/10 text-cyber-blue shadow-[0_0_12px_rgba(34,211,238,0.12)]"
+          dotClass="bg-cyber-blue animate-pulse"
+          icon={<Sparkles className="h-3.5 w-3.5 text-cyber-blue" />}
+          projects={featuredProjects}
+          expandedProjectId={expandedProjectId}
+          onToggleProject={toggleProject}
+        />
 
         {/* =================================================
-            PROJECT INDICATORS
+            ROW 2: OTHER PROJECTS & PROTOTYPES
         ================================================= */}
-
-        <div className="mt-1 flex items-center justify-center gap-2">
-          {projects.map(
-            (project) => {
-              const active =
-                activeProjectId ===
-                project.id
-
-              return (
-                <button
-                  key={
-                    project.id
-                  }
-                  type="button"
-                  aria-label={`View ${project.name}`}
-                  onClick={() =>
-                    scrollToProject(
-                      project.id
-                    )
-                  }
-                  className="relative flex h-5 items-center justify-center"
-                >
-                  <motion.span
-                    animate={{
-                      width: active
-                        ? 24
-                        : 6,
-
-                      opacity: active
-                        ? 1
-                        : 0.35,
-                    }}
-                    transition={{
-                      duration: 0.25,
-                    }}
-                    className={cn(
-                      "block h-1.5 rounded-full",
-
-                      active
-                        ? "bg-linear-to-r from-cyber-blue to-cyber-purple shadow-[0_0_8px_rgba(34,211,238,.45)]"
-                        : "bg-muted-foreground"
-                    )}
-                  />
-                </button>
-              )
-            }
-          )}
-        </div>
+        {nonFeaturedProjects.length > 0 && (
+          <div className="mt-8 pt-6 border-t border-border/15">
+            <ProjectRow
+              title="Other Projects & Prototypes"
+              subtitle="Utilities, experimental prototypes & learning builds"
+              badgeText="Other Projects & Prototypes"
+              badgeClass="border-cyber-purple/30 bg-cyber-purple/10 text-cyber-purple shadow-[0_0_12px_rgba(168,85,247,0.12)]"
+              dotClass="bg-cyber-purple"
+              icon={<Layers className="h-3.5 w-3.5 text-cyber-purple" />}
+              projects={nonFeaturedProjects}
+              expandedProjectId={expandedProjectId}
+              onToggleProject={toggleProject}
+            />
+          </div>
+        )}
 
         {/* =================================================
             BROWSE HINT
         ================================================= */}
-
         <motion.p
           initial={{
             opacity: 0,
@@ -938,18 +700,15 @@ const ProjectsSection = React.forwardRef<
           transition={{
             delay: 0.5,
           }}
-          className="mt-1 text-center text-[10px] tracking-wide text-muted-foreground/50"
+          className="mt-6 text-center text-[10px] tracking-wide text-muted-foreground/50"
         >
-          Click a project to explore
-          {" · "}
-          drag to browse
+          Click any project folder to explore details · drag or use arrows to browse rows
         </motion.p>
       </Container>
     </SectionWrapper>
   )
 })
 
-ProjectsSection.displayName =
-  "ProjectsSection"
+ProjectsSection.displayName = "ProjectsSection"
 
 export { ProjectsSection }

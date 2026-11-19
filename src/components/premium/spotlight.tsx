@@ -188,6 +188,7 @@ export const SpotlightTransition = React.forwardRef<HTMLDivElement, {
           initial: { clipPath: "inset(0 100% 0 0)" },
           animate: { clipPath: isVisible ? "inset(0 0 0 0)" : "inset(0 100% 0 0)" }
         }
+    }
   }
 
   return (
