@@ -28,6 +28,7 @@ interface ProjectFolderCardProps {
   isActive: boolean
   isExpanded: boolean
   onToggle: () => void
+  layoutIdPrefix?: string
 }
 
 /* =========================================================
@@ -514,6 +515,7 @@ export function ProjectFolderCard({
   isActive,
   isExpanded,
   onToggle,
+  layoutIdPrefix,
 }: ProjectFolderCardProps) {
   const [isDescriptionExpanded, setIsDescriptionExpanded] =
     React.useState(false)
@@ -579,7 +581,7 @@ export function ProjectFolderCard({
 
           <motion.button
             key="collapsed"
-            layoutId={`project-${project.id}`}
+            layoutId={layoutIdPrefix ? `${layoutIdPrefix}-project-${project.id}` : `project-${project.id}`}
             type="button"
             onClick={onToggle}
             aria-expanded="false"
@@ -742,7 +744,7 @@ export function ProjectFolderCard({
 
           <motion.div
             key="expanded"
-            layoutId={`project-${project.id}`}
+            layoutId={layoutIdPrefix ? `${layoutIdPrefix}-project-${project.id}` : `project-${project.id}`}
             initial={{
               opacity: 0,
               y: 12,

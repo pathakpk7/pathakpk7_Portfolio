@@ -8,6 +8,7 @@ import {
   FolderOpen,
   Sparkles,
   Layers,
+  RotateCw,
 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -26,6 +27,38 @@ import {
 ========================================================= */
 
 const COLLAPSED_CARD_WIDTH = 440
+
+/* =========================================================
+   CAROUSEL END SPACER (SPACING BETWEEN LAST AND FIRST ITEM)
+========================================================= */
+
+function CarouselEndSpacer({ label = "End of List" }: { label?: string }) {
+  return (
+    <div
+      data-carousel-spacer="true"
+      className="shrink-0 snap-start flex items-center justify-center w-36 sm:w-52 py-4 self-stretch select-none"
+    >
+      <div className="relative flex flex-col items-center justify-center gap-2.5 w-full h-[65%] min-h-[220px] rounded-[24px] border border-dashed border-white/20 bg-white/[0.025] p-5 text-center backdrop-blur-md transition-colors hover:border-cyber-purple/40 hover:bg-white/[0.04]">
+        <div className="flex h-10 w-10 items-center justify-center rounded-full border border-cyber-purple/35 bg-cyber-purple/10 text-cyber-purple shadow-[0_0_14px_rgba(168,85,247,0.25)]">
+          <RotateCw className="h-4 w-4" />
+        </div>
+        <div className="space-y-1">
+          <span className="block text-[11px] font-mono font-bold tracking-widest uppercase text-foreground/90">
+            {label}
+          </span>
+          <span className="block text-[10px] tracking-wide text-muted-foreground/60">
+            Looping to start
+          </span>
+        </div>
+        <div className="flex items-center gap-1.5 opacity-50 mt-1">
+          <span className="h-1 w-1 rounded-full bg-cyber-blue" />
+          <span className="h-1 w-4 rounded-full bg-linear-to-r from-cyber-blue to-cyber-purple" />
+          <span className="h-1 w-1 rounded-full bg-cyber-purple" />
+        </div>
+      </div>
+    </div>
+  )
+}
 
 /* =========================================================
    PROJECT ROW COMPONENT
@@ -60,7 +93,24 @@ function ProjectRow({
     rowProjects[0]?.id ?? ""
   )
 
-  /* Update active project based on scroll */
+  /* Measure the exact pixel width of one complete set including the spacer */
+  const getCycleWidth = React.useCallback(() => {
+    const container = scrollRef.current
+    if (!container) return 0
+
+    const firstCardSet0 = container.querySelector<HTMLElement>(
+      "[data-card-index='0'][data-set-index='0']"
+    )
+    const firstCardSet1 = container.querySelector<HTMLElement>(
+      "[data-card-index='0'][data-set-index='1']"
+    )
+    if (firstCardSet0 && firstCardSet1) {
+      return firstCardSet1.offsetLeft - firstCardSet0.offsetLeft
+    }
+    return 0
+  }, [])
+
+  /* Update active project based on horizontal scroll */
   const updateActiveProject = React.useCallback(() => {
     const container = scrollRef.current
     if (!container || rowProjects.length === 0) return
@@ -85,15 +135,25 @@ function ProjectRow({
       }
     })
 
-    const closestProject = rowProjects[closestIndex]
-    if (!closestProject) return
-
-    setActiveProjectId((currentId) =>
-      currentId === closestProject.id ? currentId : closestProject.id
-    )
+    const closestCard = cards[closestIndex]
+    const projectId = closestCard?.getAttribute("data-project-id")
+    if (projectId) {
+      setActiveProjectId((currentId) =>
+        currentId === projectId ? currentId : projectId
+      )
+    }
   }, [rowProjects])
 
-  /* Scroll listener */
+  /* Ensure the first project is ALWAYS shown at the start initially */
+  React.useEffect(() => {
+    const container = scrollRef.current
+    if (!container) return
+
+    container.scrollLeft = 0
+    setActiveProjectId(rowProjects[0]?.id ?? "")
+  }, [rowProjects])
+
+  /* Scroll listener: update active dot & perform infinite loop wrapping */
   React.useEffect(() => {
     const container = scrollRef.current
     if (!container) return
@@ -105,6 +165,12 @@ function ProjectRow({
         cancelAnimationFrame(animationFrameId)
       }
       animationFrameId = requestAnimationFrame(() => {
+        if (expandedProjectId === null) {
+          const cycleWidth = getCycleWidth()
+          if (cycleWidth > 0 && container.scrollLeft >= cycleWidth) {
+            container.scrollLeft -= cycleWidth
+          }
+        }
         updateActiveProject()
         animationFrameId = null
       })
@@ -119,7 +185,7 @@ function ProjectRow({
         cancelAnimationFrame(animationFrameId)
       }
     }
-  }, [updateActiveProject])
+  }, [expandedProjectId, getCycleWidth, updateActiveProject])
 
   /* Resize listener */
   React.useEffect(() => {
@@ -144,47 +210,20 @@ function ProjectRow({
     }
   }, [updateActiveProject])
 
-  /* Mouse wheel -> horizontal scroll */
-  React.useEffect(() => {
-    const container = scrollRef.current
-    if (!container) return
-
-    const handleWheel = (event: WheelEvent) => {
-      if (expandedProjectId !== null) return
-
-      const vertical = Math.abs(event.deltaY)
-      const horizontal = Math.abs(event.deltaX)
-
-      if (vertical > horizontal && event.deltaY !== 0) {
-        event.preventDefault()
-        container.scrollBy({
-          left: event.deltaY * 0.7,
-          behavior: "auto",
-        })
-      }
-    }
-
-    container.addEventListener("wheel", handleWheel, { passive: false })
-    return () => {
-      container.removeEventListener("wheel", handleWheel)
-    }
-  }, [expandedProjectId])
-
   /* Center project */
   const centerProject = React.useCallback(
     (projectId: string, behavior: ScrollBehavior = "smooth") => {
       const container = scrollRef.current
       if (!container) return
 
-      const projectIndex = rowProjects.findIndex(
-        (project) => project.id === projectId
-      )
-      if (projectIndex < 0) return
+      const target =
+        container.querySelector<HTMLElement>(
+          `[data-project-id='${projectId}'][data-set-index='0']`
+        ) ??
+        container.querySelector<HTMLElement>(
+          `[data-project-id='${projectId}']`
+        )
 
-      const cards = Array.from(
-        container.querySelectorAll<HTMLElement>("[data-project-folder]")
-      )
-      const target = cards[projectIndex]
       if (!target) return
 
       const desiredScrollLeft =
@@ -195,7 +234,7 @@ function ProjectRow({
         behavior,
       })
     },
-    [rowProjects]
+    []
   )
 
   const handleCardToggle = React.useCallback(
@@ -214,22 +253,37 @@ function ProjectRow({
     [centerProject, onToggleProject]
   )
 
-  /* Previous / Next buttons */
+  /* Previous / Next buttons with infinite horizontal scroll wrapping */
   const scrollProjects = React.useCallback(
     (direction: "left" | "right") => {
       const container = scrollRef.current
       if (!container) return
 
+      const cycleWidth = getCycleWidth()
       const scrollAmount = expandedProjectId
         ? Math.min(container.clientWidth * 0.82, 850)
         : Math.min(container.clientWidth * 0.72, COLLAPSED_CARD_WIDTH + 30)
 
-      container.scrollBy({
-        left: direction === "right" ? scrollAmount : -scrollAmount,
-        behavior: "smooth",
-      })
+      if (direction === "left") {
+        if (cycleWidth > 0 && container.scrollLeft < scrollAmount) {
+          // Wrap forward by cycleWidth before scrolling left so it seamlessly loops to the end!
+          container.scrollLeft += cycleWidth
+        }
+        container.scrollBy({
+          left: -scrollAmount,
+          behavior: "smooth",
+        })
+      } else {
+        if (cycleWidth > 0 && container.scrollLeft >= cycleWidth) {
+          container.scrollLeft -= cycleWidth
+        }
+        container.scrollBy({
+          left: scrollAmount,
+          behavior: "smooth",
+        })
+      }
     },
-    [expandedProjectId]
+    [expandedProjectId, getCycleWidth]
   )
 
   const scrollToProject = React.useCallback(
@@ -329,69 +383,72 @@ function ProjectRow({
             WebkitOverflowScrolling: "touch",
           }}
         >
-          {rowProjects.map((project, index) => {
-            const isActive = activeProjectId === project.id
-            const isExpanded = expandedProjectId === project.id
-            const anotherProjectExpanded =
-              expandedProjectId !== null && !isExpanded
+          {[0, 1].map((setIndex) => (
+            <React.Fragment key={`set-${setIndex}`}>
+              {rowProjects.map((project, index) => {
+                const isActive = activeProjectId === project.id
+                const isExpanded = expandedProjectId === project.id
+                const anotherProjectExpanded =
+                  expandedProjectId !== null && !isExpanded
 
-            return (
-              <motion.div
-                layout
-                key={project.id}
-                data-project-folder="true"
-                animate={{
-                  opacity: anotherProjectExpanded
-                    ? 0.2
-                    : isActive
-                      ? 1
-                      : 0.68,
-                  scale: anotherProjectExpanded
-                    ? 0.93
-                    : isActive
-                      ? 1
-                      : 0.975,
-                }}
-                transition={{
-                  layout: {
-                    type: "spring",
-                    stiffness: 220,
-                    damping: 30,
-                  },
-                  opacity: {
-                    duration: 0.25,
-                  },
-                  scale: {
-                    duration: 0.25,
-                  },
-                }}
-                className={cn(
-                  "shrink-0 snap-start",
-                  isExpanded
-                    ? [
-                        "w-[94vw]",
-                        "sm:w-[92vw]",
-                        "lg:w-[980px]",
-                        "lg:max-w-[980px]",
-                      ]
-                    : [
-                        "w-[88vw]",
-                        "sm:w-[440px]",
-                        "lg:w-[440px]",
-                        "lg:max-w-[440px]",
-                      ]
-                )}
-              >
-                <ProjectFolderCard
-                  project={project}
-                  index={index}
-                  isActive={isActive}
-                  isExpanded={isExpanded}
-                  onToggle={() => handleCardToggle(project.id)}
-                />
-              </motion.div>
-            )
-          })}
+                return (
+                  <motion.div
+                    key={`${project.id}-set-${setIndex}`}
+                    data-project-folder="true"
+                    data-project-id={project.id}
+                    data-card-index={index}
+                    data-set-index={setIndex}
+                    animate={{
+                      opacity: anotherProjectExpanded
+                        ? 0.2
+                        : isActive
+                          ? 1
+                          : 0.72,
+                      scale: anotherProjectExpanded
+                        ? 0.94
+                        : 1,
+                    }}
+                    transition={{
+                      opacity: {
+                        duration: 0.25,
+                      },
+                      scale: {
+                        duration: 0.25,
+                      },
+                    }}
+                    className={cn(
+                      "shrink-0 snap-start",
+                      isExpanded
+                        ? [
+                            "w-[94vw]",
+                            "sm:w-[92vw]",
+                            "lg:w-[980px]",
+                            "lg:max-w-[980px]",
+                          ]
+                        : [
+                            "w-[88vw]",
+                            "sm:w-[440px]",
+                            "lg:w-[440px]",
+                            "lg:max-w-[440px]",
+                          ]
+                    )}
+                  >
+                    <ProjectFolderCard
+                      project={project}
+                      index={index}
+                      isActive={isActive}
+                      isExpanded={isExpanded}
+                      onToggle={() => handleCardToggle(project.id)}
+                      layoutIdPrefix={`set-${setIndex}`}
+                    />
+                  </motion.div>
+                )
+              })}
+
+              {/* END SPACER BETWEEN SETS (LET USER KNOW ABOUT END OF COLLECTION) */}
+              <CarouselEndSpacer label={title} />
+            </React.Fragment>
+          ))}
         </div>
       </div>
 
