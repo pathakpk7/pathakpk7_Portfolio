@@ -4,25 +4,22 @@ import "./globals.css";
 import { Providers } from "@/providers";
 import { Navbar, Footer, PageWrapper } from "@/components/layout";
 
-// Premium font pairing for luxury typography
+// Premium font pairing for luxury typography (variable fonts automatically include all weights)
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-body",
-  weight: ["300", "400", "500", "600", "700"],
   display: "swap",
 });
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
   variable: "--font-heading",
-  weight: ["300", "400", "500", "600", "700"],
   display: "swap",
 });
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
-  weight: ["300", "400", "500", "600", "700"],
   display: "swap",
 });
 
