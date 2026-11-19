@@ -222,7 +222,13 @@ export const projects: Project[] = [
     githubUrl: "https://github.com/pathakpk7/Dhoni_7.git",
     liveUrl: "https://project-7-tau.vercel.app",
     screenshot: "/projects/dhoni-7/thumbnail.png",
-    screenshots: [],
+    screenshots: [
+      "/projects/dhoni-7/home.png",
+      "/projects/dhoni-7/memorabilia.png",
+      "/projects/dhoni-7/telemetry.png",
+      "/projects/dhoni-7/helicopter-shot.png",
+      "/projects/dhoni-7/storybook.png",
+    ],
     roadmap: [],
   },
 
@@ -272,7 +278,12 @@ export const projects: Project[] = [
     githubUrl: "https://github.com/pathakpk7/PlayNed.git",
     liveUrl: "https://playned-frontend.vercel.app",
     screenshot: "/projects/playned/thumbnail.png",
-    screenshots: [],
+    screenshots: [
+      "/projects/playned/home.png",
+      "/projects/playned/games.png",
+      "/projects/playned/party-games.png",
+      "/projects/playned/multiplayer.png",
+    ],
     roadmap: [
       "Add Quoridor and Pentago game engines",
       "Global leaderboard system",
@@ -378,7 +389,13 @@ export const projects: Project[] = [
     githubUrl: "https://github.com/pathakpk7/pathakpk7_blog.git",
     liveUrl: "https://pathakpk7blog.vercel.app",
     screenshot: "/projects/pathak-blog/thumbnail.png",
-    screenshots: [],
+    screenshots: [
+      "/projects/pathak-blog/home.png",
+      "/projects/pathak-blog/studio.png",
+      "/projects/pathak-blog/folio-cover.png",
+      "/projects/pathak-blog/folio-inside.png",
+      "/projects/pathak-blog/notifications.png",
+    ],
     roadmap: [],
   },
 
@@ -477,8 +494,9 @@ export const projects: Project[] = [
     screenshot: "/projects/findora/thumbnail.png",
     screenshots: [
       "/projects/findora/home.png",
-      "/projects/findora/report-item.png",
       "/projects/findora/dashboard.png",
+      "/projects/findora/report-item.png",
+      "/projects/findora/auth.png",
     ],
     roadmap: [
       "Complete backend",
