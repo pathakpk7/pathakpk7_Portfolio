@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { motion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
 import {
   ChevronLeft,
   ChevronRight,
@@ -417,19 +417,21 @@ function ProjectRow({
                       },
                     }}
                     className={cn(
-                      "shrink-0 snap-start",
+                      "shrink-0 snap-start transition-all",
                       isExpanded
                         ? [
                             "w-[94vw]",
                             "sm:w-[92vw]",
                             "lg:w-[980px]",
                             "lg:max-w-[980px]",
+                            "relative z-50",
                           ]
                         : [
                             "w-[88vw]",
                             "sm:w-[440px]",
                             "lg:w-[440px]",
                             "lg:max-w-[440px]",
+                            "relative z-10",
                           ]
                     )}
                   >
@@ -530,6 +532,35 @@ const ProjectsSection = React.forwardRef<
     }
   }, [expandedProjectId])
 
+  /* Close expanded project when clicking anywhere outside */
+  React.useEffect(() => {
+    if (expandedProjectId === null) return
+
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+      const target = event.target as HTMLElement | null
+      if (!target) return
+
+      // Do not close if clicking inside the expanded project card or an image lightbox
+      if (
+        target.closest("[data-project-expanded='true']") ||
+        target.closest("[data-lightbox='true']")
+      ) {
+        return
+      }
+
+      setExpandedProjectId(null)
+    }
+
+    const timer = setTimeout(() => {
+      document.addEventListener("pointerdown", handleClickOutside)
+    }, 60)
+
+    return () => {
+      clearTimeout(timer)
+      document.removeEventListener("pointerdown", handleClickOutside)
+    }
+  }, [expandedProjectId])
+
   const toggleProject = React.useCallback((projectId: string) => {
     setExpandedProjectId((currentId) =>
       currentId === projectId ? null : projectId
@@ -565,6 +596,24 @@ const ProjectsSection = React.forwardRef<
       )}
       {...props}
     >
+      {/* ===================================================
+          CLICK-OUTSIDE BACKDROP OVERLAY
+      =================================================== */}
+      <AnimatePresence>
+        {expandedProjectId !== null && (
+          <motion.div
+            key="projects-backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            onClick={() => setExpandedProjectId(null)}
+            className="fixed inset-0 z-40 bg-black/60 backdrop-blur-[2px] cursor-pointer"
+            aria-label="Click anywhere outside to minimize open project"
+            title="Click outside to minimize"
+          />
+        )}
+      </AnimatePresence>
       {/* ===================================================
           BACKGROUND GLOWS
       =================================================== */}

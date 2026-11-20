@@ -349,6 +349,7 @@ function ExpandedScreenshot({
       {/* Lightbox Modal */}
       {isLightboxOpen && (
         <div
+          data-lightbox="true"
           className="fixed inset-0 z-[999] flex items-center justify-center bg-black/92 p-4 backdrop-blur-xl"
           onClick={(event) => {
             event.stopPropagation()
@@ -394,34 +395,37 @@ function ExpandedGallery({
 }) {
   const images = getProjectImages(project)
 
-  const [activeImage, setActiveImage] =
-    React.useState(0)
+  const [activeImage, setActiveImage] = React.useState(0)
 
-  const gallery =
-    images.length > 0
-      ? images
-      : [undefined]
+  const gallery = images.length > 0 ? images : [undefined]
 
-  const previous = () => {
+  const previous = React.useCallback(() => {
     setActiveImage((current) =>
-      current === 0
-        ? gallery.length - 1
-        : current - 1
+      current === 0 ? gallery.length - 1 : current - 1
     )
-  }
+  }, [gallery.length])
 
-  const next = () => {
+  const next = React.useCallback(() => {
     setActiveImage((current) =>
-      current === gallery.length - 1
-        ? 0
-        : current + 1
+      current === gallery.length - 1 ? 0 : current + 1
     )
-  }
+  }, [gallery.length])
+
+  // Keyboard navigation for image carousel
+  React.useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (gallery.length <= 1) return
+      if (event.key === "ArrowLeft") previous()
+      if (event.key === "ArrowRight") next()
+    }
+    window.addEventListener("keydown", handleKeyDown)
+    return () => window.removeEventListener("keydown", handleKeyDown)
+  }, [gallery.length, next, previous])
 
   return (
     <div>
-      <div className="relative overflow-hidden rounded-[20px] border border-white/[0.12] bg-black/20 p-3">
-        <div className="relative h-[250px] overflow-hidden rounded-[14px] border border-white/[0.08] bg-[#070c14] sm:h-[320px] lg:h-[380px]">
+      <div className="relative overflow-hidden rounded-[20px] border border-white/[0.12] bg-black/40 p-2 sm:p-3">
+        <div className="relative h-[260px] overflow-hidden rounded-[14px] border border-white/[0.08] bg-[#070c14] sm:h-[330px] lg:h-[400px]">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeImage}
@@ -438,7 +442,7 @@ function ExpandedGallery({
                 scale: 1.01,
               }}
               transition={{
-                duration: 0.25,
+                duration: 0.22,
               }}
               className="absolute inset-0"
             >
@@ -449,58 +453,69 @@ function ExpandedGallery({
               />
             </motion.div>
           </AnimatePresence>
+
+          {/* Screenshot counter pill */}
+          {gallery.length > 1 && (
+            <div className="pointer-events-none absolute left-3 top-3 z-30 flex items-center gap-1.5 rounded-full border border-white/20 bg-black/80 px-2.5 py-1 text-[11px] font-mono text-white/90 backdrop-blur-md shadow-lg">
+              <span className="font-semibold text-cyan-300">{activeImage + 1}</span>
+              <span className="text-white/40">/</span>
+              <span>{gallery.length}</span>
+            </div>
+          )}
+
+          {/* Navigation Arrows: Inside frame with z-30, high contrast for light and dark screenshots */}
+          {gallery.length > 1 && (
+            <>
+              <button
+                type="button"
+                onClick={(event) => {
+                  event.stopPropagation()
+                  previous()
+                }}
+                aria-label="Previous screenshot"
+                className="absolute left-3 top-1/2 z-30 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/30 bg-black/85 text-white shadow-[0_4px_20px_rgba(0,0,0,0.8)] backdrop-blur-xl transition hover:scale-110 hover:border-cyan-400 hover:bg-black hover:text-cyan-300 active:scale-95"
+              >
+                <ChevronLeft className="h-5 w-5" />
+              </button>
+
+              <button
+                type="button"
+                onClick={(event) => {
+                  event.stopPropagation()
+                  next()
+                }}
+                aria-label="Next screenshot"
+                className="absolute right-3 top-1/2 z-30 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/30 bg-black/85 text-white shadow-[0_4px_20px_rgba(0,0,0,0.8)] backdrop-blur-xl transition hover:scale-110 hover:border-cyan-400 hover:bg-black hover:text-cyan-300 active:scale-95"
+              >
+                <ChevronRight className="h-5 w-5" />
+              </button>
+            </>
+          )}
         </div>
 
+        {/* Thumbnail indicators */}
         {gallery.length > 1 && (
-          <>
-            <button
-              type="button"
-              onClick={(event) => {
-                event.stopPropagation()
-                previous()
-              }}
-              aria-label="Previous screenshot"
-              className="absolute left-6 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-black/60 text-white/80 backdrop-blur-xl transition hover:border-violet-400/40 hover:text-white"
-            >
-              <ChevronLeft className="h-5 w-5" />
-            </button>
-
-            <button
-              type="button"
-              onClick={(event) => {
-                event.stopPropagation()
-                next()
-              }}
-              aria-label="Next screenshot"
-              className="absolute right-6 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-black/60 text-white/80 backdrop-blur-xl transition hover:border-violet-400/40 hover:text-white"
-            >
-              <ChevronRight className="h-5 w-5" />
-            </button>
-          </>
+          <div className="mt-3 flex items-center justify-center gap-2">
+            {gallery.map((_, imageIndex) => (
+              <button
+                key={imageIndex}
+                type="button"
+                onClick={(event) => {
+                  event.stopPropagation()
+                  setActiveImage(imageIndex)
+                }}
+                aria-label={`Go to screenshot ${imageIndex + 1}`}
+                className={cn(
+                  "h-1.5 rounded-full transition-all duration-300",
+                  activeImage === imageIndex
+                    ? "w-6 bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.7)]"
+                    : "w-1.5 bg-white/25 hover:bg-white/50"
+                )}
+              />
+            ))}
+          </div>
         )}
       </div>
-
-      {gallery.length > 1 && (
-        <div className="mt-3 flex justify-center gap-2">
-          {gallery.map((_, imageIndex) => (
-            <button
-              key={imageIndex}
-              type="button"
-              onClick={(event) => {
-                event.stopPropagation()
-                setActiveImage(imageIndex)
-              }}
-              aria-label={`Screenshot ${imageIndex + 1}`}
-              className={cn(
-                "h-1.5 rounded-full transition-all",
-                activeImage === imageIndex
-                  ? "w-6 bg-white"
-                  : "w-1.5 bg-white/25 hover:bg-white/45"
-              )}
-            />
-          ))}
-        </div>
-      )}
     </div>
   )
 }
@@ -529,7 +544,7 @@ export function ProjectFolderCard({
     project.techStack.slice(0, 4)
 
   const features =
-    project.features?.slice(0, 5) ?? []
+    project.features ?? []
 
   const stopPropagation = (
     event: React.MouseEvent<HTMLElement>
@@ -609,7 +624,7 @@ export function ProjectFolderCard({
               stiffness: 250,
               damping: 24,
             }}
-            className="group relative block min-h-[405px] w-full cursor-pointer text-left focus:outline-none"
+            className="group relative block h-[445px] min-h-[445px] w-full cursor-pointer text-left focus:outline-none"
           >
             {/* glow */}
 
@@ -632,7 +647,7 @@ export function ProjectFolderCard({
 
             {/* folder rear border */}
 
-            <div className="absolute inset-x-[3%] bottom-[2px] top-[80px] rounded-[28px] border border-white/20 bg-white/[0.025]" />
+            <div className="absolute inset-x-[3%] bottom-[2px] top-[75px] rounded-[28px] border border-white/20 bg-white/[0.025]" />
 
             {/* =================================================
                 FOLDER FRONT
@@ -640,7 +655,7 @@ export function ProjectFolderCard({
 
             <div
               className={cn(
-                "absolute inset-x-0 bottom-0 top-[115px]",
+                "absolute inset-x-0 bottom-0 top-[95px]",
                 "overflow-hidden",
                 "rounded-[28px]",
                 "border",
@@ -658,41 +673,44 @@ export function ProjectFolderCard({
 
               <div
                 aria-hidden="true"
-                className="absolute left-0 top-0 h-[62px] w-[46%] rounded-br-[42px] border-b border-r border-white/15 bg-white/[0.035]"
+                className="absolute left-0 top-0 h-[56px] w-[46%] rounded-br-[38px] border-b border-r border-white/15 bg-white/[0.035]"
               />
 
               {/* subtle surface gradient */}
 
               <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-white/[0.045] via-transparent to-violet-500/[0.025]" />
 
-              <div className="relative flex h-full flex-col px-7 pb-6 pt-8">
-                <FolderOpen className="mb-6 h-8 w-8 text-cyan-100/80" />
+              <div className="relative flex h-full flex-col px-6 pb-5 pt-6 sm:px-7 sm:pb-6 sm:pt-6">
+                <div className="mb-3 flex items-center justify-between">
+                  <FolderOpen className="h-7 w-7 text-cyan-100/80" />
+                  <span className="text-[10px] font-mono tracking-wider text-white/40 uppercase truncate max-w-[150px]">
+                    {project.category}
+                  </span>
+                </div>
 
-                <h3 className="text-[27px] font-bold tracking-[-0.04em] text-white sm:text-[30px]">
+                <h3 className="text-xl sm:text-[23px] font-bold tracking-tight text-white leading-tight line-clamp-2">
                   {project.name}
                 </h3>
 
-                <p className="mt-1.5 line-clamp-1 text-sm leading-relaxed text-white/60">
+                <p className="mt-1.5 line-clamp-2 text-xs sm:text-[13px] leading-relaxed text-white/60">
                   {project.tagline}
                 </p>
 
-                <div className="mt-5 flex flex-wrap gap-2">
-                  {visibleTech.map(
-                    (tech) => (
-                      <span
-                        key={tech}
-                        className="rounded-lg border border-white/10 bg-white/[0.035] px-3 py-1.5 text-xs font-medium text-white/65"
-                      >
-                        {tech}
-                      </span>
-                    )
-                  )}
+                <div className="mt-3.5 flex flex-wrap gap-1.5">
+                  {visibleTech.map((tech) => (
+                    <span
+                      key={tech}
+                      className="rounded-lg border border-white/10 bg-white/[0.035] px-2.5 py-1 text-[11px] font-medium text-white/70"
+                    >
+                      {tech}
+                    </span>
+                  ))}
                 </div>
 
-                <div className="mt-auto flex items-end justify-between gap-4 pt-6">
+                <div className="mt-auto flex items-center justify-between gap-3 pt-4 border-t border-white/5">
                   <div
                     className={cn(
-                      "flex items-center gap-2 rounded-full border px-3 py-1.5",
+                      "flex items-center gap-1.5 rounded-full border px-2.5 py-1",
                       status.border,
                       status.background
                     )}
@@ -706,7 +724,7 @@ export function ProjectFolderCard({
 
                     <span
                       className={cn(
-                        "text-[10px] font-semibold uppercase tracking-[0.13em]",
+                        "text-[9px] sm:text-[10px] font-semibold uppercase tracking-[0.12em]",
                         status.text
                       )}
                     >
@@ -714,12 +732,12 @@ export function ProjectFolderCard({
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-2 text-sm font-medium text-violet-300 transition-colors group-hover:text-violet-200">
+                  <div className="flex items-center gap-1.5 text-xs sm:text-sm font-medium text-violet-300 transition-colors group-hover:text-violet-200">
                     <span>
                       View Project
                     </span>
 
-                    <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                    <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
                   </div>
                 </div>
               </div>
@@ -744,6 +762,8 @@ export function ProjectFolderCard({
 
           <motion.div
             key="expanded"
+            data-project-expanded="true"
+            onClick={(event) => event.stopPropagation()}
             layoutId={layoutIdPrefix ? `${layoutIdPrefix}-project-${project.id}` : `project-${project.id}`}
             initial={{
               opacity: 0,
@@ -816,17 +836,17 @@ export function ProjectFolderCard({
                 INFORMATION
             ================================================= */}
 
-            <div className="relative grid gap-7 px-6 pb-7 pt-7 sm:px-8 lg:grid-cols-[1.05fr_1fr_.9fr] lg:gap-0">
+            <div className="relative grid gap-7 px-6 pb-7 pt-7 sm:px-8 lg:grid-cols-[1.1fr_1fr_.9fr] lg:gap-0">
               {/* description */}
 
-              <div className="lg:pr-7">
+              <div className="min-w-0 lg:pr-7">
                 <h4 className="text-[11px] font-bold uppercase tracking-[0.15em] text-white/90">
                   Description
                 </h4>
 
                 <p
                   className={cn(
-                    "mt-3 text-[13px] leading-6 text-white/65 sm:text-sm",
+                    "mt-3 text-[13px] leading-6 text-white/70 sm:text-sm break-words",
                     !isDescriptionExpanded && "line-clamp-4"
                   )}
                 >
