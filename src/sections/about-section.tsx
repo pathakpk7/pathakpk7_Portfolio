@@ -1,13 +1,23 @@
 "use client"
 
 import * as React from "react"
-import { motion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
 import {
   BookOpen,
   GraduationCap,
   Settings,
   School,
   MapPin,
+  Calendar,
+  Award,
+  Radio,
+  ChevronLeft,
+  ChevronRight,
+  Sparkles,
+  Play,
+  Pause,
+  Target,
+  Compass,
 } from "lucide-react"
 
 import { Container, SectionWrapper } from "@/components/layout"
@@ -26,1385 +36,962 @@ interface EducationItem {
   period: string
   percentage: string
   description: string
-  position: "top" | "bottom"
-  x: number
   icon: React.ComponentType<{
     className?: string
   }>
   accent: "blue" | "purple"
+  stage: string
+  statusBadge: string
+  focusTag: string
+  radius: number
+  angle: number // in degrees
 }
 
 /* =========================================================
-   EDUCATION DATA --- CHANGE THESE TO YOUR OWN EDUCATION DATA ----
+   EDUCATION DATA
    ========================================================= */
 
 const educationData: EducationItem[] = [
   {
     id: "secondary",
     shortTitle: "10th",
-    title: "10th",
-    subtitle: "Secondary School",
+    title: "10th Grade",
+    subtitle: "Secondary School Certificate",
     institution: "St. John's School, Chandauli",
     period: "2017 – 2018",
     percentage: "81.33%",
     description:
-      "Excellent academic performance with distinction in Mathematics and Computer Science fundamentals.",
-    position: "bottom",
-    x: 13,
+      "Built initial academic rigor with distinction in Mathematics and Computer Science fundamentals, establishing a lifelong curiosity for technology.",
     icon: School,
     accent: "blue",
+    stage: "01",
+    statusBadge: "Foundational Honors",
+    focusTag: "Math & Computing",
+    radius: 78,
+    angle: 215,
   },
   {
     id: "senior-secondary",
     shortTitle: "12th",
-    title: "12th",
-    subtitle: "Senior Secondary",
+    title: "12th Grade",
+    subtitle: "Senior Secondary (PCM)",
     institution: "St. John's School, Chandauli",
     period: "2019 – 2020",
     percentage: "65.4%",
     description:
-      "Strong foundation in Physics, Chemistry, and Mathematics with focus on analytical thinking.",
-    position: "top",
-    x: 38,
+      "Deepened analytical thinking and problem-solving through intensive coursework in Physics, Chemistry, and Advanced Mathematics.",
     icon: BookOpen,
     accent: "blue",
+    stage: "02",
+    statusBadge: "Analytical Foundation",
+    focusTag: "Physics, Chem & Math",
+    radius: 126,
+    angle: 310,
   },
   {
     id: "diploma",
     shortTitle: "Diploma",
-    title: "Diploma",
+    title: "Diploma in Engineering",
     subtitle: "Mechanical Engineering",
     institution: "Chandauli Polytechnic",
     period: "2021 – 2024",
     percentage: "76.5%",
     description:
-      "Developed a strong engineering foundation through production, manufacturing, mechanical systems, and practical technical coursework.",
-    position: "bottom",
-    x: 63,
+      "Gained hands-on engineering principles, manufacturing systems, precision design, and structured problem-solving before transitioning to computer science.",
     icon: Settings,
     accent: "purple",
+    stage: "03",
+    statusBadge: "Engineering Core",
+    focusTag: "Systems & Mechanics",
+    radius: 174,
+    angle: 35,
   },
   {
     id: "btech",
     shortTitle: "B.Tech",
-    title: "B.Tech",
+    title: "Bachelor of Technology",
     subtitle: "Computer Science Engineering",
-    institution: "United Institute of Technology",
+    institution: "United Institute of Technology, Prayagraj",
     period: "2024 – Present",
     percentage: "77.4%",
     description:
-      "Building expertise in software development, data structures, databases, cybersecurity, AI/ML, and modern full-stack technologies.",
-    position: "top",
-    x: 87,
+      "Specializing in full-stack architecture, distributed systems, algorithms, AI/ML pipelines, and modern cybersecurity threat detection platforms.",
     icon: GraduationCap,
     accent: "purple",
+    stage: "04",
+    statusBadge: "Current Specialization",
+    focusTag: "Full-Stack, AI & Cyber",
+    radius: 218,
+    angle: 125,
   },
 ]
 
 /* =========================================================
-   ROAD
-
-   Deep rounded roadmap, compressed vertically to fit
-   comfortably inside a laptop viewport.
+   ORBITAL GEOMETRY CONSTANTS
    ========================================================= */
 
-const ROAD_PATH =
-  "M 0 250 " +
-  "L 70 250 " +
-  "C 100 250 110 270 110 300 " +
-  "L 110 345 " +
-  "C 110 405 150 430 205 430 " +
-  "C 260 430 300 400 300 345 " +
-  "L 300 155 " +
-  "C 300 100 345 75 400 75 " +
-  "C 455 75 500 105 500 155 " +
-  "L 500 345 " +
-  "C 500 405 545 430 600 430 " +
-  "C 655 430 700 400 700 345 " +
-  "L 700 155 " +
-  "C 700 100 745 75 800 75 " +
-  "C 855 75 895 105 895 155 " +
-  "L 895 205 " +
-  "C 895 235 915 250 950 250 " +
-  "L 1000 250"
+const CENTER_X = 240
+const CENTER_Y = 240
 
-/* =========================================================
-   DETAIL POPUP
-   ========================================================= */
-
-interface DetailPopupProps {
-  item: EducationItem
+function getNodeCoordinates(radius: number, angleDeg: number) {
+  const rad = (angleDeg * Math.PI) / 180
+  return {
+    x: CENTER_X + radius * Math.cos(rad),
+    y: CENTER_Y + radius * Math.sin(rad),
+  }
 }
 
-function DetailPopup({ item }: DetailPopupProps) {
-  const Icon = item.icon
+/* =========================================================
+   ORBITAL CONSTELLATION RADAR COMPONENT
+   ========================================================= */
 
-  /*
-   * Critical positioning rule:
-   *
-   * TOP milestone    -> popup opens DOWN
-   * BOTTOM milestone -> popup opens UP
-   *
-   * This means the popup uses the empty space inside
-   * the roadmap instead of extending outside the section.
-   */
-  const opensDown = item.position === "top"
+interface OrbitalRadarProps {
+  items: EducationItem[]
+  activeIndex: number
+  onSelect: (index: number) => void
+  hoveredIndex: number | null
+  onHover: (index: number | null) => void
+}
 
-  const isBlue = item.accent === "blue"
+function OrbitalRadar({
+  items,
+  activeIndex,
+  onSelect,
+  hoveredIndex,
+  onHover,
+}: OrbitalRadarProps) {
+  const activeItem: EducationItem = items[activeIndex] ?? (items[0] as EducationItem)
+  const activeCoords = getNodeCoordinates(activeItem.radius, activeItem.angle)
 
-  const accentText = isBlue
-    ? "text-cyber-blue"
-    : "text-cyber-purple"
-
-  const accentBorder = isBlue
-    ? "border-cyber-blue/30"
-    : "border-cyber-purple/30"
+  // Construct constellation path connecting 1 -> 2 -> 3 -> 4
+  const constellationPath = items
+    .map((item, idx) => {
+      const { x, y } = getNodeCoordinates(item.radius, item.angle)
+      return `${idx === 0 ? "M" : "L"} ${x} ${y}`
+    })
+    .join(" ")
 
   return (
-    <motion.div
-      initial={{
-        opacity: 0,
-        y: opensDown ? -8 : 8,
-        scale: 0.96,
-      }}
-      animate={{
-        opacity: 1,
-        y: 0,
-        scale: 1,
-      }}
-      exit={{
-        opacity: 0,
-        y: opensDown ? -5 : 5,
-        scale: 0.97,
-      }}
-      transition={{
-        duration: 0.2,
-        ease: [0.25, 0.1, 0.25, 1],
-      }}
-      className={cn(
-        "absolute z-50",
-        "left-1/2 -translate-x-1/2",
+    <div className="relative mx-auto flex w-full max-w-[460px] items-center justify-center p-2 select-none sm:p-4">
+      {/* Ambient background glow behind radar */}
+      <div className="pointer-events-none absolute h-[340px] w-[340px] rounded-full bg-linear-to-tr from-cyber-blue/10 via-cyber-purple/10 to-transparent blur-[80px]" />
 
-        // Smaller popup
-        "w-[280px]",
+      <svg
+        viewBox="0 0 480 480"
+        className="relative z-10 h-auto w-full max-w-[460px] overflow-visible drop-shadow-[0_0_35px_rgba(0,0,0,0.8)]"
+        aria-label="Academic Journey Orbital Constellation"
+      >
+        <defs>
+          {/* Constellation line gradient */}
+          <linearGradient
+            id="constellationGradient"
+            x1="0%"
+            y1="0%"
+            x2="100%"
+            y2="100%"
+          >
+            <stop offset="0%" stopColor="#22d3ee" stopOpacity="0.8" />
+            <stop offset="50%" stopColor="#818cf8" stopOpacity="0.9" />
+            <stop offset="100%" stopColor="#c084fc" stopOpacity="0.8" />
+          </linearGradient>
 
-        "rounded-2xl border",
-        accentBorder,
+          {/* Active target beam gradient */}
+          <linearGradient
+            id="activeTargetBeam"
+            x1={`${CENTER_X}`}
+            y1={`${CENTER_Y}`}
+            x2={`${activeCoords.x}`}
+            y2={`${activeCoords.y}`}
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.2" />
+            <stop offset="60%" stopColor="#818cf8" stopOpacity="0.7" />
+            <stop offset="100%" stopColor="#a855f7" stopOpacity="1" />
+          </linearGradient>
 
-        "bg-background/95",
-        "p-4",
-        "backdrop-blur-2xl",
+          {/* Radar sweep sector gradient */}
+          <linearGradient id="radarSweepGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#22d3ee" stopOpacity="0" />
+            <stop offset="60%" stopColor="#38bdf8" stopOpacity="0.08" />
+            <stop offset="100%" stopColor="#818cf8" stopOpacity="0.25" />
+          </linearGradient>
 
-        "shadow-[0_18px_55px_rgba(0,0,0,0.5)]",
+          {/* Core radial glow */}
+          <radialGradient id="coreGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#22d3ee" stopOpacity="0.4" />
+            <stop offset="60%" stopColor="#a855f7" stopOpacity="0.15" />
+            <stop offset="100%" stopColor="#0b111a" stopOpacity="0" />
+          </radialGradient>
+        </defs>
 
-        // OPEN TOWARD THE CENTER
-        opensDown
-          ? "top-[calc(100%+14px)]"
-          : "bottom-[calc(100%+14px)]"
-      )}
-    >
-      {/* Connector line */}
+        {/* =================================================
+            BACKGROUND GRID & CROSSHAIRS
+            ================================================= */}
+        {/* Subtle grid rings */}
+        <circle
+          cx={CENTER_X}
+          cy={CENTER_Y}
+          r={235}
+          fill="none"
+          stroke="rgba(255,255,255,0.04)"
+          strokeWidth="1"
+        />
 
-      <div
-        className={cn(
-          "absolute left-1/2",
-          "-translate-x-1/2",
-          "h-[14px] w-px",
+        {/* Crosshair coordinate axes */}
+        <line
+          x1={CENTER_X}
+          y1={15}
+          x2={CENTER_X}
+          y2={465}
+          stroke="rgba(255,255,255,0.07)"
+          strokeWidth="1"
+          strokeDasharray="3 6"
+        />
+        <line
+          x1={15}
+          y1={CENTER_Y}
+          x2={465}
+          y2={CENTER_Y}
+          stroke="rgba(255,255,255,0.07)"
+          strokeWidth="1"
+          strokeDasharray="3 6"
+        />
 
-          isBlue
-            ? "bg-cyber-blue/60"
-            : "bg-cyber-purple/60",
-
-          opensDown
-            ? "-top-[14px]"
-            : "-bottom-[14px]"
-        )}
-      />
-
-      {/* Connector dot */}
-
-      <div
-        className={cn(
-          "absolute left-1/2",
-          "-translate-x-1/2",
-          "h-1.5 w-1.5 rounded-full",
-
-          isBlue
-            ? "bg-cyber-blue"
-            : "bg-cyber-purple",
-
-          opensDown
-            ? "-top-[17px]"
-            : "-bottom-[17px]"
-        )}
-      />
-
-      {/* Header */}
-
-      <div className="flex items-center gap-3">
-        <div
-          className={cn(
-            "flex h-9 w-9 shrink-0",
-            "items-center justify-center",
-            "rounded-xl border",
-            accentBorder,
-            "bg-background/70",
-            accentText
-          )}
+        {/* Cardinal calibration markers */}
+        <text
+          x={CENTER_X}
+          y={26}
+          textAnchor="middle"
+          className="fill-muted-foreground/40 text-[9px] font-mono tracking-widest"
         >
-          <Icon className="h-4 w-4" />
-        </div>
+          000° // ALPHA
+        </text>
+        <text
+          x={460}
+          y={CENTER_Y + 3}
+          textAnchor="end"
+          className="fill-muted-foreground/40 text-[9px] font-mono tracking-widest"
+        >
+          090°
+        </text>
+        <text
+          x={CENTER_X}
+          y={460}
+          textAnchor="middle"
+          className="fill-muted-foreground/40 text-[9px] font-mono tracking-widest"
+        >
+          180°
+        </text>
+        <text
+          x={20}
+          y={CENTER_Y + 3}
+          textAnchor="start"
+          className="fill-muted-foreground/40 text-[9px] font-mono tracking-widest"
+        >
+          270°
+        </text>
 
-        <div className="min-w-0 flex-1">
-          <div className="flex items-start justify-between gap-2">
-            <div className="min-w-0">
-              <h4 className="text-sm font-semibold text-foreground">
-                {item.title}
-              </h4>
+        {/* =================================================
+            CONCENTRIC ORBITAL RINGS
+            ================================================= */}
+        {items.map((item, idx) => {
+          const isSelected = activeIndex === idx
+          const isHovered = hoveredIndex === idx
+          const isHighlighted = isSelected || isHovered
+
+          return (
+            <g key={`orbit-ring-${item.id}`}>
+              <circle
+                cx={CENTER_X}
+                cy={CENTER_Y}
+                r={item.radius}
+                fill="none"
+                stroke={
+                  isHighlighted
+                    ? item.accent === "blue"
+                      ? "rgba(34,211,238,0.45)"
+                      : "rgba(168,85,247,0.45)"
+                    : "rgba(255,255,255,0.08)"
+                }
+                strokeWidth={isHighlighted ? 1.6 : 1}
+                strokeDasharray={isHighlighted ? "6 4" : "3 7"}
+                className="transition-all duration-300"
+              />
+
+              {/* Pulsing ring aura when selected */}
+              {isSelected && (
+                <motion.circle
+                  cx={CENTER_X}
+                  cy={CENTER_Y}
+                  r={item.radius}
+                  fill="none"
+                  stroke={item.accent === "blue" ? "#22d3ee" : "#a855f7"}
+                  strokeWidth="1"
+                  animate={{
+                    opacity: [0.1, 0.45, 0.1],
+                  }}
+                  transition={{
+                    duration: 2.8,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                />
+              )}
+            </g>
+          )
+        })}
+
+        {/* =================================================
+            ROTATING RADAR SWEEP CONE
+            ================================================= */}
+        <motion.g
+          animate={{ rotate: 360 }}
+          transition={{
+            duration: 12,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+          style={{ transformOrigin: `${CENTER_X}px ${CENTER_Y}px` }}
+        >
+          <path
+            d={`M ${CENTER_X} ${CENTER_Y} L ${CENTER_X} 20 A 220 220 0 0 1 ${CENTER_X + 130} ${CENTER_Y - 177} Z`}
+            fill="url(#radarSweepGradient)"
+          />
+          <line
+            x1={CENTER_X}
+            y1={CENTER_Y}
+            x2={CENTER_X + 130}
+            y2={CENTER_Y - 177}
+            stroke="#22d3ee"
+            strokeWidth="1.2"
+            strokeOpacity="0.7"
+            strokeLinecap="round"
+          />
+        </motion.g>
+
+        {/* =================================================
+            CONSTELLATION VECTOR LINE (CONNECTING MILESTONES)
+            ================================================= */}
+        <path
+          d={constellationPath}
+          fill="none"
+          stroke="url(#constellationGradient)"
+          strokeWidth="1.8"
+          strokeDasharray="4 6"
+          strokeLinecap="round"
+          strokeOpacity="0.6"
+        />
+
+        {/* Animated energy pulse traveling through constellation */}
+        <motion.path
+          d={constellationPath}
+          fill="none"
+          stroke="#ffffff"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeDasharray="8 60"
+          animate={{
+            strokeDashoffset: [-120, 120],
+          }}
+          transition={{
+            duration: 4.5,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+          strokeOpacity="0.9"
+        />
+
+        {/* =================================================
+            ACTIVE TARGETING BEAM (CORE -> ACTIVE NODE)
+            ================================================= */}
+        <motion.line
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          key={`laser-to-${activeItem.id}`}
+          x1={CENTER_X}
+          y1={CENTER_Y}
+          x2={activeCoords.x}
+          y2={activeCoords.y}
+          stroke="url(#activeTargetBeam)"
+          strokeWidth="1.8"
+          strokeDasharray="3 4"
+        />
+
+        {/* =================================================
+            CENTRAL NUCLEUS (PRASOON PATHAK CORE)
+            ================================================= */}
+        <g>
+          {/* Pulsing Core Wave */}
+          <motion.circle
+            cx={CENTER_X}
+            cy={CENTER_Y}
+            r={38}
+            fill="url(#coreGlow)"
+            animate={{
+              r: [32, 44, 32],
+              opacity: [0.6, 0.2, 0.6],
+            }}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+
+          {/* Core Body */}
+          <circle
+            cx={CENTER_X}
+            cy={CENTER_Y}
+            r={24}
+            fill="#080e1a"
+            stroke="rgba(168,85,247,0.5)"
+            strokeWidth="1.5"
+          />
+
+          <circle
+            cx={CENTER_X}
+            cy={CENTER_Y}
+            r={16}
+            fill="#0f172a"
+            stroke="rgba(34,211,238,0.7)"
+            strokeWidth="1.2"
+          />
+
+          {/* Central Pulsing Beacon Dot */}
+          <circle cx={CENTER_X} cy={CENTER_Y} r={4} fill="#22d3ee" />
+        </g>
+
+        {/* =================================================
+            ORBITAL SATELLITE NODES
+            ================================================= */}
+        {items.map((item, idx) => {
+          const { x, y } = getNodeCoordinates(item.radius, item.angle)
+          const isSelected = activeIndex === idx
+          const isHovered = hoveredIndex === idx
+          const isHighlighted = isSelected || isHovered
+          const isBlue = item.accent === "blue"
+
+          return (
+            <g
+              key={`node-${item.id}`}
+              onClick={() => onSelect(idx)}
+              onMouseEnter={() => onHover(idx)}
+              onMouseLeave={() => onHover(null)}
+              className="cursor-pointer transition-transform duration-200"
+              role="button"
+              tabIndex={0}
+              aria-label={`Select ${item.title}`}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  onSelect(idx)
+                }
+              }}
+            >
+              {/* Outer pulsing beacon if selected */}
+              {isSelected && (
+                <motion.circle
+                  cx={x}
+                  cy={y}
+                  r={24}
+                  fill="none"
+                  stroke={isBlue ? "#22d3ee" : "#a855f7"}
+                  strokeWidth="1"
+                  animate={{
+                    r: [16, 28, 16],
+                    opacity: [0.9, 0, 0.9],
+                  }}
+                  transition={{
+                    duration: 1.8,
+                    repeat: Infinity,
+                    ease: "easeOut",
+                  }}
+                />
+              )}
+
+              {/* Node Outer Ring */}
+              <circle
+                cx={x}
+                cy={y}
+                r={isHighlighted ? 17 : 14}
+                fill="#0b111a"
+                stroke={
+                  isHighlighted
+                    ? isBlue
+                      ? "#22d3ee"
+                      : "#c084fc"
+                    : "rgba(255,255,255,0.22)"
+                }
+                strokeWidth={isHighlighted ? 2 : 1.2}
+                className="transition-all duration-300"
+              />
+
+              {/* Inner Circle Glow */}
+              <circle
+                cx={x}
+                cy={y}
+                r={isHighlighted ? 9 : 6}
+                fill={
+                  isHighlighted
+                    ? isBlue
+                      ? "#22d3ee"
+                      : "#a855f7"
+                    : "rgba(255,255,255,0.3)"
+                }
+                className="transition-all duration-300"
+              />
+
+              {/* Year / Phase Badge */}
+              <g transform={`translate(${x}, ${y + (item.angle > 180 ? -22 : 26)})`}>
+                <rect
+                  x="-28"
+                  y="-10"
+                  width="56"
+                  height="18"
+                  rx="9"
+                  fill="#070c14"
+                  stroke={
+                    isHighlighted
+                      ? isBlue
+                        ? "rgba(34,211,238,0.6)"
+                        : "rgba(192,132,252,0.6)"
+                      : "rgba(255,255,255,0.12)"
+                  }
+                  strokeWidth="1"
+                  className="transition-all duration-200"
+                />
+                <text
+                  x="0"
+                  y="2.5"
+                  textAnchor="middle"
+                  className={cn(
+                    "text-[9.5px] font-mono font-semibold tracking-wider",
+                    isHighlighted
+                      ? isBlue
+                        ? "fill-cyan-300"
+                        : "fill-purple-300"
+                      : "fill-white/60"
+                  )}
+                >
+                  {item.shortTitle}
+                </text>
+              </g>
+            </g>
+          )
+        })}
+      </svg>
+    </div>
+  )
+}
+
+/* =========================================================
+   TELEMETRY HUD CARD COMPONENT
+   ========================================================= */
+
+interface MilestoneHudCardProps {
+  item: EducationItem
+  index: number
+  total: number
+  onPrev: () => void
+  onNext: () => void
+  isPlaying: boolean
+  onTogglePlay: () => void
+}
+
+function MilestoneHudCard({
+  item,
+  index,
+  total,
+  onPrev,
+  onNext,
+  isPlaying,
+  onTogglePlay,
+}: MilestoneHudCardProps) {
+  const Icon = item.icon
+  const isBlue = item.accent === "blue"
+
+  return (
+    <div className="relative flex flex-col justify-between overflow-hidden rounded-[28px] border border-white/15 bg-[#0b111a]/90 p-6 shadow-[0_20px_60px_rgba(0,0,0,0.6)] backdrop-blur-2xl sm:p-8 lg:min-h-[460px]">
+      {/* Background cyber ambient gradients */}
+      <div
+        className={cn(
+          "pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full blur-[90px]",
+          isBlue ? "bg-cyber-blue/15" : "bg-cyber-purple/15"
+        )}
+      />
+      <div className="pointer-events-none absolute -bottom-24 -left-20 h-56 w-56 rounded-full bg-white/[0.02] blur-[80px]" />
+
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={item.id}
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -14 }}
+          transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+          className="relative z-10 flex flex-1 flex-col"
+        >
+          {/* Top HUD Telemetry Bar */}
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-4">
+            <div className="flex items-center gap-2">
+              <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-[10px] font-mono tracking-widest text-emerald-400 uppercase">
+                Radar Target Locked
+              </span>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <span
+                className={cn(
+                  "rounded-full border px-2.5 py-0.5 text-[10px] font-mono font-semibold uppercase tracking-wider",
+                  isBlue
+                    ? "border-cyber-blue/30 bg-cyber-blue/10 text-cyber-blue"
+                    : "border-cyber-purple/30 bg-cyber-purple/10 text-cyber-purple"
+                )}
+              >
+                {item.statusBadge}
+              </span>
+              <span className="text-xs font-mono text-muted-foreground/60">
+                PHASE {item.stage} / 0{total}
+              </span>
+            </div>
+          </div>
+
+          {/* Main Info Header */}
+          <div className="mt-6 flex items-start gap-4">
+            <div
+              className={cn(
+                "flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border backdrop-blur-md shadow-lg",
+                isBlue
+                  ? "border-cyber-blue/40 bg-cyber-blue/10 text-cyber-blue shadow-[0_0_20px_rgba(34,211,238,0.2)]"
+                  : "border-cyber-purple/40 bg-cyber-purple/10 text-cyber-purple shadow-[0_0_20px_rgba(168,85,247,0.2)]"
+              )}
+            >
+              <Icon className="h-7 w-7" />
+            </div>
+
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <h3 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
+                  {item.title}
+                </h3>
+
+                {/* Score Lockup Badge */}
+                <div
+                  className={cn(
+                    "flex items-center gap-1.5 rounded-xl border px-3 py-1 backdrop-blur-sm",
+                    isBlue
+                      ? "border-cyber-blue/35 bg-cyber-blue/[0.08] text-cyber-blue"
+                      : "border-cyber-purple/35 bg-cyber-purple/[0.08] text-cyber-purple"
+                  )}
+                >
+                  <Award className="h-4 w-4" />
+                  <span className="text-sm font-bold font-mono">
+                    {item.percentage}
+                  </span>
+                </div>
+              </div>
 
               <p
                 className={cn(
-                  "mt-0.5 text-[10px] font-medium",
-                  accentText
+                  "mt-1 text-sm font-medium tracking-wide",
+                  isBlue ? "text-cyan-300/90" : "text-purple-300/90"
                 )}
               >
                 {item.subtitle}
               </p>
             </div>
-
-            {/* Result badge */}
-
-            <span
-              className={cn(
-                "shrink-0",
-                "rounded-full border",
-                "px-2 py-1",
-                "text-[9px] font-semibold",
-                accentBorder,
-                accentText
-              )}
-            >
-              {item.percentage}
-            </span>
           </div>
-        </div>
-      </div>
 
-      {/* Institution */}
+          {/* Meta Details: Institution & Period */}
+          <div className="mt-6 grid grid-cols-1 gap-3 rounded-2xl border border-white/8 bg-white/[0.02] p-4 sm:grid-cols-2">
+            <div className="flex items-start gap-2.5">
+              <MapPin
+                className={cn(
+                  "mt-0.5 h-4 w-4 shrink-0",
+                  isBlue ? "text-cyber-blue" : "text-cyber-purple"
+                )}
+              />
+              <div className="min-w-0">
+                <span className="block text-[9px] font-mono tracking-widest uppercase text-muted-foreground/60">
+                  Institution
+                </span>
+                <span className="text-xs font-medium text-foreground/90 leading-snug">
+                  {item.institution}
+                </span>
+              </div>
+            </div>
 
-      <div className="mt-3 flex items-start gap-2">
-        <MapPin
-          className={cn(
-            "mt-[1px] h-3.5 w-3.5 shrink-0",
-            accentText
-          )}
-        />
+            <div className="flex items-start gap-2.5">
+              <Calendar
+                className={cn(
+                  "mt-0.5 h-4 w-4 shrink-0",
+                  isBlue ? "text-cyber-blue" : "text-cyber-purple"
+                )}
+              />
+              <div className="min-w-0">
+                <span className="block text-[9px] font-mono tracking-widest uppercase text-muted-foreground/60">
+                  Academic Timeline
+                </span>
+                <span
+                  className={cn(
+                    "text-xs font-semibold font-mono",
+                    isBlue ? "text-cyan-300" : "text-purple-300"
+                  )}
+                >
+                  {item.period}
+                </span>
+              </div>
+            </div>
+          </div>
 
-        <span className="text-[11px] leading-4 text-muted-foreground">
-          {item.institution}
-        </span>
-      </div>
+          {/* Description */}
+          <div className="mt-5 flex-1">
+            <span className="block text-[9px] font-mono tracking-widest uppercase text-muted-foreground/60 mb-1.5">
+              Key Academic Impact & Curriculum
+            </span>
+            <p className="text-sm leading-relaxed text-muted-foreground/90">
+              {item.description}
+            </p>
+          </div>
+        </motion.div>
+      </AnimatePresence>
 
-      {/* Academic period */}
-
-      <div className="mt-2.5 flex items-center justify-between gap-3">
-        <span className="text-[9px] uppercase tracking-[0.14em] text-muted-foreground/55">
-          Academic Period
-        </span>
-
-        <span
-          className={cn(
-            "text-[10px] font-semibold",
-            accentText
-          )}
-        >
-          {item.period}
-        </span>
-      </div>
-
-      {/* Separator */}
-
-      <div
-        className={cn(
-          "my-3 h-px w-full",
-
-          isBlue
-            ? "bg-linear-to-r from-cyber-blue/35 via-border/20 to-transparent"
-            : "bg-linear-to-r from-cyber-purple/35 via-border/20 to-transparent"
-        )}
-      />
-
-      {/* Description */}
-
-      <p className="text-[10.5px] leading-[1.55] text-muted-foreground/85">
-        {item.description}
-      </p>
-    </motion.div>
-  )
-}
-
-/* =========================================================
-   DESKTOP MILESTONE
-   ========================================================= */
-
-interface DesktopMilestoneProps {
-  item: EducationItem
-  index: number
-}
-
-function DesktopMilestone({
-  item,
-  index,
-}: DesktopMilestoneProps) {
-  const [hovered, setHovered] =
-    React.useState(false)
-
-  const Icon = item.icon
-  const isBlue = item.accent === "blue"
-
-  return (
-    <motion.div
-      initial={{
-        opacity: 0,
-        scale: 0.85,
-      }}
-      whileInView={{
-        opacity: 1,
-        scale: 1,
-      }}
-      viewport={{
-        once: true,
-        amount: 0.35,
-      }}
-      transition={{
-        duration: 0.5,
-        delay: 0.45 + index * 0.16,
-        ease: [0.25, 0.1, 0.25, 1],
-      }}
-      className="absolute z-30"
-      style={{
-        left: `${item.x}%`,
-
-        /*
-         * Cards remain outside the road's main empty area.
-         * Their popups expand toward the center.
-         */
-        top:
-          item.position === "top"
-            ? "8%"
-            : "69%",
-
-        transform: "translateX(-50%)",
-      }}
-    >
-      <div
-        className="relative"
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-        onFocus={() => setHovered(true)}
-        onBlur={() => setHovered(false)}
-      >
-        {/* YEAR */}
-
-        <div
-          className={cn(
-            "absolute left-1/2",
-            "-translate-x-1/2",
-            "whitespace-nowrap",
-
-            "text-[10px]",
-            "font-semibold",
-            "tracking-wide",
-
-            isBlue
-              ? "text-cyber-blue"
-              : "text-cyber-purple",
-
-            item.position === "top"
-              ? "-top-7"
-              : "-bottom-7"
-          )}
-        >
-          {item.period}
-        </div>
-
-        {/* MILESTONE CARD */}
-
+      {/* Navigation & Auto-tour Footer Controls */}
+      <div className="relative z-10 mt-6 flex items-center justify-between border-t border-white/10 pt-4">
+        {/* Auto Tour Toggle */}
         <button
           type="button"
-          aria-label={`${item.title} ${item.subtitle}`}
-          className={cn(
-            "relative",
-
-            "flex",
-            "w-[140px]",
-
-            "flex-col",
-            "items-center",
-            "justify-center",
-
-            "rounded-2xl border",
-
-            "px-3",
-            "py-3",
-
-            "text-center",
-            "outline-none",
-
-            "bg-background/82",
-            "backdrop-blur-xl",
-
-            "transition-[border-color,box-shadow,background-color]",
-            "duration-300",
-
-            isBlue
-              ? [
-                  "border-cyber-blue/25",
-                  "hover:border-cyber-blue/60",
-                  "focus-visible:border-cyber-blue/60",
-                  "hover:bg-cyber-blue/[0.035]",
-                  "hover:shadow-[0_0_28px_rgba(59,130,246,0.15)]",
-                ]
-              : [
-                  "border-cyber-purple/25",
-                  "hover:border-cyber-purple/60",
-                  "focus-visible:border-cyber-purple/60",
-                  "hover:bg-cyber-purple/[0.035]",
-                  "hover:shadow-[0_0_28px_rgba(168,85,247,0.15)]",
-                ]
-          )}
+          onClick={onTogglePlay}
+          className="flex items-center gap-1.5 rounded-full border border-white/15 bg-white/[0.03] px-3 py-1.5 text-xs font-medium text-muted-foreground transition hover:border-white/30 hover:text-white"
+          title={isPlaying ? "Pause auto-rotation" : "Start auto-rotation tour"}
         >
-          {/* ICON */}
-
-          <motion.div
-            animate={{
-              scale: hovered ? 1.07 : 1,
-              rotate: hovered ? 2 : 0,
-            }}
-            transition={{
-              duration: 0.2,
-            }}
-            className={cn(
-              "mb-2",
-
-              "flex h-8 w-8",
-              "items-center justify-center",
-
-              "rounded-full border",
-
-              isBlue
-                ? [
-                    "border-cyber-blue/30",
-                    "bg-cyber-blue/10",
-                    "text-cyber-blue",
-                  ]
-                : [
-                    "border-cyber-purple/30",
-                    "bg-cyber-purple/10",
-                    "text-cyber-purple",
-                  ]
-            )}
-          >
-            <Icon className="h-4 w-4" />
-          </motion.div>
-
-          {/* TITLE */}
-
-          <span className="text-xs font-semibold text-foreground">
-            {item.shortTitle}
-          </span>
-
-          {/* SUBTITLE */}
-
-          <span
-            className={cn(
-              "mt-1",
-              "max-w-[115px]",
-              "text-[8.5px]",
-              "leading-[13px]",
-
-              isBlue
-                ? "text-cyber-blue/90"
-                : "text-cyber-purple/90"
-            )}
-          >
-            {item.subtitle}
-          </span>
-
-          {/* HOVER INDICATOR */}
-
-          <motion.div
-            initial={false}
-            animate={{
-              width: hovered ? 26 : 10,
-              opacity: hovered ? 1 : 0.4,
-            }}
-            transition={{
-              duration: 0.2,
-            }}
-            className={cn(
-              "mt-2 h-px rounded-full",
-
-              isBlue
-                ? "bg-cyber-blue"
-                : "bg-cyber-purple"
-            )}
-          />
+          {isPlaying ? (
+            <>
+              <Pause className="h-3.5 w-3.5 text-amber-300" />
+              <span className="text-[11px] font-mono">Auto Tour Active</span>
+            </>
+          ) : (
+            <>
+              <Play className="h-3.5 w-3.5 text-cyber-blue" />
+              <span className="text-[11px] font-mono">Play Auto Tour</span>
+            </>
+          )}
         </button>
 
-        {/* POPUP OPENS TOWARD ROAD INTERIOR */}
-
-        {hovered && (
-          <DetailPopup item={item} />
-        )}
-      </div>
-    </motion.div>
-  )
-}
-
-/* =========================================================
-   ROAD NODE
-   ========================================================= */
-
-interface RoadNodeProps {
-  item: EducationItem
-  index: number
-}
-
-function RoadNode({
-  item,
-  index,
-}: RoadNodeProps) {
-  const isBlue = item.accent === "blue"
-
-  return (
-    <motion.div
-      initial={{
-        opacity: 0,
-        scale: 0,
-      }}
-      whileInView={{
-        opacity: 1,
-        scale: 1,
-      }}
-      viewport={{
-        once: true,
-      }}
-      transition={{
-        duration: 0.4,
-        delay: 0.4 + index * 0.16,
-        type: "spring",
-        stiffness: 180,
-        damping: 15,
-      }}
-      className="absolute z-20"
-      style={{
-        left: `${item.x}%`,
-
-        /*
-         * Nodes sit closer to the path.
-         */
-        top:
-          item.position === "top"
-            ? "39%"
-            : "61%",
-
-        transform:
-          "translate(-50%, -50%)",
-      }}
-    >
-      <motion.div
-        animate={{
-          boxShadow: isBlue
-            ? [
-                "0 0 0px rgba(59,130,246,0.2)",
-                "0 0 18px rgba(59,130,246,0.65)",
-                "0 0 0px rgba(59,130,246,0.2)",
-              ]
-            : [
-                "0 0 0px rgba(168,85,247,0.2)",
-                "0 0 18px rgba(168,85,247,0.65)",
-                "0 0 0px rgba(168,85,247,0.2)",
-              ],
-        }}
-        transition={{
-          duration: 2.5,
-          repeat: Infinity,
-          ease: "easeInOut",
-          delay: index * 0.35,
-        }}
-        className={cn(
-          "flex h-6 w-6",
-          "items-center justify-center",
-
-          "rounded-full border",
-
-          "bg-background/90",
-
-          isBlue
-            ? "border-cyber-blue"
-            : "border-cyber-purple"
-        )}
-      >
-        <div
-          className={cn(
-            "h-2 w-2",
-            "rounded-full",
-
-            isBlue
-              ? "bg-cyber-blue"
-              : "bg-cyber-purple"
-          )}
-        />
-      </motion.div>
-    </motion.div>
-  )
-}
-
-/* =========================================================
-   DESKTOP ROADMAP
-   ========================================================= */
-
-function DesktopRoadmap() {
-  return (
-    <div
-      className={cn(
-        "relative",
-        "hidden lg:block",
-
-        /*
-         * OLD: 620px
-         * NEW: 500px
-         */
-        "h-[500px]",
-
-        "w-full",
-
-        /*
-         * We intentionally keep this visible so internal
-         * popup shadows are not clipped.
-         */
-        "overflow-visible"
-      )}
-    >
-      {/* SVG ROAD */}
-
-      <svg
-        viewBox="0 0 1000 500"
-        preserveAspectRatio="none"
-        className="absolute inset-0 h-full w-full overflow-visible"
-        aria-hidden="true"
-      >
-        <defs>
-          <linearGradient
-            id="educationRoadGradient"
-            x1="0%"
-            y1="0%"
-            x2="100%"
-            y2="0%"
+        {/* Phase Navigation Buttons */}
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={onPrev}
+            aria-label="Previous academic milestone"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-white/[0.03] text-white/80 transition hover:border-cyber-blue/40 hover:bg-white/[0.08] hover:text-white"
           >
-            <stop
-              offset="0%"
-              stopColor="rgb(59 130 246)"
-            />
-
-            <stop
-              offset="50%"
-              stopColor="rgb(139 92 246)"
-            />
-
-            <stop
-              offset="100%"
-              stopColor="rgb(217 70 239)"
-            />
-          </linearGradient>
-
-          <filter
-            id="educationRoadGlow"
-            x="-30%"
-            y="-30%"
-            width="160%"
-            height="160%"
+            <ChevronLeft className="h-4 w-4" />
+          </button>
+          <button
+            type="button"
+            onClick={onNext}
+            aria-label="Next academic milestone"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-white/[0.03] text-white/80 transition hover:border-cyber-purple/40 hover:bg-white/[0.08] hover:text-white"
           >
-            <feGaussianBlur
-              stdDeviation="5"
-              result="blur"
-            />
-
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-        </defs>
-
-        {/* OUTER GLOW */}
-
-        <motion.path
-          d={ROAD_PATH}
-          fill="none"
-          stroke="url(#educationRoadGradient)"
-          strokeWidth="20"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          opacity="0.08"
-          filter="url(#educationRoadGlow)"
-          initial={{
-            pathLength: 0,
-          }}
-          whileInView={{
-            pathLength: 1,
-          }}
-          viewport={{
-            once: true,
-            amount: 0.25,
-          }}
-          transition={{
-            duration: 2.2,
-            ease: [0.25, 0.1, 0.25, 1],
-          }}
-        />
-
-        {/* ROAD BODY */}
-
-        <motion.path
-          d={ROAD_PATH}
-          fill="none"
-          stroke="url(#educationRoadGradient)"
-          strokeWidth="12"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          opacity="0.48"
-          initial={{
-            pathLength: 0,
-          }}
-          whileInView={{
-            pathLength: 1,
-          }}
-          viewport={{
-            once: true,
-            amount: 0.25,
-          }}
-          transition={{
-            duration: 2.05,
-            ease: [0.25, 0.1, 0.25, 1],
-          }}
-        />
-
-        {/* INNER DARK ROAD */}
-
-        <motion.path
-          d={ROAD_PATH}
-          fill="none"
-          stroke="rgba(8,15,28,0.96)"
-          strokeWidth="7"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          initial={{
-            pathLength: 0,
-          }}
-          whileInView={{
-            pathLength: 1,
-          }}
-          viewport={{
-            once: true,
-            amount: 0.25,
-          }}
-          transition={{
-            duration: 2.05,
-            ease: [0.25, 0.1, 0.25, 1],
-          }}
-        />
-
-        {/* DASHED CENTER LINE */}
-
-        <motion.path
-          d={ROAD_PATH}
-          fill="none"
-          stroke="rgba(255,255,255,0.62)"
-          strokeWidth="1.3"
-          strokeDasharray="8 10"
-          strokeLinecap="round"
-          initial={{
-            pathLength: 0,
-            opacity: 0,
-          }}
-          whileInView={{
-            pathLength: 1,
-            opacity: 1,
-          }}
-          viewport={{
-            once: true,
-            amount: 0.25,
-          }}
-          transition={{
-            pathLength: {
-              duration: 2.3,
-              ease: [0.25, 0.1, 0.25, 1],
-            },
-
-            opacity: {
-              duration: 0.5,
-              delay: 0.35,
-            },
-          }}
-        />
-      </svg>
-
-      {/* ROAD NODES */}
-
-      {educationData.map(
-        (item, index) => (
-          <RoadNode
-            key={item.id}
-            item={item}
-            index={index}
-          />
-        )
-      )}
-
-      {/* MILESTONE CARDS */}
-
-      {educationData.map(
-        (item, index) => (
-          <DesktopMilestone
-            key={item.id}
-            item={item}
-            index={index}
-          />
-        )
-      )}
-    </div>
-  )
-}
-
-/* =========================================================
-   MOBILE ROADMAP
-   ========================================================= */
-
-function MobileRoadmap() {
-  const [activeId, setActiveId] =
-    React.useState<string | null>(null)
-
-  return (
-    <div className="relative lg:hidden">
-      {/* Vertical timeline */}
-
-      <motion.div
-        initial={{
-          scaleY: 0,
-        }}
-        whileInView={{
-          scaleY: 1,
-        }}
-        viewport={{
-          once: true,
-        }}
-        transition={{
-          duration: 1.4,
-          ease: [0.25, 0.1, 0.25, 1],
-        }}
-        style={{
-          transformOrigin: "top",
-        }}
-        className={cn(
-          "absolute",
-          "bottom-5 left-[19px] top-5",
-          "w-px",
-
-          "bg-linear-to-b",
-          "from-cyber-blue",
-          "via-cyber-purple",
-          "to-cyber-purple/20"
-        )}
-      />
-
-      <div className="space-y-6">
-        {educationData.map(
-          (item, index) => {
-            const Icon = item.icon
-
-            const active =
-              activeId === item.id
-
-            const isBlue =
-              item.accent === "blue"
-
-            return (
-              <motion.div
-                key={item.id}
-                initial={{
-                  opacity: 0,
-                  x: -18,
-                }}
-                whileInView={{
-                  opacity: 1,
-                  x: 0,
-                }}
-                viewport={{
-                  once: true,
-                  amount: 0.35,
-                }}
-                transition={{
-                  duration: 0.45,
-                  delay: index * 0.1,
-                }}
-                className="relative pl-14"
-              >
-                {/* NODE */}
-
-                <div
-                  className={cn(
-                    "absolute left-[8px] top-4",
-                    "z-10",
-
-                    "flex h-6 w-6",
-                    "items-center justify-center",
-
-                    "rounded-full border",
-                    "bg-background",
-
-                    isBlue
-                      ? "border-cyber-blue"
-                      : "border-cyber-purple"
-                  )}
-                >
-                  <div
-                    className={cn(
-                      "h-2 w-2 rounded-full",
-
-                      isBlue
-                        ? "bg-cyber-blue"
-                        : "bg-cyber-purple"
-                    )}
-                  />
-                </div>
-
-                {/* MOBILE CARD */}
-
-                <button
-                  type="button"
-                  onClick={() =>
-                    setActiveId(
-                      active
-                        ? null
-                        : item.id
-                    )
-                  }
-                  className={cn(
-                    "w-full",
-
-                    "rounded-xl border",
-
-                    "bg-background/55",
-
-                    "p-4",
-
-                    "text-left",
-
-                    "backdrop-blur-xl",
-
-                    isBlue
-                      ? "border-cyber-blue/20"
-                      : "border-cyber-purple/20"
-                  )}
-                >
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={cn(
-                        "flex h-9 w-9",
-                        "shrink-0",
-                        "items-center justify-center",
-                        "rounded-lg",
-
-                        isBlue
-                          ? [
-                              "bg-cyber-blue/10",
-                              "text-cyber-blue",
-                            ]
-                          : [
-                              "bg-cyber-purple/10",
-                              "text-cyber-purple",
-                            ]
-                      )}
-                    >
-                      <Icon className="h-4 w-4" />
-                    </div>
-
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-start justify-between gap-3">
-                        <div>
-                          <h3 className="text-sm font-semibold text-foreground">
-                            {item.title}
-                          </h3>
-
-                          <p
-                            className={cn(
-                              "mt-0.5",
-                              "text-[11px]",
-
-                              isBlue
-                                ? "text-cyber-blue"
-                                : "text-cyber-purple"
-                            )}
-                          >
-                            {item.subtitle}
-                          </p>
-                        </div>
-
-                        <span
-                          className={cn(
-                            "shrink-0",
-                            "text-[10px]",
-                            "font-semibold",
-
-                            isBlue
-                              ? "text-cyber-blue"
-                              : "text-cyber-purple"
-                          )}
-                        >
-                          {item.period}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* EXPANDED MOBILE CONTENT */}
-
-                  <motion.div
-                    initial={false}
-                    animate={{
-                      height: active
-                        ? "auto"
-                        : 0,
-
-                      opacity: active
-                        ? 1
-                        : 0,
-
-                      marginTop: active
-                        ? 14
-                        : 0,
-                    }}
-                    transition={{
-                      duration: 0.25,
-                    }}
-                    className="overflow-hidden"
-                  >
-                    <div className="border-t border-border/20 pt-4">
-                      <div className="flex items-start gap-2">
-                        <MapPin
-                          className={cn(
-                            "mt-0.5",
-                            "h-4 w-4 shrink-0",
-
-                            isBlue
-                              ? "text-cyber-blue"
-                              : "text-cyber-purple"
-                          )}
-                        />
-
-                        <span className="text-xs text-muted-foreground">
-                          {item.institution}
-                        </span>
-                      </div>
-
-                      <div className="mt-3 flex items-center justify-between">
-                        <span className="text-xs text-muted-foreground">
-                          Percentage
-                        </span>
-
-                        <span
-                          className={cn(
-                            "text-xs font-semibold",
-
-                            isBlue
-                              ? "text-cyber-blue"
-                              : "text-cyber-purple"
-                          )}
-                        >
-                          {item.percentage}
-                        </span>
-                      </div>
-
-                      <p className="mt-3 text-xs leading-5 text-muted-foreground/80">
-                        {item.description}
-                      </p>
-                    </div>
-                  </motion.div>
-                </button>
-              </motion.div>
-            )
-          }
-        )}
+            <ChevronRight className="h-4 w-4" />
+          </button>
+        </div>
       </div>
     </div>
   )
 }
 
 /* =========================================================
-   ABOUT / EDUCATION SECTION
+   MAIN ABOUT & EDUCATION SECTION
    ========================================================= */
 
 const AboutSection = React.forwardRef<
   React.ElementRef<typeof SectionWrapper>,
-  Omit<
-    React.ComponentPropsWithoutRef<
-      typeof SectionWrapper
-    >,
-    "children"
-  >
+  Omit<React.ComponentPropsWithoutRef<typeof SectionWrapper>, "children">
 >(({ className, ...props }, ref) => {
+  const [activeIndex, setActiveIndex] = React.useState<number>(3) // Default to latest milestone (B.Tech)
+  const [hoveredIndex, setHoveredIndex] = React.useState<number | null>(null)
+  const [isPlaying, setIsPlaying] = React.useState<boolean>(false)
+
+  // Auto-tour rotation interval
+  React.useEffect(() => {
+    if (!isPlaying) return
+
+    const interval = setInterval(() => {
+      setActiveIndex((curr) => (curr + 1) % educationData.length)
+    }, 4500)
+
+    return () => clearInterval(interval)
+  }, [isPlaying])
+
+  const handleNext = React.useCallback(() => {
+    setActiveIndex((curr) => (curr + 1) % educationData.length)
+  }, [])
+
+  const handlePrev = React.useCallback(() => {
+    setActiveIndex((curr) =>
+      curr === 0 ? educationData.length - 1 : curr - 1
+    )
+  }, [])
+
   return (
     <SectionWrapper
       ref={ref}
       id="about"
       background="cyber"
-
-      /*
-       * Reduced from xl to lg because the roadmap itself
-       * is now much more compact.
-       */
       padding="lg"
-
-      className={cn(
-        "relative overflow-hidden",
-        className
-      )}
+      className={cn("relative overflow-hidden py-16 sm:py-20", className)}
       {...props}
     >
-      {/* BACKGROUND */}
-
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0"
-      >
-        <div
-          className={cn(
-            "absolute",
-            "left-[15%] top-[20%]",
-            "h-64 w-64",
-            "rounded-full",
-            "bg-cyber-blue/[0.04]",
-            "blur-[110px]"
-          )}
-        />
-
-        <div
-          className={cn(
-            "absolute",
-            "bottom-[15%] right-[15%]",
-            "h-72 w-72",
-            "rounded-full",
-            "bg-cyber-purple/[0.05]",
-            "blur-[120px]"
-          )}
-        />
+      {/* Background glow flares */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+        <div className="absolute left-[10%] top-[15%] h-80 w-80 rounded-full bg-cyber-blue/[0.05] blur-[120px]" />
+        <div className="absolute right-[10%] bottom-[15%] h-96 w-96 rounded-full bg-cyber-purple/[0.06] blur-[140px]" />
       </div>
 
-      <Container
-        size="cinematic"
-        className="relative z-10"
-      >
+      <Container size="cinematic" className="relative z-10">
         {/* =================================================
-            HEADER
+            SECTION HEADER
             ================================================= */}
-
         <motion.div
-          initial={{
-            opacity: 0,
-            y: 24,
-          }}
-          whileInView={{
-            opacity: 1,
-            y: 0,
-          }}
-          viewport={{
-            once: true,
-            amount: 0.5,
-          }}
-          transition={{
-            duration: 0.7,
-            ease: [0.25, 0.1, 0.25, 1],
-          }}
-          className="mb-7 text-center lg:mb-0"
+          initial={{ opacity: 0, y: 22 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.5 }}
+          transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
+          className="mb-10 text-center sm:mb-14"
         >
-          {/* ICON */}
-
+          {/* Header Icon */}
           <motion.div
-            initial={{
-              opacity: 0,
-              scale: 0.8,
-            }}
-            whileInView={{
-              opacity: 1,
-              scale: 1,
-            }}
-            viewport={{
-              once: true,
-            }}
-            transition={{
-              duration: 0.45,
-              delay: 0.1,
-            }}
-            className={cn(
-              "mx-auto mb-3",
-
-              "flex h-10 w-10",
-              "items-center justify-center",
-
-              "rounded-full border",
-
-              "border-cyber-purple/25",
-              "bg-cyber-purple/[0.06]",
-              "text-cyber-purple"
-            )}
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.45, delay: 0.1 }}
+            className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-2xl border border-cyber-purple/30 bg-cyber-purple/10 text-cyber-purple shadow-[0_0_18px_rgba(168,85,247,0.2)]"
           >
-            <GraduationCap className="h-5 w-5" />
+            <Target className="h-5 w-5" />
           </motion.div>
 
-          {/* TITLE */}
-
+          {/* Section Title */}
           <motion.h2
-            initial={{
-              scale: 0.95,
-            }}
-            whileInView={{
-              scale: 1,
-            }}
-            viewport={{
-              once: true,
-            }}
-            transition={{
-              duration: 0.55,
-              delay: 0.08,
-            }}
-            className={cn(
-              "text-3xl",
-              "sm:text-4xl",
-              "md:text-5xl",
-
-              "font-black",
-              "tracking-tight"
-            )}
+            initial={{ scale: 0.96 }}
+            whileInView={{ scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.55, delay: 0.08 }}
+            className="text-3xl font-black tracking-tight sm:text-4xl md:text-5xl"
           >
-            <span
-              className={cn(
-                "bg-linear-to-r",
-                "from-foreground",
-                "via-cyber-purple",
-                "to-cyber-blue",
-
-                "bg-clip-text",
-                "text-transparent"
-              )}
-            >
-              EDUCATION
+            <span className="bg-linear-to-r from-foreground via-cyber-purple to-cyber-blue bg-clip-text text-transparent">
+              ACADEMIC CONSTELLATION
             </span>
           </motion.h2>
 
-          {/* UNDERLINE */}
-
+          {/* Section Underline */}
           <motion.div
-            initial={{
-              width: 0,
-            }}
-            whileInView={{
-              width: 80,
-            }}
-            viewport={{
-              once: true,
-            }}
-            transition={{
-              duration: 0.7,
-              delay: 0.25,
-            }}
-            className={cn(
-              "mx-auto mt-3",
-
-              "h-px",
-
-              "bg-linear-to-r",
-              "from-transparent",
-              "via-cyber-purple",
-              "to-transparent"
-            )}
+            initial={{ width: 0 }}
+            whileInView={{ width: 88 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.25 }}
+            className="mx-auto mt-3 h-px bg-linear-to-r from-transparent via-cyber-purple to-transparent shadow-[0_0_10px_rgba(168,85,247,0.5)]"
           />
 
-          {/* SUBTITLE */}
-
+          {/* Section Subtitle */}
           <motion.p
-            initial={{
-              opacity: 0,
-            }}
-            whileInView={{
-              opacity: 1,
-            }}
-            viewport={{
-              once: true,
-            }}
-            transition={{
-              duration: 0.5,
-              delay: 0.3,
-            }}
-            className="mt-3 text-xs text-muted-foreground"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="mt-3 text-xs tracking-wider text-muted-foreground uppercase sm:text-sm"
           >
-            My academic journey
+            Interactive Radar Mapping My Engineering & Educational Evolution
           </motion.p>
         </motion.div>
 
         {/* =================================================
-            DESKTOP ROADMAP
+            STAGE SELECTOR PILLS
             ================================================= */}
+        <div className="mb-8 flex flex-wrap items-center justify-center gap-2 sm:gap-3">
+          {educationData.map((item, idx) => {
+            const isActive = activeIndex === idx
+            const isBlue = item.accent === "blue"
 
-        <DesktopRoadmap />
+            return (
+              <button
+                key={`pill-${item.id}`}
+                type="button"
+                onClick={() => {
+                  setActiveIndex(idx)
+                  setIsPlaying(false) // pause auto tour on manual select
+                }}
+                className={cn(
+                  "relative flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-mono font-medium transition-all duration-300 backdrop-blur-md",
+                  isActive
+                    ? isBlue
+                      ? "border-cyber-blue bg-cyber-blue/15 text-white shadow-[0_0_16px_rgba(34,211,238,0.35)]"
+                      : "border-cyber-purple bg-cyber-purple/15 text-white shadow-[0_0_16px_rgba(168,85,247,0.35)]"
+                    : "border-white/10 bg-white/[0.03] text-muted-foreground hover:border-white/25 hover:text-foreground"
+                )}
+              >
+                <span
+                  className={cn(
+                    "h-1.5 w-1.5 rounded-full",
+                    isActive
+                      ? isBlue
+                        ? "bg-cyber-blue"
+                        : "bg-cyber-purple"
+                      : "bg-muted-foreground/40"
+                  )}
+                />
+                <span>
+                  {item.stage} // {item.shortTitle}
+                </span>
+                {isActive && (
+                  <span className="hidden sm:inline text-[10px] text-muted-foreground/80">
+                    ({item.percentage})
+                  </span>
+                )}
+              </button>
+            )
+          })}
+        </div>
 
         {/* =================================================
-            MOBILE ROADMAP
+            ORBITAL COCKPIT GRID
+            Left: Interactive Radar Constellation
+            Right: Holographic Telemetry HUD
             ================================================= */}
+        <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-12 lg:gap-12">
+          {/* LEFT: Orbital Constellation Graphic */}
+          <div className="flex flex-col items-center justify-center lg:col-span-6">
+            <OrbitalRadar
+              items={educationData}
+              activeIndex={activeIndex}
+              onSelect={(idx) => {
+                setActiveIndex(idx)
+                setIsPlaying(false)
+              }}
+              hoveredIndex={hoveredIndex}
+              onHover={setHoveredIndex}
+            />
 
-        <MobileRoadmap />
-
-        {/* =================================================
-            INTERACTION HINT
-            ================================================= */}
-
-        <motion.div
-          initial={{
-            opacity: 0,
-            y: 8,
-          }}
-          whileInView={{
-            opacity: 1,
-            y: 0,
-          }}
-          viewport={{
-            once: true,
-          }}
-          transition={{
-            duration: 0.45,
-            delay: 1,
-          }}
-          className="hidden justify-center lg:flex"
-        >
-          <div
-            className={cn(
-              "rounded-full border",
-
-              "border-cyber-purple/15",
-              "bg-background/30",
-
-              "px-4 py-1.5",
-
-              "text-[10px]",
-              "text-muted-foreground",
-
-              "backdrop-blur-lg"
-            )}
-          >
-            Hover over a milestone to explore details
+            {/* Radar status caption */}
+            <div className="mt-3 flex items-center gap-2 text-[11px] font-mono text-muted-foreground/60">
+              <Compass className="h-3.5 w-3.5 text-cyber-blue" />
+              <span>Click any orbital node or select a stage to explore</span>
+            </div>
           </div>
-        </motion.div>
+
+          {/* RIGHT: Telemetry HUD Detail Card */}
+          <div className="w-full lg:col-span-6">
+            <MilestoneHudCard
+              item={educationData[activeIndex] ?? (educationData[0] as EducationItem)}
+              index={activeIndex}
+              total={educationData.length}
+              onPrev={handlePrev}
+              onNext={handleNext}
+              isPlaying={isPlaying}
+              onTogglePlay={() => setIsPlaying((p) => !p)}
+            />
+          </div>
+        </div>
       </Container>
     </SectionWrapper>
   )
