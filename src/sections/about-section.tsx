@@ -3,20 +3,24 @@
 import * as React from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import {
-  BookOpen,
   GraduationCap,
   Settings,
+  BookOpen,
   School,
   MapPin,
   Calendar,
   Award,
-  Radio,
-  ChevronLeft,
-  ChevronRight,
   Sparkles,
-  Play,
-  Pause,
-  Target,
+  ChevronDown,
+  ChevronUp,
+  CheckCircle2,
+  Terminal,
+  Cpu,
+  ShieldCheck,
+  Layers,
+  Code2,
+  Flame,
+  Binary,
   Compass,
 } from "lucide-react"
 
@@ -24,978 +28,598 @@ import { Container, SectionWrapper } from "@/components/layout"
 import { cn } from "@/lib/utils"
 
 /* =========================================================
-   TYPES
+   TYPES & DATA
    ========================================================= */
 
-interface EducationItem {
+interface EducationMilestone {
   id: string
-  shortTitle: string
-  title: string
-  subtitle: string
-  institution: string
-  period: string
-  percentage: string
-  description: string
-  icon: React.ComponentType<{
-    className?: string
-  }>
-  accent: "blue" | "purple"
   stage: string
+  degree: string
+  field: string
+  institution: string
+  location: string
+  period: string
+  score: string
+  scoreLabel: string
   statusBadge: string
-  focusTag: string
-  radius: number
-  angle: number // in degrees
+  statusType: "active" | "completed"
+  accent: "blue" | "purple"
+  icon: React.ComponentType<{ className?: string }>
+  summary: string
+  coursework: string[]
+  keyAchievement: string
 }
 
-/* =========================================================
-   EDUCATION DATA
-   ========================================================= */
-
-const educationData: EducationItem[] = [
+const educationMilestones: EducationMilestone[] = [
   {
-    id: "secondary",
-    shortTitle: "10th",
-    title: "10th Grade",
-    subtitle: "Secondary School Certificate",
-    institution: "St. John's School, Chandauli",
-    period: "2017 – 2018",
-    percentage: "81.33%",
-    description:
-      "Built initial academic rigor with distinction in Mathematics and Computer Science fundamentals, establishing a lifelong curiosity for technology.",
-    icon: School,
-    accent: "blue",
-    stage: "01",
-    statusBadge: "Foundational Honors",
-    focusTag: "Math & Computing",
-    radius: 78,
-    angle: 215,
-  },
-  {
-    id: "senior-secondary",
-    shortTitle: "12th",
-    title: "12th Grade",
-    subtitle: "Senior Secondary (PCM)",
-    institution: "St. John's School, Chandauli",
-    period: "2019 – 2020",
-    percentage: "65.4%",
-    description:
-      "Deepened analytical thinking and problem-solving through intensive coursework in Physics, Chemistry, and Advanced Mathematics.",
-    icon: BookOpen,
-    accent: "blue",
-    stage: "02",
-    statusBadge: "Analytical Foundation",
-    focusTag: "Physics, Chem & Math",
-    radius: 126,
-    angle: 310,
+    id: "btech",
+    stage: "STAGE 04",
+    degree: "Bachelor of Technology (B.Tech)",
+    field: "Computer Science & Engineering",
+    institution: "United Institute of Technology",
+    location: "Prayagraj, Uttar Pradesh",
+    period: "2024 – Present",
+    score: "77.4%",
+    scoreLabel: "Current Aggregate",
+    statusBadge: "Currently Pursuing",
+    statusType: "active",
+    accent: "purple",
+    icon: GraduationCap,
+    summary:
+      "Deepening computer science engineering fundamentals with an emphasis on full-stack architecture, distributed systems, artificial intelligence pipelines, and cybersecurity defensive patterns. Actively building production-grade web applications and developer tools.",
+    coursework: [
+      "Data Structures & Algorithms",
+      "Full-Stack Web Architecture",
+      "AI & Machine Learning",
+      "Cybersecurity & Threat Detection",
+      "Database Management & SQL",
+      "Operating & Distributed Systems",
+    ],
+    keyAchievement:
+      "Maintaining a strong 77.4% academic standing while building and deploying full-stack web and cybersecurity projects.",
   },
   {
     id: "diploma",
-    shortTitle: "Diploma",
-    title: "Diploma in Engineering",
-    subtitle: "Mechanical Engineering",
+    stage: "STAGE 03",
+    degree: "Diploma in Engineering",
+    field: "Mechanical Engineering (Production)",
     institution: "Chandauli Polytechnic",
+    location: "Chandauli, Uttar Pradesh",
     period: "2021 – 2024",
-    percentage: "76.5%",
-    description:
-      "Gained hands-on engineering principles, manufacturing systems, precision design, and structured problem-solving before transitioning to computer science.",
+    score: "76.5%",
+    scoreLabel: "First Class with Distinction",
+    statusBadge: "Graduated with Honors",
+    statusType: "completed",
+    accent: "blue",
     icon: Settings,
-    accent: "purple",
-    stage: "03",
-    statusBadge: "Engineering Core",
-    focusTag: "Systems & Mechanics",
-    radius: 174,
-    angle: 35,
+    summary:
+      "Gained comprehensive engineering discipline through physical systems, precision design, manufacturing workflows, and applied mechanics. This hands-on engineering background formed the blueprint for my transition into software systems and architecture.",
+    coursework: [
+      "Engineering Mechanics",
+      "Manufacturing & Production Systems",
+      "Industrial Automation",
+      "CAD / Precision Modeling",
+      "Applied Mathematics",
+      "Quality Control & Systems Design",
+    ],
+    keyAchievement:
+      "Bridged physical engineering principles with modern software paradigms, bringing unique problem-solving rigor to software design.",
   },
   {
-    id: "btech",
-    shortTitle: "B.Tech",
-    title: "Bachelor of Technology",
-    subtitle: "Computer Science Engineering",
-    institution: "United Institute of Technology, Prayagraj",
-    period: "2024 – Present",
-    percentage: "77.4%",
-    description:
-      "Specializing in full-stack architecture, distributed systems, algorithms, AI/ML pipelines, and modern cybersecurity threat detection platforms.",
-    icon: GraduationCap,
-    accent: "purple",
-    stage: "04",
-    statusBadge: "Current Specialization",
-    focusTag: "Full-Stack, AI & Cyber",
-    radius: 218,
-    angle: 125,
+    id: "senior-secondary",
+    stage: "STAGE 02",
+    degree: "12th Grade (Senior Secondary)",
+    field: "Physics, Chemistry & Mathematics (PCM)",
+    institution: "St. John's School",
+    location: "Chandauli, Uttar Pradesh",
+    period: "2019 – 2020",
+    score: "65.4%",
+    scoreLabel: "Board Aggregate",
+    statusBadge: "Completed",
+    statusType: "completed",
+    accent: "blue",
+    icon: BookOpen,
+    summary:
+      "Cultivated analytical rigor and mathematical problem-solving under an intensive science and mathematics curriculum. Built solid foundations in calculus, mechanics, and physical principles.",
+    coursework: [
+      "Advanced Calculus & Algebra",
+      "Classical & Modern Physics",
+      "Inorganic & Physical Chemistry",
+      "Analytical Reasoning",
+    ],
+    keyAchievement:
+      "Developed mathematical discipline and logical decomposition skills essential for algorithm design and computational logic.",
+  },
+  {
+    id: "secondary",
+    stage: "STAGE 01",
+    degree: "10th Grade (Secondary Certificate)",
+    field: "Secondary School Curriculum",
+    institution: "St. John's School",
+    location: "Chandauli, Uttar Pradesh",
+    period: "2017 – 2018",
+    score: "81.33%",
+    scoreLabel: "Distinction Honors",
+    statusBadge: "Distinction Honors",
+    statusType: "completed",
+    accent: "blue",
+    icon: School,
+    summary:
+      "Established foundational academic excellence with distinction in Mathematics and Computer Science fundamentals, sparking an early and lifelong passion for computers and technology.",
+    coursework: [
+      "High School Mathematics",
+      "Computer Science Fundamentals",
+      "General Science & Physics",
+      "Communication & Humanities",
+    ],
+    keyAchievement:
+      "Graduated with 81.33% distinction, earning highest academic marks in Mathematics and early computing coursework.",
   },
 ]
 
+const quickStats = [
+  { label: "Academic Journey", value: "8+ Years", detail: "Continuous Engineering Growth" },
+  { label: "Engineering Disciplines", value: "Mechanical → CS", detail: "Unique Cross-Disciplinary Edge" },
+  { label: "Projects Shipped", value: "15+ Apps", detail: "Full-Stack, AI & Cyber" },
+  { label: "Current Specialization", value: "B.Tech CSE", detail: "Prayagraj, UP" },
+]
+
+const corePillars = [
+  { title: "Full-Stack Architecture", icon: Code2, desc: "Modern React, Next.js, Node.js & Scalable APIs" },
+  { title: "AI & GenAI Integration", icon: Cpu, desc: "Gemini API, LLM orchestrations & automation" },
+  { title: "Cybersecurity & Defenses", icon: ShieldCheck, desc: "Security-first mindset & threat awareness" },
+  { title: "System Decomposition", icon: Layers, desc: "Mechanical precision applied to software design" },
+]
+
 /* =========================================================
-   ORBITAL GEOMETRY CONSTANTS
+   MAIN COMPONENT
    ========================================================= */
 
-const CENTER_X = 240
-const CENTER_Y = 240
+const AboutSection = React.forwardRef<HTMLElement, React.HTMLAttributes<HTMLElement>>(
+  function AboutSection({ className, ...props }, ref) {
+    // Keep B.Tech (index 0 in reverse-chrono) expanded by default for immediate visual richness
+    const [expandedIds, setExpandedIds] = React.useState<Set<string>>(
+      new Set(["btech"])
+    )
 
-function getNodeCoordinates(radius: number, angleDeg: number) {
-  const rad = (angleDeg * Math.PI) / 180
-  return {
-    x: CENTER_X + radius * Math.cos(rad),
-    y: CENTER_Y + radius * Math.sin(rad),
-  }
-}
+    const toggleExpand = (id: string) => {
+      setExpandedIds((prev) => {
+        const next = new Set(prev)
+        if (next.has(id)) {
+          next.delete(id)
+        } else {
+          next.add(id)
+        }
+        return next
+      })
+    }
 
-/* =========================================================
-   ORBITAL CONSTELLATION RADAR COMPONENT
-   ========================================================= */
+    const expandAll = () => {
+      setExpandedIds(new Set(educationMilestones.map((m) => m.id)))
+    }
 
-interface OrbitalRadarProps {
-  items: EducationItem[]
-  activeIndex: number
-  onSelect: (index: number) => void
-  hoveredIndex: number | null
-  onHover: (index: number | null) => void
-}
+    const collapseAll = () => {
+      setExpandedIds(new Set())
+    }
 
-function OrbitalRadar({
-  items,
-  activeIndex,
-  onSelect,
-  hoveredIndex,
-  onHover,
-}: OrbitalRadarProps) {
-  const activeItem: EducationItem = items[activeIndex] ?? (items[0] as EducationItem)
-  const activeCoords = getNodeCoordinates(activeItem.radius, activeItem.angle)
+    const isAllExpanded = expandedIds.size === educationMilestones.length
 
-  // Construct constellation path connecting 1 -> 2 -> 3 -> 4
-  const constellationPath = items
-    .map((item, idx) => {
-      const { x, y } = getNodeCoordinates(item.radius, item.angle)
-      return `${idx === 0 ? "M" : "L"} ${x} ${y}`
-    })
-    .join(" ")
-
-  return (
-    <div className="relative mx-auto flex w-full max-w-[460px] items-center justify-center p-2 select-none sm:p-4">
-      {/* Ambient background glow behind radar */}
-      <div className="pointer-events-none absolute h-[340px] w-[340px] rounded-full bg-linear-to-tr from-cyber-blue/10 via-cyber-purple/10 to-transparent blur-[80px]" />
-
-      <svg
-        viewBox="0 0 480 480"
-        className="relative z-10 h-auto w-full max-w-[460px] overflow-visible drop-shadow-[0_0_35px_rgba(0,0,0,0.8)]"
-        aria-label="Academic Journey Orbital Constellation"
+    return (
+      <SectionWrapper
+        ref={ref}
+        id="about"
+        className={cn("relative overflow-hidden py-24 sm:py-32", className)}
+        {...props}
       >
-        <defs>
-          {/* Constellation line gradient */}
-          <linearGradient
-            id="constellationGradient"
-            x1="0%"
-            y1="0%"
-            x2="100%"
-            y2="100%"
-          >
-            <stop offset="0%" stopColor="#22d3ee" stopOpacity="0.8" />
-            <stop offset="50%" stopColor="#818cf8" stopOpacity="0.9" />
-            <stop offset="100%" stopColor="#c084fc" stopOpacity="0.8" />
-          </linearGradient>
+        {/* Ambient background atmosphere */}
+        <div className="pointer-events-none absolute -top-40 left-1/4 h-[500px] w-[500px] rounded-full bg-cyber-blue/10 blur-[120px]" />
+        <div className="pointer-events-none absolute -bottom-40 right-1/4 h-[500px] w-[500px] rounded-full bg-cyber-purple/10 blur-[120px]" />
 
-          {/* Active target beam gradient */}
-          <linearGradient
-            id="activeTargetBeam"
-            x1={`${CENTER_X}`}
-            y1={`${CENTER_Y}`}
-            x2={`${activeCoords.x}`}
-            y2={`${activeCoords.y}`}
-            gradientUnits="userSpaceOnUse"
-          >
-            <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.2" />
-            <stop offset="60%" stopColor="#818cf8" stopOpacity="0.7" />
-            <stop offset="100%" stopColor="#a855f7" stopOpacity="1" />
-          </linearGradient>
-
-          {/* Radar sweep sector gradient */}
-          <linearGradient id="radarSweepGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#22d3ee" stopOpacity="0" />
-            <stop offset="60%" stopColor="#38bdf8" stopOpacity="0.08" />
-            <stop offset="100%" stopColor="#818cf8" stopOpacity="0.25" />
-          </linearGradient>
-
-          {/* Core radial glow */}
-          <radialGradient id="coreGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#22d3ee" stopOpacity="0.4" />
-            <stop offset="60%" stopColor="#a855f7" stopOpacity="0.15" />
-            <stop offset="100%" stopColor="#0b111a" stopOpacity="0" />
-          </radialGradient>
-        </defs>
-
-        {/* =================================================
-            BACKGROUND GRID & CROSSHAIRS
-            ================================================= */}
-        {/* Subtle grid rings */}
-        <circle
-          cx={CENTER_X}
-          cy={CENTER_Y}
-          r={235}
-          fill="none"
-          stroke="rgba(255,255,255,0.04)"
-          strokeWidth="1"
-        />
-
-        {/* Crosshair coordinate axes */}
-        <line
-          x1={CENTER_X}
-          y1={15}
-          x2={CENTER_X}
-          y2={465}
-          stroke="rgba(255,255,255,0.07)"
-          strokeWidth="1"
-          strokeDasharray="3 6"
-        />
-        <line
-          x1={15}
-          y1={CENTER_Y}
-          x2={465}
-          y2={CENTER_Y}
-          stroke="rgba(255,255,255,0.07)"
-          strokeWidth="1"
-          strokeDasharray="3 6"
-        />
-
-        {/* Cardinal calibration markers */}
-        <text
-          x={CENTER_X}
-          y={26}
-          textAnchor="middle"
-          className="fill-muted-foreground/40 text-[9px] font-mono tracking-widest"
-        >
-          000° // ALPHA
-        </text>
-        <text
-          x={460}
-          y={CENTER_Y + 3}
-          textAnchor="end"
-          className="fill-muted-foreground/40 text-[9px] font-mono tracking-widest"
-        >
-          090°
-        </text>
-        <text
-          x={CENTER_X}
-          y={460}
-          textAnchor="middle"
-          className="fill-muted-foreground/40 text-[9px] font-mono tracking-widest"
-        >
-          180°
-        </text>
-        <text
-          x={20}
-          y={CENTER_Y + 3}
-          textAnchor="start"
-          className="fill-muted-foreground/40 text-[9px] font-mono tracking-widest"
-        >
-          270°
-        </text>
-
-        {/* =================================================
-            CONCENTRIC ORBITAL RINGS
-            ================================================= */}
-        {items.map((item, idx) => {
-          const isSelected = activeIndex === idx
-          const isHovered = hoveredIndex === idx
-          const isHighlighted = isSelected || isHovered
-
-          return (
-            <g key={`orbit-ring-${item.id}`}>
-              <circle
-                cx={CENTER_X}
-                cy={CENTER_Y}
-                r={item.radius}
-                fill="none"
-                stroke={
-                  isHighlighted
-                    ? item.accent === "blue"
-                      ? "rgba(34,211,238,0.45)"
-                      : "rgba(168,85,247,0.45)"
-                    : "rgba(255,255,255,0.08)"
-                }
-                strokeWidth={isHighlighted ? 1.6 : 1}
-                strokeDasharray={isHighlighted ? "6 4" : "3 7"}
-                className="transition-all duration-300"
-              />
-
-              {/* Pulsing ring aura when selected */}
-              {isSelected && (
-                <motion.circle
-                  cx={CENTER_X}
-                  cy={CENTER_Y}
-                  r={item.radius}
-                  fill="none"
-                  stroke={item.accent === "blue" ? "#22d3ee" : "#a855f7"}
-                  strokeWidth="1"
-                  animate={{
-                    opacity: [0.1, 0.45, 0.1],
-                  }}
-                  transition={{
-                    duration: 2.8,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                />
-              )}
-            </g>
-          )
-        })}
-
-        {/* =================================================
-            ROTATING RADAR SWEEP CONE
-            ================================================= */}
-        <motion.g
-          animate={{ rotate: 360 }}
-          transition={{
-            duration: 12,
-            repeat: Infinity,
-            ease: "linear",
-          }}
-          style={{ transformOrigin: `${CENTER_X}px ${CENTER_Y}px` }}
-        >
-          <path
-            d={`M ${CENTER_X} ${CENTER_Y} L ${CENTER_X} 20 A 220 220 0 0 1 ${CENTER_X + 130} ${CENTER_Y - 177} Z`}
-            fill="url(#radarSweepGradient)"
-          />
-          <line
-            x1={CENTER_X}
-            y1={CENTER_Y}
-            x2={CENTER_X + 130}
-            y2={CENTER_Y - 177}
-            stroke="#22d3ee"
-            strokeWidth="1.2"
-            strokeOpacity="0.7"
-            strokeLinecap="round"
-          />
-        </motion.g>
-
-        {/* =================================================
-            CONSTELLATION VECTOR LINE (CONNECTING MILESTONES)
-            ================================================= */}
-        <path
-          d={constellationPath}
-          fill="none"
-          stroke="url(#constellationGradient)"
-          strokeWidth="1.8"
-          strokeDasharray="4 6"
-          strokeLinecap="round"
-          strokeOpacity="0.6"
-        />
-
-        {/* Animated energy pulse traveling through constellation */}
-        <motion.path
-          d={constellationPath}
-          fill="none"
-          stroke="#ffffff"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          strokeDasharray="8 60"
-          animate={{
-            strokeDashoffset: [-120, 120],
-          }}
-          transition={{
-            duration: 4.5,
-            repeat: Infinity,
-            ease: "linear",
-          }}
-          strokeOpacity="0.9"
-        />
-
-        {/* =================================================
-            ACTIVE TARGETING BEAM (CORE -> ACTIVE NODE)
-            ================================================= */}
-        <motion.line
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          key={`laser-to-${activeItem.id}`}
-          x1={CENTER_X}
-          y1={CENTER_Y}
-          x2={activeCoords.x}
-          y2={activeCoords.y}
-          stroke="url(#activeTargetBeam)"
-          strokeWidth="1.8"
-          strokeDasharray="3 4"
-        />
-
-        {/* =================================================
-            CENTRAL NUCLEUS (PRASOON PATHAK CORE)
-            ================================================= */}
-        <g>
-          {/* Pulsing Core Wave */}
-          <motion.circle
-            cx={CENTER_X}
-            cy={CENTER_Y}
-            r={38}
-            fill="url(#coreGlow)"
-            animate={{
-              r: [32, 44, 32],
-              opacity: [0.6, 0.2, 0.6],
-            }}
-            transition={{
-              duration: 3,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          />
-
-          {/* Core Body */}
-          <circle
-            cx={CENTER_X}
-            cy={CENTER_Y}
-            r={24}
-            fill="#080e1a"
-            stroke="rgba(168,85,247,0.5)"
-            strokeWidth="1.5"
-          />
-
-          <circle
-            cx={CENTER_X}
-            cy={CENTER_Y}
-            r={16}
-            fill="#0f172a"
-            stroke="rgba(34,211,238,0.7)"
-            strokeWidth="1.2"
-          />
-
-          {/* Central Pulsing Beacon Dot */}
-          <circle cx={CENTER_X} cy={CENTER_Y} r={4} fill="#22d3ee" />
-        </g>
-
-        {/* =================================================
-            ORBITAL SATELLITE NODES
-            ================================================= */}
-        {items.map((item, idx) => {
-          const { x, y } = getNodeCoordinates(item.radius, item.angle)
-          const isSelected = activeIndex === idx
-          const isHovered = hoveredIndex === idx
-          const isHighlighted = isSelected || isHovered
-          const isBlue = item.accent === "blue"
-
-          return (
-            <g
-              key={`node-${item.id}`}
-              onClick={() => onSelect(idx)}
-              onMouseEnter={() => onHover(idx)}
-              onMouseLeave={() => onHover(null)}
-              className="cursor-pointer transition-transform duration-200"
-              role="button"
-              tabIndex={0}
-              aria-label={`Select ${item.title}`}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  onSelect(idx)
-                }
-              }}
+        <Container className="relative z-10 max-w-7xl">
+          {/* =================================================
+              SECTION HEADER
+              ================================================= */}
+          <div className="mb-14 text-center sm:mb-20">
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="inline-flex items-center gap-2 rounded-full border border-cyber-blue/30 bg-cyber-blue/5 px-4 py-1.5 text-xs font-mono tracking-wider text-cyber-blue uppercase backdrop-blur-md"
             >
-              {/* Outer pulsing beacon if selected */}
-              {isSelected && (
-                <motion.circle
-                  cx={x}
-                  cy={y}
-                  r={24}
-                  fill="none"
-                  stroke={isBlue ? "#22d3ee" : "#a855f7"}
-                  strokeWidth="1"
-                  animate={{
-                    r: [16, 28, 16],
-                    opacity: [0.9, 0, 0.9],
-                  }}
-                  transition={{
-                    duration: 1.8,
-                    repeat: Infinity,
-                    ease: "easeOut",
-                  }}
-                />
-              )}
+              <Terminal className="h-3.5 w-3.5 animate-pulse text-cyber-blue" />
+              <span>// 02. DOSSIER & ACADEMIC JOURNEY</span>
+            </motion.div>
 
-              {/* Node Outer Ring */}
-              <circle
-                cx={x}
-                cy={y}
-                r={isHighlighted ? 17 : 14}
-                fill="#0b111a"
-                stroke={
-                  isHighlighted
-                    ? isBlue
-                      ? "#22d3ee"
-                      : "#c084fc"
-                    : "rgba(255,255,255,0.22)"
-                }
-                strokeWidth={isHighlighted ? 2 : 1.2}
-                className="transition-all duration-300"
-              />
-
-              {/* Inner Circle Glow */}
-              <circle
-                cx={x}
-                cy={y}
-                r={isHighlighted ? 9 : 6}
-                fill={
-                  isHighlighted
-                    ? isBlue
-                      ? "#22d3ee"
-                      : "#a855f7"
-                    : "rgba(255,255,255,0.3)"
-                }
-                className="transition-all duration-300"
-              />
-
-              {/* Year / Phase Badge */}
-              <g transform={`translate(${x}, ${y + (item.angle > 180 ? -22 : 26)})`}>
-                <rect
-                  x="-28"
-                  y="-10"
-                  width="56"
-                  height="18"
-                  rx="9"
-                  fill="#070c14"
-                  stroke={
-                    isHighlighted
-                      ? isBlue
-                        ? "rgba(34,211,238,0.6)"
-                        : "rgba(192,132,252,0.6)"
-                      : "rgba(255,255,255,0.12)"
-                  }
-                  strokeWidth="1"
-                  className="transition-all duration-200"
-                />
-                <text
-                  x="0"
-                  y="2.5"
-                  textAnchor="middle"
-                  className={cn(
-                    "text-[9.5px] font-mono font-semibold tracking-wider",
-                    isHighlighted
-                      ? isBlue
-                        ? "fill-cyan-300"
-                        : "fill-purple-300"
-                      : "fill-white/60"
-                  )}
-                >
-                  {item.shortTitle}
-                </text>
-              </g>
-            </g>
-          )
-        })}
-      </svg>
-    </div>
-  )
-}
-
-/* =========================================================
-   TELEMETRY HUD CARD COMPONENT
-   ========================================================= */
-
-interface MilestoneHudCardProps {
-  item: EducationItem
-  index: number
-  total: number
-  onPrev: () => void
-  onNext: () => void
-  isPlaying: boolean
-  onTogglePlay: () => void
-}
-
-function MilestoneHudCard({
-  item,
-  index,
-  total,
-  onPrev,
-  onNext,
-  isPlaying,
-  onTogglePlay,
-}: MilestoneHudCardProps) {
-  const Icon = item.icon
-  const isBlue = item.accent === "blue"
-
-  return (
-    <div className="relative flex flex-col justify-between overflow-hidden rounded-[28px] border border-white/15 bg-[#0b111a]/90 p-6 shadow-[0_20px_60px_rgba(0,0,0,0.6)] backdrop-blur-2xl sm:p-8 lg:min-h-[460px]">
-      {/* Background cyber ambient gradients */}
-      <div
-        className={cn(
-          "pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full blur-[90px]",
-          isBlue ? "bg-cyber-blue/15" : "bg-cyber-purple/15"
-        )}
-      />
-      <div className="pointer-events-none absolute -bottom-24 -left-20 h-56 w-56 rounded-full bg-white/[0.02] blur-[80px]" />
-
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={item.id}
-          initial={{ opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -14 }}
-          transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-          className="relative z-10 flex flex-1 flex-col"
-        >
-          {/* Top HUD Telemetry Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-4">
-            <div className="flex items-center gap-2">
-              <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-[10px] font-mono tracking-widest text-emerald-400 uppercase">
-                Radar Target Locked
+            <motion.h2
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="mt-4 text-3xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl"
+            >
+              Engineering Mindset.{" "}
+              <span className="bg-linear-to-r from-cyber-blue via-indigo-400 to-cyber-purple bg-clip-text text-transparent">
+                Academic Rigor.
               </span>
-            </div>
+            </motion.h2>
 
-            <div className="flex items-center gap-3">
-              <span
-                className={cn(
-                  "rounded-full border px-2.5 py-0.5 text-[10px] font-mono font-semibold uppercase tracking-wider",
-                  isBlue
-                    ? "border-cyber-blue/30 bg-cyber-blue/10 text-cyber-blue"
-                    : "border-cyber-purple/30 bg-cyber-purple/10 text-cyber-purple"
-                )}
-              >
-                {item.statusBadge}
-              </span>
-              <span className="text-xs font-mono text-muted-foreground/60">
-                PHASE {item.stage} / 0{total}
-              </span>
-            </div>
+            <motion.p
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="mx-auto mt-4 max-w-2xl text-base text-muted-foreground sm:text-lg"
+            >
+              From mechanical manufacturing precision to modern computer science, full-stack architecture, and cybersecurity.
+            </motion.p>
           </div>
 
-          {/* Main Info Header */}
-          <div className="mt-6 flex items-start gap-4">
-            <div
-              className={cn(
-                "flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border backdrop-blur-md shadow-lg",
-                isBlue
-                  ? "border-cyber-blue/40 bg-cyber-blue/10 text-cyber-blue shadow-[0_0_20px_rgba(34,211,238,0.2)]"
-                  : "border-cyber-purple/40 bg-cyber-purple/10 text-cyber-purple shadow-[0_0_20px_rgba(168,85,247,0.2)]"
-              )}
-            >
-              <Icon className="h-7 w-7" />
-            </div>
+          {/* =================================================
+              DUAL BENTO GRID
+              Left: Developer Profile Dossier (5 cols)
+              Right: Interactive Timeline with Click-to-Expand (7 cols)
+              ================================================= */}
+          <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-12 lg:gap-10">
+            {/* ===============================================
+                LEFT COLUMN: DEVELOPER DOSSIER BENTO
+                =============================================== */}
+            <div className="space-y-6 lg:col-span-5 lg:sticky lg:top-24">
+              {/* Profile Card */}
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+                className="relative overflow-hidden rounded-3xl border border-white/10 bg-[#0d1420]/80 p-6 sm:p-8 backdrop-blur-xl shadow-2xl"
+              >
+                {/* Glow accent */}
+                <div className="pointer-events-none absolute -right-20 -top-20 h-44 w-44 rounded-full bg-cyber-blue/15 blur-3xl" />
 
-            <div className="min-w-0 flex-1">
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <h3 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
-                  {item.title}
-                </h3>
-
-                {/* Score Lockup Badge */}
-                <div
-                  className={cn(
-                    "flex items-center gap-1.5 rounded-xl border px-3 py-1 backdrop-blur-sm",
-                    isBlue
-                      ? "border-cyber-blue/35 bg-cyber-blue/[0.08] text-cyber-blue"
-                      : "border-cyber-purple/35 bg-cyber-purple/[0.08] text-cyber-purple"
-                  )}
-                >
-                  <Award className="h-4 w-4" />
-                  <span className="text-sm font-bold font-mono">
-                    {item.percentage}
+                {/* Status beacon */}
+                <div className="mb-6 flex items-center justify-between border-b border-white/10 pb-4">
+                  <div className="flex items-center gap-2">
+                    <span className="relative flex h-2.5 w-2.5">
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                      <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500" />
+                    </span>
+                    <span className="text-xs font-mono text-emerald-400 tracking-wide uppercase">
+                      Active Scholar & Builder
+                    </span>
+                  </div>
+                  <span className="text-[11px] font-mono text-muted-foreground/60">
+                    ID: PP-CSE-2026
                   </span>
                 </div>
-              </div>
 
-              <p
-                className={cn(
-                  "mt-1 text-sm font-medium tracking-wide",
-                  isBlue ? "text-cyan-300/90" : "text-purple-300/90"
-                )}
+                {/* Bio text */}
+                <h3 className="text-2xl font-bold tracking-tight text-white">
+                  Prasoon Pathak
+                </h3>
+                <p className="mt-1 text-sm font-medium text-cyber-blue">
+                  Computer Science Student & Full-Stack Developer
+                </p>
+
+                <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+                  I combine an analytical engineering background with hands-on software development. Having started in Mechanical Engineering before transitioning into Computer Science, I bring structured systems thinking, physical tolerances discipline, and algorithmic problem-solving to every piece of software I design.
+                </p>
+
+                {/* Core focus pillars */}
+                <div className="mt-6 space-y-3 pt-4 border-t border-white/10">
+                  <div className="text-xs font-mono tracking-wider text-muted-foreground/80 uppercase">
+                    Core Technical Pillars
+                  </div>
+                  <div className="grid grid-cols-2 gap-2.5">
+                    {corePillars.map((pillar) => {
+                      const Icon = pillar.icon
+                      return (
+                        <div
+                          key={pillar.title}
+                          className="flex items-center gap-2.5 rounded-xl border border-white/5 bg-white/[0.02] p-2.5 transition-colors hover:border-cyber-blue/30 hover:bg-white/[0.04]"
+                        >
+                          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-cyber-blue/10 text-cyber-blue">
+                            <Icon className="h-4 w-4" />
+                          </div>
+                          <span className="text-xs font-medium text-slate-200">
+                            {pillar.title}
+                          </span>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+
+                {/* Terminal approach signature */}
+                <div className="mt-6 rounded-xl border border-white/10 bg-[#080d14]/90 p-3.5 font-mono text-xs">
+                  <div className="flex items-center gap-2 text-muted-foreground/60 mb-1.5 text-[11px]">
+                    <Binary className="h-3.5 w-3.5 text-cyber-purple" />
+                    <span>PHILOSOPHY.config</span>
+                  </div>
+                  <div className="text-emerald-400">
+                    <span className="text-pink-400">const</span> approach = [
+                    <span className="text-cyber-blue">&quot;Learn&quot;</span>,{" "}
+                    <span className="text-cyber-blue">&quot;Build&quot;</span>,{" "}
+                    <span className="text-cyber-blue">&quot;Experiment&quot;</span>,{" "}
+                    <span className="text-cyber-blue">&quot;Improve&quot;</span>];
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Quick stats bento cards */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.15 }}
+                className="grid grid-cols-2 gap-3"
               >
-                {item.subtitle}
-              </p>
-            </div>
-          </div>
-
-          {/* Meta Details: Institution & Period */}
-          <div className="mt-6 grid grid-cols-1 gap-3 rounded-2xl border border-white/8 bg-white/[0.02] p-4 sm:grid-cols-2">
-            <div className="flex items-start gap-2.5">
-              <MapPin
-                className={cn(
-                  "mt-0.5 h-4 w-4 shrink-0",
-                  isBlue ? "text-cyber-blue" : "text-cyber-purple"
-                )}
-              />
-              <div className="min-w-0">
-                <span className="block text-[9px] font-mono tracking-widest uppercase text-muted-foreground/60">
-                  Institution
-                </span>
-                <span className="text-xs font-medium text-foreground/90 leading-snug">
-                  {item.institution}
-                </span>
-              </div>
+                {quickStats.map((stat) => (
+                  <div
+                    key={stat.label}
+                    className="rounded-2xl border border-white/10 bg-[#0d1420]/60 p-4 backdrop-blur-md transition-all hover:border-cyber-blue/20"
+                  >
+                    <div className="text-[11px] font-mono text-muted-foreground uppercase">
+                      {stat.label}
+                    </div>
+                    <div className="mt-1 text-lg font-bold text-white tracking-tight">
+                      {stat.value}
+                    </div>
+                    <div className="text-[11px] text-muted-foreground/80 mt-0.5 truncate">
+                      {stat.detail}
+                    </div>
+                  </div>
+                ))}
+              </motion.div>
             </div>
 
-            <div className="flex items-start gap-2.5">
-              <Calendar
-                className={cn(
-                  "mt-0.5 h-4 w-4 shrink-0",
-                  isBlue ? "text-cyber-blue" : "text-cyber-purple"
-                )}
-              />
-              <div className="min-w-0">
-                <span className="block text-[9px] font-mono tracking-widest uppercase text-muted-foreground/60">
-                  Academic Timeline
-                </span>
-                <span
-                  className={cn(
-                    "text-xs font-semibold font-mono",
-                    isBlue ? "text-cyan-300" : "text-purple-300"
-                  )}
+            {/* ===============================================
+                RIGHT COLUMN: INTERACTIVE MILESTONES (CLICK TO EXPAND)
+                =============================================== */}
+            <div className="lg:col-span-7">
+              {/* Milestone controls bar */}
+              <div className="mb-6 flex items-center justify-between px-1">
+                <div className="flex items-center gap-2 text-xs font-mono text-muted-foreground">
+                  <Compass className="h-4 w-4 text-cyber-blue" />
+                  <span>Interactive Academic Chronology</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={isAllExpanded ? collapseAll : expandAll}
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-mono text-cyber-blue transition-colors hover:border-cyber-blue/40 hover:bg-white/10"
                 >
-                  {item.period}
-                </span>
+                  {isAllExpanded ? (
+                    <>
+                      <ChevronUp className="h-3.5 w-3.5" />
+                      <span>Collapse All</span>
+                    </>
+                  ) : (
+                    <>
+                      <ChevronDown className="h-3.5 w-3.5" />
+                      <span>Expand All</span>
+                    </>
+                  )}
+                </button>
+              </div>
+
+              {/* Connected Timeline Stack */}
+              <div className="relative space-y-4">
+                {/* Vertical spine line */}
+                <div className="pointer-events-none absolute left-6 sm:left-8 top-6 bottom-6 w-0.5 bg-linear-to-b from-cyber-purple via-cyber-blue to-white/10" />
+
+                {educationMilestones.map((milestone, index) => {
+                  const isExpanded = expandedIds.has(milestone.id)
+                  const Icon = milestone.icon
+                  const isPurple = milestone.accent === "purple"
+
+                  return (
+                    <motion.div
+                      key={milestone.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.45, delay: index * 0.08 }}
+                      className={cn(
+                        "group relative rounded-2xl border transition-all duration-300",
+                        isExpanded
+                          ? isPurple
+                            ? "border-cyber-purple/50 bg-[#0f1726]/90 shadow-[0_0_30px_rgba(168,85,247,0.15)]"
+                            : "border-cyber-blue/50 bg-[#0f1726]/90 shadow-[0_0_30px_rgba(34,211,238,0.15)]"
+                          : "border-white/10 bg-[#0c131f]/70 hover:border-white/20 hover:bg-[#0f1726]/80",
+                        "backdrop-blur-xl"
+                      )}
+                    >
+                      {/* Active glow accent bar */}
+                      {isExpanded && (
+                        <div
+                          className={cn(
+                            "absolute -left-[1px] top-4 bottom-4 w-1 rounded-r-full",
+                            isPurple ? "bg-cyber-purple" : "bg-cyber-blue"
+                          )}
+                        />
+                      )}
+
+                      {/* Header (Clickable Trigger) */}
+                      <button
+                        type="button"
+                        onClick={() => toggleExpand(milestone.id)}
+                        className="flex w-full items-start gap-4 p-4 sm:p-6 text-left select-none"
+                        aria-expanded={isExpanded}
+                      >
+                        {/* Timeline Node Badge / Icon */}
+                        <div
+                          className={cn(
+                            "relative z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border transition-transform duration-300",
+                            isExpanded
+                              ? isPurple
+                                ? "border-cyber-purple bg-cyber-purple/20 text-cyber-purple shadow-[0_0_15px_rgba(168,85,247,0.4)] scale-105"
+                                : "border-cyber-blue bg-cyber-blue/20 text-cyber-blue shadow-[0_0_15px_rgba(34,211,238,0.4)] scale-105"
+                              : "border-white/15 bg-white/5 text-muted-foreground group-hover:border-white/30 group-hover:text-white"
+                          )}
+                        >
+                          <Icon className="h-5 w-5" />
+                        </div>
+
+                        {/* Title & Core Meta */}
+                        <div className="min-w-0 flex-1">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span
+                              className={cn(
+                                "text-[11px] font-mono font-semibold tracking-wider uppercase",
+                                isPurple ? "text-cyber-purple" : "text-cyber-blue"
+                              )}
+                            >
+                              {milestone.stage}
+                            </span>
+                            <span className="text-white/20">•</span>
+                            <span
+                              className={cn(
+                                "rounded-md px-2 py-0.5 text-[10px] font-mono",
+                                milestone.statusType === "active"
+                                  ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30"
+                                  : "bg-white/5 text-muted-foreground border border-white/10"
+                              )}
+                            >
+                              {milestone.statusBadge}
+                            </span>
+                          </div>
+
+                          <h4 className="mt-1 text-base font-bold text-white sm:text-lg group-hover:text-cyber-blue transition-colors">
+                            {milestone.degree}
+                          </h4>
+
+                          <p className="text-xs sm:text-sm font-medium text-slate-300">
+                            {milestone.field}
+                          </p>
+
+                          <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
+                            <span className="flex items-center gap-1.5">
+                              <School className="h-3.5 w-3.5 text-white/40" />
+                              <span className="truncate">{milestone.institution}</span>
+                            </span>
+                            <span className="flex items-center gap-1.5">
+                              <Calendar className="h-3.5 w-3.5 text-white/40" />
+                              <span>{milestone.period}</span>
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Score Badge & Chevron */}
+                        <div className="flex flex-col items-end gap-2.5 shrink-0">
+                          <div
+                            className={cn(
+                              "rounded-xl border px-3 py-1.5 text-right transition-colors",
+                              isPurple
+                                ? "border-cyber-purple/30 bg-cyber-purple/10"
+                                : "border-cyber-blue/30 bg-cyber-blue/10"
+                            )}
+                          >
+                            <div
+                              className={cn(
+                                "text-sm sm:text-base font-extrabold font-mono",
+                                isPurple ? "text-cyber-purple" : "text-cyber-blue"
+                              )}
+                            >
+                              {milestone.score}
+                            </div>
+                            <div className="text-[9px] font-mono text-muted-foreground/80 uppercase">
+                              {milestone.scoreLabel}
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-1 text-[11px] font-mono text-muted-foreground/70 group-hover:text-cyber-blue transition-colors">
+                            <span className="hidden sm:inline">
+                              {isExpanded ? "Collapse" : "Expand"}
+                            </span>
+                            <motion.div
+                              animate={{ rotate: isExpanded ? 180 : 0 }}
+                              transition={{ duration: 0.2 }}
+                            >
+                              <ChevronDown className="h-4 w-4" />
+                            </motion.div>
+                          </div>
+                        </div>
+                      </button>
+
+                      {/* Expandable Deep-Dive Content */}
+                      <AnimatePresence initial={false}>
+                        {isExpanded && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.3, ease: "easeInOut" }}
+                            className="overflow-hidden"
+                          >
+                            <div className="border-t border-white/10 px-4 sm:px-6 pb-6 pt-5 space-y-5">
+                              {/* Narrative description */}
+                              <div>
+                                <div className="text-[11px] font-mono text-muted-foreground/70 uppercase tracking-wider mb-1.5">
+                                  // Academic Focus & Impact
+                                </div>
+                                <p className="text-sm leading-relaxed text-slate-300">
+                                  {milestone.summary}
+                                </p>
+                              </div>
+
+                              {/* Coursework & Competencies */}
+                              <div>
+                                <div className="text-[11px] font-mono text-muted-foreground/70 uppercase tracking-wider mb-2">
+                                  // Core Coursework & Knowledge Pillars
+                                </div>
+                                <div className="flex flex-wrap gap-2">
+                                  {milestone.coursework.map((course) => (
+                                    <span
+                                      key={course}
+                                      className="rounded-lg border border-white/10 bg-white/[0.04] px-2.5 py-1 text-xs text-slate-200"
+                                    >
+                                      {course}
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+
+                              {/* Highlight box */}
+                              <div className="rounded-xl border border-white/10 bg-[#080d14]/70 p-3.5 flex items-start gap-3">
+                                <Award
+                                  className={cn(
+                                    "h-5 w-5 shrink-0 mt-0.5",
+                                    isPurple ? "text-cyber-purple" : "text-cyber-blue"
+                                  )}
+                                />
+                                <div className="text-xs leading-relaxed text-slate-300">
+                                  <span className="font-semibold text-white">
+                                    Key Milestone Insight:{" "}
+                                  </span>
+                                  {milestone.keyAchievement}
+                                </div>
+                              </div>
+
+                              {/* Footer location & stamp */}
+                              <div className="flex items-center justify-between text-[11px] font-mono text-muted-foreground/60 pt-2 border-t border-white/5">
+                                <span className="flex items-center gap-1.5">
+                                  <MapPin className="h-3 w-3" />
+                                  <span>{milestone.location}</span>
+                                </span>
+                                <span className="flex items-center gap-1">
+                                  <CheckCircle2 className="h-3 w-3 text-emerald-400" />
+                                  <span>Verified Academic Record</span>
+                                </span>
+                              </div>
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </motion.div>
+                  )
+                })}
               </div>
             </div>
           </div>
-
-          {/* Description */}
-          <div className="mt-5 flex-1">
-            <span className="block text-[9px] font-mono tracking-widest uppercase text-muted-foreground/60 mb-1.5">
-              Key Academic Impact & Curriculum
-            </span>
-            <p className="text-sm leading-relaxed text-muted-foreground/90">
-              {item.description}
-            </p>
-          </div>
-        </motion.div>
-      </AnimatePresence>
-
-      {/* Navigation & Auto-tour Footer Controls */}
-      <div className="relative z-10 mt-6 flex items-center justify-between border-t border-white/10 pt-4">
-        {/* Auto Tour Toggle */}
-        <button
-          type="button"
-          onClick={onTogglePlay}
-          className="flex items-center gap-1.5 rounded-full border border-white/15 bg-white/[0.03] px-3 py-1.5 text-xs font-medium text-muted-foreground transition hover:border-white/30 hover:text-white"
-          title={isPlaying ? "Pause auto-rotation" : "Start auto-rotation tour"}
-        >
-          {isPlaying ? (
-            <>
-              <Pause className="h-3.5 w-3.5 text-amber-300" />
-              <span className="text-[11px] font-mono">Auto Tour Active</span>
-            </>
-          ) : (
-            <>
-              <Play className="h-3.5 w-3.5 text-cyber-blue" />
-              <span className="text-[11px] font-mono">Play Auto Tour</span>
-            </>
-          )}
-        </button>
-
-        {/* Phase Navigation Buttons */}
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={onPrev}
-            aria-label="Previous academic milestone"
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-white/[0.03] text-white/80 transition hover:border-cyber-blue/40 hover:bg-white/[0.08] hover:text-white"
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </button>
-          <button
-            type="button"
-            onClick={onNext}
-            aria-label="Next academic milestone"
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-white/[0.03] text-white/80 transition hover:border-cyber-purple/40 hover:bg-white/[0.08] hover:text-white"
-          >
-            <ChevronRight className="h-4 w-4" />
-          </button>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-/* =========================================================
-   MAIN ABOUT & EDUCATION SECTION
-   ========================================================= */
-
-const AboutSection = React.forwardRef<
-  React.ElementRef<typeof SectionWrapper>,
-  Omit<React.ComponentPropsWithoutRef<typeof SectionWrapper>, "children">
->(({ className, ...props }, ref) => {
-  const [activeIndex, setActiveIndex] = React.useState<number>(3) // Default to latest milestone (B.Tech)
-  const [hoveredIndex, setHoveredIndex] = React.useState<number | null>(null)
-  const [isPlaying, setIsPlaying] = React.useState<boolean>(false)
-
-  // Auto-tour rotation interval
-  React.useEffect(() => {
-    if (!isPlaying) return
-
-    const interval = setInterval(() => {
-      setActiveIndex((curr) => (curr + 1) % educationData.length)
-    }, 4500)
-
-    return () => clearInterval(interval)
-  }, [isPlaying])
-
-  const handleNext = React.useCallback(() => {
-    setActiveIndex((curr) => (curr + 1) % educationData.length)
-  }, [])
-
-  const handlePrev = React.useCallback(() => {
-    setActiveIndex((curr) =>
-      curr === 0 ? educationData.length - 1 : curr - 1
+        </Container>
+      </SectionWrapper>
     )
-  }, [])
-
-  return (
-    <SectionWrapper
-      ref={ref}
-      id="about"
-      background="cyber"
-      padding="lg"
-      className={cn("relative overflow-hidden py-16 sm:py-20", className)}
-      {...props}
-    >
-      {/* Background glow flares */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-        <div className="absolute left-[10%] top-[15%] h-80 w-80 rounded-full bg-cyber-blue/[0.05] blur-[120px]" />
-        <div className="absolute right-[10%] bottom-[15%] h-96 w-96 rounded-full bg-cyber-purple/[0.06] blur-[140px]" />
-      </div>
-
-      <Container size="cinematic" className="relative z-10">
-        {/* =================================================
-            SECTION HEADER
-            ================================================= */}
-        <motion.div
-          initial={{ opacity: 0, y: 22 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.5 }}
-          transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
-          className="mb-10 text-center sm:mb-14"
-        >
-          {/* Header Icon */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.45, delay: 0.1 }}
-            className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-2xl border border-cyber-purple/30 bg-cyber-purple/10 text-cyber-purple shadow-[0_0_18px_rgba(168,85,247,0.2)]"
-          >
-            <Target className="h-5 w-5" />
-          </motion.div>
-
-          {/* Section Title */}
-          <motion.h2
-            initial={{ scale: 0.96 }}
-            whileInView={{ scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.55, delay: 0.08 }}
-            className="text-3xl font-black tracking-tight sm:text-4xl md:text-5xl"
-          >
-            <span className="bg-linear-to-r from-foreground via-cyber-purple to-cyber-blue bg-clip-text text-transparent">
-              ACADEMIC CONSTELLATION
-            </span>
-          </motion.h2>
-
-          {/* Section Underline */}
-          <motion.div
-            initial={{ width: 0 }}
-            whileInView={{ width: 88 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, delay: 0.25 }}
-            className="mx-auto mt-3 h-px bg-linear-to-r from-transparent via-cyber-purple to-transparent shadow-[0_0_10px_rgba(168,85,247,0.5)]"
-          />
-
-          {/* Section Subtitle */}
-          <motion.p
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="mt-3 text-xs tracking-wider text-muted-foreground uppercase sm:text-sm"
-          >
-            Interactive Radar Mapping My Engineering & Educational Evolution
-          </motion.p>
-        </motion.div>
-
-        {/* =================================================
-            STAGE SELECTOR PILLS
-            ================================================= */}
-        <div className="mb-8 flex flex-wrap items-center justify-center gap-2 sm:gap-3">
-          {educationData.map((item, idx) => {
-            const isActive = activeIndex === idx
-            const isBlue = item.accent === "blue"
-
-            return (
-              <button
-                key={`pill-${item.id}`}
-                type="button"
-                onClick={() => {
-                  setActiveIndex(idx)
-                  setIsPlaying(false) // pause auto tour on manual select
-                }}
-                className={cn(
-                  "relative flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-mono font-medium transition-all duration-300 backdrop-blur-md",
-                  isActive
-                    ? isBlue
-                      ? "border-cyber-blue bg-cyber-blue/15 text-white shadow-[0_0_16px_rgba(34,211,238,0.35)]"
-                      : "border-cyber-purple bg-cyber-purple/15 text-white shadow-[0_0_16px_rgba(168,85,247,0.35)]"
-                    : "border-white/10 bg-white/[0.03] text-muted-foreground hover:border-white/25 hover:text-foreground"
-                )}
-              >
-                <span
-                  className={cn(
-                    "h-1.5 w-1.5 rounded-full",
-                    isActive
-                      ? isBlue
-                        ? "bg-cyber-blue"
-                        : "bg-cyber-purple"
-                      : "bg-muted-foreground/40"
-                  )}
-                />
-                <span>
-                  {item.stage} // {item.shortTitle}
-                </span>
-                {isActive && (
-                  <span className="hidden sm:inline text-[10px] text-muted-foreground/80">
-                    ({item.percentage})
-                  </span>
-                )}
-              </button>
-            )
-          })}
-        </div>
-
-        {/* =================================================
-            ORBITAL COCKPIT GRID
-            Left: Interactive Radar Constellation
-            Right: Holographic Telemetry HUD
-            ================================================= */}
-        <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-12 lg:gap-12">
-          {/* LEFT: Orbital Constellation Graphic */}
-          <div className="flex flex-col items-center justify-center lg:col-span-6">
-            <OrbitalRadar
-              items={educationData}
-              activeIndex={activeIndex}
-              onSelect={(idx) => {
-                setActiveIndex(idx)
-                setIsPlaying(false)
-              }}
-              hoveredIndex={hoveredIndex}
-              onHover={setHoveredIndex}
-            />
-
-            {/* Radar status caption */}
-            <div className="mt-3 flex items-center gap-2 text-[11px] font-mono text-muted-foreground/60">
-              <Compass className="h-3.5 w-3.5 text-cyber-blue" />
-              <span>Click any orbital node or select a stage to explore</span>
-            </div>
-          </div>
-
-          {/* RIGHT: Telemetry HUD Detail Card */}
-          <div className="w-full lg:col-span-6">
-            <MilestoneHudCard
-              item={educationData[activeIndex] ?? (educationData[0] as EducationItem)}
-              index={activeIndex}
-              total={educationData.length}
-              onPrev={handlePrev}
-              onNext={handleNext}
-              isPlaying={isPlaying}
-              onTogglePlay={() => setIsPlaying((p) => !p)}
-            />
-          </div>
-        </div>
-      </Container>
-    </SectionWrapper>
-  )
-})
+  }
+)
 
 AboutSection.displayName = "AboutSection"
 
